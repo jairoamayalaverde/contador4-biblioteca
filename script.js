@@ -1,1 +1,153 @@
-(function(){const STORAGE_KEY='contador4_prompts_v4';const EXAMPLES=[{categoria:'finanzas',nombre:'Análisis Express Rentabilidad PYME',cuando:'Cliente pregunta por qué bajó utilidad',personalizacion:'Sector retail Colombia; lenguaje simple',tiempo:20,frecuencia:'semanal',ejemplo:'Distribuidora: problema capital de trabajo; ahorro $15M',contenido:'Analiza las partidas clave (ventas, COGS, gastos operativos) y genera un plan de 3 acciones priorizadas para mejorar la rentabilidad en los próximos 90 días, incluyendo impacto estimado en pesos.'},{categoria:'clientes',nombre:'Propuesta Premium de Servicios Contables',cuando:'Prospecto solicita cotización o upgrade',personalizacion:'Dirigida a Gerente; énfasis en ROI',tiempo:30,frecuencia:'mensual',ejemplo:'Cerré 3 upgrades; aumento promedio 40% en honorarios',contenido:'Crea una propuesta comercial de una página que destaque beneficios, métricas esperadas (ahorro/ingresos), plazos y ROI proyectado en 6 meses.'},{categoria:'automatizacion',nombre:'Calendario Fiscal Automatizado',cuando:'Inicio de mes para planificar obligaciones',personalizacion:'Régimen común; formato tabla con alertas',tiempo:15,frecuencia:'mensual',ejemplo:'Evité 2 multas por vencimientos',contenido:"Genera un calendario fiscal mensual en formato tabla con fechas de vencimiento, responsable y una columna 'alerta' con reglas para recordatorio 7 días antes."},{categoria:'automatizacion',nombre:'Reporte Ejecutivo Semanal con IA',cuando:'Todos los lunes para clientes premium',personalizacion:'Máximo 1 página; 3 métricas clave',tiempo:12,frecuencia:'semanal',ejemplo:'Cliente aceptó aumento de 25% en retainer',contenido:'Resume las 3 métricas financieras clave (ventas, margen, cashflow) y su tendencia semanal. Incluye 2 recomendaciones accionables.'},{categoria:'nómina',nombre:'Detección de Irregularidades en Nómina',cuando:'Antes de procesar nómina mensual',personalizacion:'Detectar duplicados y empleados fantasma',tiempo:25,frecuencia:'mensual',ejemplo:'Detecté empleado duplicado; ahorro $3.2M/año',contenido:'Analiza la nómina y detecta patrones: duplicados, horas extras inusuales y empleados sin actividad. Genera lista priorizada y sugerencias de corrección.'}];const tbody=document.querySelector('#promptsTable tbody');const fab=document.getElementById('fab');const modal=document.getElementById('modal');const modalForm=document.getElementById('modalForm');const cancelModal=document.getElementById('cancelModal');const exportBtn=document.getElementById('exportTopBtn');const clearBtn=document.getElementById('clearAllBtn');const detail=document.getElementById('detailPanel');const dName=document.getElementById('d-name');const dSub=document.getElementById('d-sub');const dCategoria=document.getElementById('d-categoria');const dContenido=document.getElementById('d-contenido');function readStorage(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return null;return JSON.parse(raw)}catch(e){return null}}function writeStorage(arr){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(arr))}catch(e){}}function ensureSeed(){const data=readStorage();if(!data||!Array.isArray(data)||data.length===0){writeStorage(EXAMPLES.slice());return EXAMPLES.slice()}return data}function escapeHtml(s){if(s===undefined||s===null)return'';return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')}function truncate(s,n){if(!s)return'';return s.length>n?s.slice(0,n-1)+'…':s}function capitalize(s){if(!s)return'';return s.charAt(0).toUpperCase()+s.slice(1)}function render(){const data=ensureSeed();tbody.innerHTML='';data.forEach((r,i)=>{const tr=document.createElement('tr');if(i<EXAMPLES.length)tr.style.background='linear-gradient(90deg, rgba(255,244,224,0.8), transparent)';tr.innerHTML=`<td>${i+1}</td><td>${escapeHtml(r.categoria||'')}</td><td><a class="prompt-link" data-index="${i}">${escapeHtml(r.nombre)}</a></td><td>${escapeHtml(truncate(r.cuando,80))}</td><td>${escapeHtml(truncate(r.personalizacion||'',60))}</td><td>${escapeHtml(String(r.tiempo||''))}</td><td>${escapeHtml(capitalize(r.frecuencia||''))}</td><td><button class="btn btn-ghost btn-delete" data-index="${i}">Eliminar</button></td>`;tbody.appendChild(tr)})}fab.addEventListener('click',()=>{modal.style.display='flex';document.getElementById('m-nombre').focus()});cancelModal.addEventListener('click',()=>{modal.style.display='none';modalForm.reset()});modalForm.addEventListener('submit',function(e){e.preventDefault();const categoria=document.getElementById('m-categoria').value;const nombre=document.getElementById('m-nombre').value.trim();const cuando=document.getElementById('m-cuando').value.trim();const personalizacion=document.getElementById('m-personalizacion').value.trim();const tiempo=Number(document.getElementById('m-tiempo').value)||0;const frecuencia=document.getElementById('m-frecuencia').value;const ejemplo=document.getElementById('m-ejemplo').value.trim();const contenido=document.getElementById('m-contenido').value.trim();if(!nombre||!cuando||!ejemplo||!contenido){alert('Completa los campos obligatorios');return}const cur=readStorage()||[];cur.push({categoria,nombre,cuando,personalizacion,tiempo,frecuencia,ejemplo,contenido});writeStorage(cur);render();modal.style.display='none';modalForm.reset()});tbody.addEventListener('click',function(e){const a=e.target.closest('.prompt-link');if(a){const idx=Number(a.dataset.index);openDetail(idx);return}const del=e.target.closest('.btn-delete');if(del){const idx=Number(del.dataset.index);if(!confirm('¿Eliminar este prompt?'))return;let arr=readStorage()||[];arr.splice(idx,1);writeStorage(arr);render()}});function openDetail(idx){const arr=ensureSeed();const item=arr[idx];if(!item)return;dName.textContent=item.nombre||'';dSub.textContent=item.personalizacion||'';dCategoria.textContent=item.categoria||'';dContenido.textContent=item.contenido||'';detail.style.display='block';document.getElementById('biblioteca').style.display='none'}document.getElementById('backBtn')?.addEventListener('click',()=>{detail.style.display='none';document.getElementById('biblioteca').style.display=''});clearBtn.addEventListener('click',()=>{if(!confirm('¿Restablecer ejemplos iniciales?'))return;writeStorage(EXAMPLES.slice());render();alert('Restablecido a ejemplos iniciales')});exportBtn.addEventListener('click',()=>{exportXLSX()});function exportXLSX(){const arr=readStorage()||[];if(!arr.length){alert('No hay prompts para exportar');return}const ws1=[['Categoria','Nombre','Cuándo Usar','Personalización','Tiempo (min)','Frecuencia','Ejemplo de Uso','Contenido del Prompt']];arr.forEach(r=>ws1.push([r.categoria||'',r.nombre||'',r.cuando||'',r.personalizacion||'',r.tiempo||'',r.frecuencia||'',r.ejemplo||'',r.contenido||'']));const instructions=[['Instrucciones de uso - Biblioteca de Prompts — Contador 4.0 (Desarrollado por Jairo Amaya)'],[],['1. Agregar Prompt: usa el botón (+) para completar la ficha con el prompt real que usas en la IA.'],['2. Editar: abre un prompt y presiona \"Editar\" para modificarlo.'],['3. Eliminar: usa el ícono de basura para borrar un prompt individual.'],['4. Limpiar Biblioteca: restablece los 5 ejemplos iniciales.'],['5. Exportar a Excel: genera este archivo con dos hojas: Biblioteca e Instrucciones.'],[],['Tips:'],['- Usa la columna \"Categoria\" para filtrar por tema (finanzas, clientes, automatización, nómina, otros).'],['- Guarda copia de seguridad en Google Drive si trabajas en equipo.']];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(ws1),'Biblioteca');XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(instructions),'Instrucciones');const wbout=XLSX.write(wb,{bookType:'xlsx',type:'array'});const blob=new Blob([wbout],{type:'application/octet-stream'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='Biblioteca_Prompts_Contador4.xlsx';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},1500)}render();
+// script.js – v2.5
+document.addEventListener("DOMContentLoaded", () => {
+  const addPromptBtn = document.getElementById("addPromptBtn");
+  const modal = document.getElementById("promptModal");
+  const savePromptBtn = document.getElementById("savePromptBtn");
+  const closeModalBtn = document.getElementById("closeModalBtn");
+  const promptTableBody = document.getElementById("promptTableBody");
+  const exportExcelBtn = document.getElementById("exportExcel");
+  const clearLibraryBtn = document.getElementById("clearLibrary");
+
+  // Cargar prompts desde localStorage
+  let prompts = JSON.parse(localStorage.getItem("prompts")) || [];
+
+  // Si está vacío, agregar 5 ejemplos iniciales
+  if (prompts.length === 0) {
+    prompts = [
+      {
+        categoria: "Análisis Financiero",
+        nombre: "Rentabilidad PYME Express",
+        cuando: "Cuando el cliente pregunta por qué bajó la utilidad",
+        personalizacion: "Incluye 'Sector retail Colombia' y lenguaje simple",
+        tiempo: 20,
+        frecuencia: "Semanal"
+      },
+      {
+        categoria: "Propuestas",
+        nombre: "Propuesta Premium Servicios",
+        cuando: "Cuando un prospecto pide cotización o upgrade",
+        personalizacion: "Cambio CEO por Gerente, énfasis en ROI cuantificado",
+        tiempo: 30,
+        frecuencia: "Mensual"
+      },
+      {
+        categoria: "Planificación Fiscal",
+        nombre: "Calendario Fiscal Automatizado",
+        cuando: "Inicio de mes para planificar obligaciones",
+        personalizacion: "Solo clientes régimen común, formato tabla con alertas",
+        tiempo: 15,
+        frecuencia: "Mensual"
+      },
+      {
+        categoria: "Reportes Ejecutivos",
+        nombre: "Reporte Ejecutivo Semanal",
+        cuando: "Cada lunes para clientes premium",
+        personalizacion: "Dashboard visual, máximo 1 página, 3 métricas clave",
+        tiempo: 12,
+        frecuencia: "Semanal"
+      },
+      {
+        categoria: "Auditoría de Nómina",
+        nombre: "Detección Irregularidades Nómina",
+        cuando: "Antes de procesar la nómina mensual",
+        personalizacion: "Buscar duplicados, horas extra inusuales, empleados fantasma",
+        tiempo: 25,
+        frecuencia: "Mensual"
+      }
+    ];
+    localStorage.setItem("prompts", JSON.stringify(prompts));
+  }
+
+  // Renderizar tabla
+  function renderTable() {
+    promptTableBody.innerHTML = "";
+    if (prompts.length === 0) {
+      promptTableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#888;">No hay prompts aún. Usa el botón “+” para agregar uno nuevo.</td></tr>`;
+      return;
+    }
+
+    prompts.forEach((p, i) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${p.categoria}</td>
+        <td><strong>${p.nombre}</strong></td>
+        <td>${p.cuando}</td>
+        <td>${p.personalizacion}</td>
+        <td>${p.tiempo}</td>
+        <td>${p.frecuencia}</td>
+        <td><button class="delete-btn" data-index="${i}">🗑️</button></td>
+      `;
+      promptTableBody.appendChild(row);
+    });
+
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const index = e.target.dataset.index;
+        prompts.splice(index, 1);
+        localStorage.setItem("prompts", JSON.stringify(prompts));
+        renderTable();
+      });
+    });
+  }
+
+  // Mostrar modal
+  addPromptBtn.addEventListener("click", () => {
+    modal.style.display = "flex";
+  });
+
+  // Cerrar modal
+  closeModalBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+
+  // Guardar prompt
+  savePromptBtn.addEventListener("click", () => {
+    const newPrompt = {
+      categoria: document.getElementById("promptCategory").value,
+      nombre: document.getElementById("promptName").value,
+      cuando: document.getElementById("promptWhen").value,
+      personalizacion: document.getElementById("promptCustom").value,
+      tiempo: document.getElementById("promptTime").value,
+      frecuencia: document.getElementById("promptFrequency").value
+    };
+
+    if (!newPrompt.nombre.trim()) {
+      alert("El nombre del prompt es obligatorio");
+      return;
+    }
+
+    prompts.push(newPrompt);
+    localStorage.setItem("prompts", JSON.stringify(prompts));
+    renderTable();
+    modal.style.display = "none";
+    document.querySelectorAll("input, textarea").forEach(i => i.value = "");
+  });
+
+  // Exportar a Excel
+  exportExcelBtn.addEventListener("click", () => {
+    const headers = ["Categoría","Nombre","Cuándo Usar","Personalización","Tiempo","Frecuencia"];
+    let csv = headers.join(",") + "\n";
+    prompts.forEach(p => {
+      csv += `${p.categoria},${p.nombre},${p.cuando},${p.personalizacion},${p.tiempo},${p.frecuencia}\n`;
+    });
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Biblioteca_Prompts_Contador4.csv";
+    link.click();
+  });
+
+  // Limpiar biblioteca
+  clearLibraryBtn.addEventListener("click", () => {
+    if (confirm("¿Seguro que deseas borrar toda la biblioteca?")) {
+      prompts = [];
+      localStorage.removeItem("prompts");
+      renderTable();
+    }
+  });
+
+  // Render inicial
+  renderTable();
+});
