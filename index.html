@@ -1,143 +1,221 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca de Prompts – Contador 4.0</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./style.css">
+  <style>
+    body {
+      background: #f8f9fb;
+      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+      color: #2f3640;
+      margin: 0;
+      padding: 40px;
+    }
+
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      padding: 30px 40px;
+    }
+
+    h1 {
+      font-size: 1.8em;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    p.subtitle {
+      color: #707070;
+      font-size: 1em;
+      margin-bottom: 30px;
+    }
+
+    .btn-orange {
+      background-color: #E86C2A;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-orange:hover {
+      background-color: #cf5d21;
+    }
+
+    .btn-clear {
+      background-color: white;
+      color: #1a1a1a;
+      border: 1.5px solid #d0d0d0;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-clear:hover {
+      background-color: #f2f2f2;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      background: white;
+      font-size: 0.95em;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background: #fafafa;
+      font-weight: 600;
+      color: #444;
+    }
+
+    tr:hover {
+      background: #f8f8f8;
+    }
+
+    .floating-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #E86C2A;
+      color: white;
+      font-size: 28px;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      border: none;
+      box-shadow: 0 5px 15px rgba(232,108,42,0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+    }
+
+    .floating-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 7px 18px rgba(232,108,42,0.5);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+      color: #E86C2A;
+    }
+
+    .modal-content input, .modal-content textarea, .modal-content select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+    }
+
+    .modal-content button {
+      margin-top: 10px;
+    }
+
+  </style>
 </head>
+
 <body>
-  <div class="container">
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-        <div>
-          <div class="title">Biblioteca de Prompts – Contador 4.0</div>
-          <div class="subtitle">Tu colección personal de prompts (guardar, editar, exportar)</div>
-        </div>
-        <div style="flex:1"></div>
-        <div class="controls" role="toolbar" aria-label="Controles">
-          <button id="exportTopBtn" class="btn btn-primary" title="Exportar a Excel (.xlsx)">Exportar a Excel</button>
-          <button id="clearAllBtn" class="btn btn-ghost" title="Limpiar biblioteca">🗑️ Limpiar Biblioteca</button>
-        </div>
-      </div>
+  <div class="app-container">
+    <h1>Biblioteca de Prompts – Contador 4.0</h1>
+    <p class="subtitle">Tu colección personal de prompts (guardar, editar, exportar)</p>
 
-      <div class="tabs" role="tablist" aria-label="Pestañas">
-        <div class="tab active" data-target="biblioteca">Biblioteca</div>
-        <div class="tab" data-target="casos">Casos de Éxito</div>
-        <div class="tab" data-target="recursos">Recursos</div>
-      </div>
-
-      <div id="biblioteca" class="card" style="margin-top:12px">
-        <div class="muted">Haz clic en el nombre del prompt para abrir su ficha. Los ejemplos pre-cargados están marcados.</div>
-        <div class="table-wrapper" style="margin-top:12px">
-          <table id="promptsTable" aria-describedby="desc">
-            <thead>
-              <tr><th style="width:4%">#</th><th style="width:14%">Categoría</th><th style="width:18%">Nombre</th><th style="width:16%">Cuándo Usar</th><th style="width:16%">Personalización</th><th style="width:6%">Tiempo</th><th style="width:8%">Frecuencia</th><th style="width:16%">Acciones</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div id="casos" class="card" style="margin-top:12px; display:none">
-        <h3>Casos de Éxito</h3>
-        <ul class="muted">
-          <li><strong>Análisis Express Rentabilidad PYME:</strong> Detectó problema de capital de trabajo; ahorro estimado: $15M.</li>
-          <li><strong>Propuesta Premium de Servicios Contables:</strong> 3 upgrades cerrados, +40% honorarios.</li>
-          <li><strong>Calendario Fiscal Automatizado:</strong> Evitó 2 multas por vencimientos.</li>
-          <li><strong>Detección de Irregularidades en Nómina:</strong> Empleado duplicado detectado; ahorro $3.2M/año.</li>
-        </ul>
-      </div>
-
-      <div id="recursos" class="card" style="margin-top:12px; display:none">
-        <h3>Recursos & Descargas</h3>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <a class="btn btn-ghost" href="https://docs.google.com/spreadsheets/d/1LKITDhmh2EKybf9vfVgwIrxiUxmOpBKM/edit?usp=sharing" target="_blank" rel="noopener">Abrir Plantilla en Google Sheets</a>
-        </div>
-        <p class="muted" style="margin-top:8px">Utiliza la plantilla para respaldos o importación masiva.</p>
-      </div>
-
+    <div class="actions">
+      <button class="btn-orange" id="exportExcel">Exportar a Excel</button>
+      <button class="btn-clear" id="clearLibrary">🗑️ Limpiar Biblioteca</button>
     </div>
 
-    <div id="detailPanel" class="card" style="margin-top:18px; display:none">
-      <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap">
-        <div>
-          <div class="title" id="d-name">Título</div>
-          <div class="muted" id="d-sub">Sub</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button id="backBtn" class="icon-btn" title="Volver">Volver</button>
-        </div>
-      </div>
-
-      <div style="margin-top:12px">
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px">
-          <div><strong>Categoría</strong><div class="muted" id="d-categoria"></div></div>
-        </div>
-
-        <div>
-          <strong>Contenido del Prompt</strong>
-          <div class="box-code" id="d-contenido" tabindex="0" aria-label="Contenido completo del prompt"></div>
-        </div>
-      </div>
-    </div>
-
+    <table id="promptTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Categoría</th>
+          <th>Nombre</th>
+          <th>Cuándo Usar</th>
+          <th>Personalización</th>
+          <th>Tiempo</th>
+          <th>Frecuencia</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="promptTableBody">
+        <tr><td colspan="8" style="text-align:center; color:#888;">No hay prompts aún. Usa el botón “+” para agregar uno nuevo.</td></tr>
+      </tbody>
+    </table>
   </div>
 
-  <button id="fab" class="fab" aria-label="Agregar prompt"><svg viewBox="0 0 24 24" fill="none" width="28" height="28"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <!-- Botón flotante -->
+  <button class="floating-btn" id="addPromptBtn">+</button>
 
-  <div id="modal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(2,43,69,0.4);z-index:80;padding:20px;">
-    <div style="max-width:880px;width:100%;background:var(--card);border-radius:12px;padding:18px;box-shadow:0 16px 40px rgba(2,43,69,0.18);">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div><strong style="font-size:18px;color:var(--accent-blue)">Agregar nuevo prompt</strong><div class="muted">Completa la ficha con el prompt real que usarás.</div></div>
-        <button id="closeModal" class="icon-btn" title="Cerrar">✖</button>
-      </div>
-
-      <form id="modalForm" style="margin-top:12px">
-        <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <div style="flex:1;min-width:240px"><label><strong>Nombre</strong></label><input id="m-nombre" type="text" required style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6"/></div>
-          <div style="width:140px"><label><strong>Tiempo (min)</strong></label><input id="m-tiempo" type="number" min="1" value="20" style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6"/></div>
-        </div>
-
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
-          <div style="flex:1 1 60%"><label><strong>Cuándo Usar</strong></label><textarea id="m-cuando" required style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6;min-height:80px"></textarea></div>
-          <div style="flex:1 1 38%">
-            <label><strong>Categoría</strong></label>
-            <select id="m-categoria" style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6">
-              <option value="finanzas">Finanzas</option>
-              <option value="clientes">Clientes</option>
-              <option value="automatizacion">Automatización</option>
-              <option value="nómina">Nómina</option>
-              <option value="otros" selected>Otros</option>
-            </select>
-            <label style="margin-top:10px"><strong>Frecuencia</strong></label>
-            <select id="m-frecuencia" style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6">
-              <option value="diario">Diario</option><option value="semanal" selected>Semanal</option><option value="mensual">Mensual</option><option value="trimestral">Trimestral</option><option value="ocasional">Ocasional</option>
-            </select>
-            <label style="margin-top:10px"><strong>Personalización</strong></label>
-            <textarea id="m-personalizacion" style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6;min-height:64px"></textarea>
-          </div>
-        </div>
-
-        <div style="margin-top:8px">
-          <label><strong>Ejemplo de Uso</strong></label>
-          <textarea id="m-ejemplo" required style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6;min-height:80px"></textarea>
-        </div>
-
-        <div style="margin-top:8px">
-          <label><strong>Contenido del Prompt</strong></label>
-          <textarea id="m-contenido" required style="width:100%;padding:12px;border-radius:8px;border:1px solid #e6eef6;min-height:200px;font-family:ui-monospace,monospace"></textarea>
-        </div>
-
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
-          <button type="button" id="cancelModal" class="btn btn-ghost">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Guardar Prompt</button>
-        </div>
-      </form>
+  <!-- Modal -->
+  <div class="modal" id="promptModal">
+    <div class="modal-content">
+      <h2>Nuevo Prompt</h2>
+      <input type="text" id="promptName" placeholder="Nombre del Prompt">
+      <input type="text" id="promptCategory" placeholder="Categoría">
+      <textarea id="promptWhen" placeholder="¿Cuándo usar este prompt?"></textarea>
+      <textarea id="promptCustom" placeholder="Personalización habitual"></textarea>
+      <input type="number" id="promptTime" placeholder="Tiempo estimado (min)">
+      <select id="promptFrequency">
+        <option value="Diario">Diario</option>
+        <option value="Semanal" selected>Semanal</option>
+        <option value="Mensual">Mensual</option>
+      </select>
+      <button class="btn-orange" id="savePromptBtn">Guardar Prompt</button>
+      <button class="btn-clear" id="closeModalBtn">Cancelar</button>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="script.js"></script>
+  <script type="module" src="./script.js" defer></script>
 </body>
 </html>
