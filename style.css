@@ -1,218 +1,284 @@
-/* ===========================================
-   BIBLIOTECA DE PROMPTS – CONTADOR 4.0 v2.6
-   Estilo visual limpio, moderno y profesional
-   =========================================== */
-
+/* =========================
+   BASE / TIPOGRAFÍA
+========================= */
 :root {
-  --accent: #E86C2A;
-  --accent-dark: #cf5d20;
-  --gray-light: #f8f9fa;
-  --gray: #6c757d;
-  --dark: #2c3e50;
-  --radius: 10px;
-  --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  --orange: #E86C2A;
+  --blue: #2C3E50;
+  --gray-bg: #f6f7f9;
+  --gray-text: #6c757d;
+  --white: #ffffff;
+  --border: #e1e4e8;
 }
-
-/* ---------- Base ---------- */
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #ffffff;
-  color: var(--dark);
+  font-family: 'Lato', sans-serif;
+  background: var(--gray-bg);
   margin: 0;
   padding: 0;
-  line-height: 1.6;
+  color: var(--blue);
+  min-height: 100vh;
 }
 
-.container {
+/* =========================
+   CONTENEDOR PRINCIPAL
+========================= */
+.app-container {
   max-width: 1100px;
-  margin: 40px auto;
-  padding: 20px;
+  margin: 50px auto;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+  padding: 30px 40px;
 }
 
-/* ---------- Títulos ---------- */
-
-h1 {
-  text-align: center;
-  font-weight: 700;
-  margin-bottom: 30px;
-  color: var(--dark);
+/* =========================
+   HEADER
+========================= */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-/* ---------- Botones ---------- */
+.app-header h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  font-size: 1.8rem;
+  color: var(--blue);
+}
 
-.btn {
-  background: var(--accent);
-  color: #fff;
+.app-header span {
+  color: var(--orange);
+}
+
+.btn-add {
+  background: var(--orange);
+  color: white;
   border: none;
-  padding: 10px 22px;
-  border-radius: var(--radius);
+  padding: 10px 18px;
+  border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: var(--shadow);
+  transition: all 0.2s ease-in-out;
 }
 
-.btn:hover {
-  background: var(--accent-dark);
+.btn-add:hover {
+  background: #d65c1f;
   transform: translateY(-1px);
 }
 
-.btn-secondary {
-  background: var(--gray);
-}
-
-.btn-secondary:hover {
-  background: #5a6268;
-}
-
-/* ---------- Barra de acciones ---------- */
-
-.action-bar {
+/* =========================
+   SEARCH BAR
+========================= */
+.search-bar {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
   gap: 10px;
-  margin-bottom: 25px;
+  margin: 30px 0;
 }
 
-/* ---------- Tabla ---------- */
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  font-size: 0.95em;
-  box-shadow: var(--shadow);
+.search-bar input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border 0.2s ease-in-out;
 }
 
-thead {
-  background: var(--accent);
-  color: #fff;
+.search-bar input:focus {
+  border-color: var(--orange);
+  outline: none;
 }
 
-th, td {
-  padding: 12px 15px;
-  border: 1px solid #eee;
-  text-align: left;
-  vertical-align: top;
-}
-
-tr:nth-child(even) {
-  background: var(--gray-light);
-}
-
-/* ---------- Enlaces ---------- */
-
-a.prompt-link {
-  color: var(--accent);
-  font-weight: 600;
+.btn-export {
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
   cursor: pointer;
-  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
 }
 
-a.prompt-link:hover {
-  text-decoration: underline;
+.btn-export:hover {
+  background: #233140;
 }
 
-/* ---------- Modal ---------- */
+/* =========================
+   LISTA DE PROMPTS
+========================= */
+.prompt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
 
+.prompt-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.prompt-card:hover {
+  border-color: var(--orange);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.prompt-card h3 {
+  margin: 0 0 5px 0;
+  color: var(--blue);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.prompt-card p {
+  margin: 0;
+  color: var(--gray-text);
+  font-size: 0.95rem;
+}
+
+/* =========================
+   MODAL
+========================= */
 .modal {
   display: none;
   position: fixed;
-  inset: 0;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.4);
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  padding: 20px;
+  animation: fadeIn 0.3s ease forwards;
 }
 
 .modal-content {
-  background: #fff;
-  border-radius: var(--radius);
+  background: var(--white);
+  padding: 30px;
+  border-radius: 10px;
+  width: 95%;
   max-width: 600px;
-  width: 100%;
-  padding: 25px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  overflow-y: auto;
-  max-height: 90vh;
-  animation: fadeIn 0.2s ease;
+  position: relative;
+  animation: slideUp 0.3s ease forwards;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 1.6rem;
+  color: var(--gray-text);
+  cursor: pointer;
 }
 
-.modal h2 {
+.close:hover {
+  color: var(--orange);
+}
+
+.modal-content h2 {
   margin-top: 0;
-  color: var(--accent);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  color: var(--blue);
+  font-size: 1.4rem;
+}
+
+/* =========================
+   FORMULARIO
+========================= */
+form label {
+  display: block;
+  margin: 15px 0 6px;
+  font-weight: 600;
+  color: var(--blue);
+}
+
+form input, form textarea, form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  transition: border 0.2s ease-in-out;
+}
+
+form input:focus, form textarea:focus, form select:focus {
+  border-color: var(--orange);
+  outline: none;
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 25px;
+  margin-top: 20px;
 }
 
-/* ---------- Responsivo ---------- */
+.btn-primary {
+  background: var(--orange);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
 
-@media (max-width: 768px) {
-  .action-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
+.btn-secondary {
+  background: var(--gray-bg);
+  color: var(--blue);
+  border: 1px solid var(--border);
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
-  table, thead, tbody, th, td, tr {
-    display: block;
-  }
+.btn-primary:hover {
+  background: #d65c1f;
+}
 
-  thead {
-    display: none;
-  }
+.btn-secondary:hover {
+  background: #e9ebee;
+}
 
-  tr {
-    margin-bottom: 15px;
-    background: #fff;
-    box-shadow: var(--shadow);
-    border-radius: var(--radius);
-    padding: 10px;
-  }
+/* =========================
+   ANIMACIONES
+========================= */
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
 
-  td {
-    border: none;
-    padding: 8px 15px;
-  }
+@keyframes slideUp {
+  from {transform: translateY(30px); opacity: 0;}
+  to {transform: translateY(0); opacity: 1;}
+}
 
-  td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    display: block;
-    color: var(--gray);
-    margin-bottom: 5px;
-  }
-
-  a.prompt-link {
-    display: inline-block;
-    margin-top: 5px;
-  }
-
-  .btn {
-    width: 100%;
-    text-align: center;
-  }
-
-  .modal-content {
-    max-width: 95%;
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 700px) {
+  .app-container {
     padding: 20px;
+    margin: 20px;
   }
-}
-
-/* ---------- Animaciones suaves ---------- */
-
-.fade {
-  animation: fadeIn 0.3s ease;
+  .app-header h1 {
+    font-size: 1.4rem;
+  }
+  .search-bar {
+    flex-direction: column;
+  }
+  .btn-export {
+    width: 100%;
+  }
 }
