@@ -1,171 +1,194 @@
-/* =========================================================
-   Biblioteca de Prompts – Contador 4.0 v2.7
-   Autor: Jairo Amaya Laverde - Full Stack Marketer
-   Funcionalidad completa con almacenamiento local
-   ========================================================= */
-
-const tbody = document.querySelector("#promptTable tbody");
-const newPromptBtn = document.getElementById("newPromptBtn");
-const exportExcelBtn = document.getElementById("exportExcelBtn");
-
-// Modal
-const modal = document.getElementById("viewPromptModal");
-const viewTitle = document.getElementById("viewPromptTitle");
-const viewBody = document.getElementById("viewPromptBody");
-const closeModalBtn = document.getElementById("closeModalBtn");
-const copyPromptBtn = document.getElementById("copyPrompt");
-
 // ===============================
-//   Base de datos local
+// BIBLIOTECA DE PROMPTS – CONTADOR 4.0
 // ===============================
-const defaultPrompts = [
-  {
-    nombre: "Análisis Express Rentabilidad PYME",
-    cuando: "Cliente pregunta por qué bajó la utilidad neta",
-    frecuencia: "Semanal",
-    contenido: `Analiza la rentabilidad mensual de una PYME del sector retail en Colombia. 
-Incluye causas posibles de variación en utilidad neta, compara con promedios del sector 
-y presenta recomendaciones claras en lenguaje no técnico.`
-  },
-  {
-    nombre: "Propuesta Premium de Servicios Contables",
-    cuando: "Prospecto solicita cotización o upgrade de cliente actual",
-    frecuencia: "Mensual",
-    contenido: `Genera una propuesta comercial de servicios contables premium orientada a ROI. 
-Usa tono profesional, enfatiza beneficios financieros y eficiencia con IA.`
-  },
-  {
-    nombre: "Calendario Fiscal Automatizado",
-    cuando: "Inicio de mes para planificar obligaciones",
-    frecuencia: "Mensual",
-    contenido: `Crea un calendario fiscal automatizado con fechas de vencimiento, 
-tipo de obligación y alertas anticipadas. Presenta en formato tabla, 
-solo para régimen común Colombia.`
-  },
-  {
-    nombre: "Reporte Ejecutivo Semanal",
-    cuando: "Lunes por la mañana para clientes premium",
-    frecuencia: "Semanal",
-    contenido: `Diseña un reporte ejecutivo de 1 página con 3 métricas clave: 
-ingresos, gastos y margen. Añade breve análisis narrativo y recomendaciones.`
-  },
-  {
-    nombre: "Detección de Irregularidades en Nómina",
-    cuando: "Antes de procesar nómina mensual",
-    frecuencia: "Mensual",
-    contenido: `Analiza datos de nómina en busca de duplicados, 
-horas extras inusuales o registros sospechosos. 
-Sugiere un resumen de hallazgos con posibles impactos financieros.`
-  }
-];
 
-// Cargar prompts guardados o iniciales
-let prompts = JSON.parse(localStorage.getItem("promptsContador4")) || defaultPrompts;
+// Referencias DOM
+const addPromptBtn = document.getElementById("addPromptBtn");
+const promptModal = document.getElementById("promptModal");
+const closeModal = document.querySelector(".close");
+const cancelBtn = document.getElementById("cancelBtn");
+const promptForm = document.getElementById("promptForm");
+const promptList = document.getElementById("promptList");
+const modalTitle = document.getElementById("modalTitle");
+const exportBtn = document.getElementById("exportBtn");
+const searchInput = document.getElementById("searchInput");
+
+// Campos del formulario
+const nameInput = document.getElementById("promptName");
+const contextInput = document.getElementById("promptContext");
+const personalizationInput = document.getElementById("promptPersonalization");
+const textInput = document.getElementById("promptText");
+const freqSelect = document.getElementById("promptFrequency");
 
 // ===============================
-//   Renderización de la tabla
+// Inicialización
 // ===============================
-function renderPrompts() {
-  tbody.innerHTML = "";
-  prompts.forEach((p, i) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td data-label="#">${i + 1}</td>
-      <td data-label="Nombre"><a class="prompt-link" data-index="${i}">${p.nombre}</a></td>
-      <td data-label="Cuándo usar">${p.cuando}</td>
-      <td data-label="Frecuencia">${p.frecuencia}</td>
-      <td data-label="Acciones">
-        <button class="btn btn-secondary btn-sm deleteBtn" data-index="${i}">🗑️</button>
-      </td>
-    `;
-    tbody.appendChild(row);
-  });
-  savePrompts();
-}
+let prompts = JSON.parse(localStorage.getItem("prompts")) || [];
 
-// Guardar en localStorage
-function savePrompts() {
-  localStorage.setItem("promptsContador4", JSON.stringify(prompts));
-}
-
-// ===============================
-//   Modal para ver prompt
-// ===============================
-tbody.addEventListener("click", (e) => {
-  if (e.target.classList.contains("prompt-link")) {
-    const index = e.target.dataset.index;
-    const p = prompts[index];
-    viewTitle.innerText = p.nombre;
-    viewBody.innerText = p.contenido;
-    modal.style.display = "flex";
-
-    copyPromptBtn.onclick = () => {
-      navigator.clipboard.writeText(p.contenido);
-      alert("✅ Prompt copiado al portapapeles");
-    };
-  }
-});
-
-// ===============================
-//   Cerrar modal
-// ===============================
-closeModalBtn.onclick = () => (modal.style.display = "none");
-window.onclick = (e) => {
-  if (e.target === modal) modal.style.display = "none";
-};
-
-// ===============================
-//   Eliminar prompt
-// ===============================
-tbody.addEventListener("click", (e) => {
-  if (e.target.classList.contains("deleteBtn")) {
-    const index = e.target.dataset.index;
-    if (confirm(`¿Eliminar el prompt "${prompts[index].nombre}"?`)) {
-      prompts.splice(index, 1);
-      savePrompts();
-      renderPrompts();
+// Si no hay datos guardados, cargar ejemplos iniciales
+if (prompts.length === 0) {
+  prompts = [
+    {
+      id: Date.now() + 1,
+      name: "Análisis Express Rentabilidad PYME",
+      context: "Cliente pregunta por qué bajó utilidad.",
+      personalization: "Incluye 'sector retail Colombia' y lenguaje simple.",
+      text: "Actúa como un analista financiero experto. Evalúa los márgenes de rentabilidad de una PYME colombiana del sector retail durante el último trimestre y explica causas probables de la caída en utilidad neta en lenguaje claro.",
+      frequency: "semanal"
+    },
+    {
+      id: Date.now() + 2,
+      name: "Propuesta Premium de Servicios",
+      context: "Cuando un prospecto solicita cotización o upgrade.",
+      personalization: "Cambiar 'CEO' por 'Gerente'. Enfatizar ROI cuantificado.",
+      text: "Genera una propuesta ejecutiva de servicios contables premium enfocada en ROI tangible para el cliente. Mantén tono profesional y claridad en los beneficios financieros.",
+      frequency: "mensual"
+    },
+    {
+      id: Date.now() + 3,
+      name: "Calendario Fiscal Automatizado",
+      context: "Inicio de mes para planificar obligaciones.",
+      personalization: "Incluir solo clientes régimen común, formato tabla con alertas.",
+      text: "Crea un calendario fiscal para el mes actual en formato tabla, incluyendo fechas límite para IVA, retención en la fuente y nómina electrónica en Colombia. Usa emojis o alertas visuales para cada tipo de vencimiento.",
+      frequency: "mensual"
+    },
+    {
+      id: Date.now() + 4,
+      name: "Reporte Ejecutivo Semanal",
+      context: "Todos los lunes para clientes premium.",
+      personalization: "Dashboard visual, máximo 1 página, 3 métricas clave.",
+      text: "Elabora un reporte ejecutivo semanal con resumen financiero, proyección de flujo de caja y métricas clave de desempeño. Presenta en formato breve tipo dashboard con lenguaje de negocio.",
+      frequency: "semanal"
+    },
+    {
+      id: Date.now() + 5,
+      name: "Detección de Irregularidades en Nómina",
+      context: "Antes de procesar nómina mensual.",
+      personalization: "Detectar duplicados, horas extras inusuales y empleados inactivos.",
+      text: "Analiza una nómina simulada e identifica irregularidades: duplicados, horas extras inusuales o inconsistencias. Devuelve una tabla con observaciones y posibles causas.",
+      frequency: "mensual"
     }
+  ];
+  localStorage.setItem("prompts", JSON.stringify(prompts));
+}
+
+renderPrompts();
+
+// ===============================
+// Funciones principales
+// ===============================
+
+function renderPrompts(filter = "") {
+  promptList.innerHTML = "";
+  const filtered = prompts.filter(p =>
+    p.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  if (filtered.length === 0) {
+    promptList.innerHTML = `<p style="color:#6c757d;">No se encontraron prompts...</p>`;
+    return;
   }
+
+  filtered.forEach((p) => {
+    const card = document.createElement("div");
+    card.className = "prompt-card";
+    card.innerHTML = `
+      <h3>${p.name}</h3>
+      <p><strong>Frecuencia:</strong> ${capitalize(p.frequency)}</p>
+      <p><strong>Contexto:</strong> ${p.context}</p>
+    `;
+    card.addEventListener("click", () => openPromptModal(p.id));
+    promptList.appendChild(card);
+  });
+}
+
+function openPromptModal(id = null) {
+  const isEdit = !!id;
+  promptModal.style.display = "flex";
+  modalTitle.textContent = isEdit ? "Editar Prompt" : "Nuevo Prompt";
+
+  if (isEdit) {
+    const prompt = prompts.find((p) => p.id === id);
+    nameInput.value = prompt.name;
+    contextInput.value = prompt.context;
+    personalizationInput.value = prompt.personalization;
+    textInput.value = prompt.text;
+    freqSelect.value = prompt.frequency;
+    promptForm.dataset.editing = id;
+  } else {
+    promptForm.reset();
+    delete promptForm.dataset.editing;
+  }
+}
+
+function closePromptModal() {
+  promptModal.style.display = "none";
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// ===============================
+// Eventos
+// ===============================
+addPromptBtn.addEventListener("click", () => openPromptModal());
+closeModal.addEventListener("click", closePromptModal);
+cancelBtn.addEventListener("click", closePromptModal);
+
+window.addEventListener("click", (e) => {
+  if (e.target === promptModal) closePromptModal();
+});
+
+promptForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const id = promptForm.dataset.editing;
+
+  const newPrompt = {
+    id: id ? parseInt(id) : Date.now(),
+    name: nameInput.value.trim(),
+    context: contextInput.value.trim(),
+    personalization: personalizationInput.value.trim(),
+    text: textInput.value.trim(),
+    frequency: freqSelect.value
+  };
+
+  if (id) {
+    const index = prompts.findIndex((p) => p.id === parseInt(id));
+    prompts[index] = newPrompt;
+  } else {
+    prompts.push(newPrompt);
+  }
+
+  localStorage.setItem("prompts", JSON.stringify(prompts));
+  renderPrompts(searchInput.value);
+  closePromptModal();
 });
 
 // ===============================
-//   Agregar nuevo prompt
+// Búsqueda en tiempo real
 // ===============================
-newPromptBtn.onclick = () => {
-  const nombre = prompt("Nombre del nuevo prompt:");
-  if (!nombre) return;
-
-  const cuando = prompt("¿Cuándo usarlo?");
-  if (!cuando) return;
-
-  const frecuencia = prompt("Frecuencia (diaria, semanal, mensual, etc.):");
-  if (!frecuencia) return;
-
-  const contenido = prompt("Escribe el contenido completo del prompt:");
-  if (!contenido) return;
-
-  prompts.push({ nombre, cuando, frecuencia, contenido });
-  savePrompts();
-  renderPrompts();
-};
+searchInput.addEventListener("input", (e) => {
+  renderPrompts(e.target.value);
+});
 
 // ===============================
-//   Exportar a Excel (CSV)
+// Exportar a Excel (CSV simple)
 // ===============================
-exportExcelBtn.onclick = () => {
-  const csv = [
-    ["Nombre", "Cuándo Usar", "Frecuencia", "Contenido"],
-    ...prompts.map(p => [p.nombre, p.cuando, p.frecuencia, p.contenido])
-  ]
-    .map(r => r.map(v => `"${v}"`).join(","))
-    .join("\n");
+exportBtn.addEventListener("click", () => {
+  const headers = ["Nombre", "Contexto", "Personalización", "Contenido", "Frecuencia"];
+  const rows = prompts.map((p) => [
+    p.name,
+    p.context,
+    p.personalization,
+    `"${p.text.replace(/"/g, '""')}"`,
+    p.frequency
+  ]);
 
-  const blob = new Blob([csv], { type: "text/csv" });
+  let csvContent = headers.join(",") + "\n" + rows.map((r) => r.join(",")).join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "Biblioteca_Prompts_Contador4.csv";
+  link.download = "biblioteca_prompts_contador40.csv";
   link.click();
-};
-
-// Inicializar
-renderPrompts();
+});
