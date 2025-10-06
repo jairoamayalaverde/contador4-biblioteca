@@ -1,221 +1,311 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Biblioteca de Prompts – Contador 4.0</title>
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body {
-      background: #f8f9fb;
-      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-      color: #2f3640;
-      margin: 0;
-      padding: 40px;
+    :root {
+      --accent: #E86C2A;
+      --gray-light: #f8f9fa;
+      --gray: #6c757d;
+      --dark: #2c3e50;
     }
 
-    .app-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-      padding: 30px 40px;
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #fff;
+      margin: 0;
+      color: var(--dark);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 20px;
     }
 
     h1 {
-      font-size: 1.8em;
-      color: #1a1a1a;
-      margin-bottom: 8px;
-    }
-
-    p.subtitle {
-      color: #707070;
-      font-size: 1em;
+      text-align: center;
       margin-bottom: 30px;
+      font-weight: 700;
+      color: var(--dark);
     }
 
-    .btn-orange {
-      background-color: #E86C2A;
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .btn {
+      background: var(--accent);
       color: white;
       border: none;
-      border-radius: 8px;
       padding: 10px 20px;
+      border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
-    .btn-orange:hover {
-      background-color: #cf5d21;
-    }
-
-    .btn-clear {
-      background-color: white;
-      color: #1a1a1a;
-      border: 1.5px solid #d0d0d0;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-clear:hover {
-      background-color: #f2f2f2;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-bottom: 20px;
+    .btn:hover {
+      background: #cf5d20;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      border-radius: 12px;
-      overflow: hidden;
-      background: white;
+      margin-top: 20px;
       font-size: 0.95em;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    thead {
+      background: var(--accent);
+      color: white;
     }
 
     th, td {
+      padding: 12px 15px;
+      border: 1px solid #eee;
       text-align: left;
-      padding: 12px 16px;
-      border-bottom: 1px solid #eee;
     }
 
-    th {
-      background: #fafafa;
+    tr:nth-child(even) {
+      background: var(--gray-light);
+    }
+
+    a.prompt-link {
+      color: var(--accent);
       font-weight: 600;
-      color: #444;
-    }
-
-    tr:hover {
-      background: #f8f8f8;
-    }
-
-    .floating-btn {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #E86C2A;
-      color: white;
-      font-size: 28px;
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      border: none;
-      box-shadow: 0 5px 15px rgba(232,108,42,0.4);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.3s;
+      text-decoration: none;
     }
 
-    .floating-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 7px 18px rgba(232,108,42,0.5);
+    a.prompt-link:hover {
+      text-decoration: underline;
     }
 
     /* Modal */
     .modal {
       display: none;
       position: fixed;
-      z-index: 100;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.4);
+      inset: 0;
+      background: rgba(0,0,0,0.4);
       justify-content: center;
       align-items: center;
+      z-index: 1000;
+      padding: 20px;
     }
 
     .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
+      background: #fff;
+      border-radius: 10px;
       max-width: 600px;
-      width: 90%;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    }
-
-    .modal-content h2 {
-      margin-top: 0;
-      color: #E86C2A;
-    }
-
-    .modal-content input, .modal-content textarea, .modal-content select {
       width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-family: inherit;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      overflow-y: auto;
+      max-height: 90vh;
+      animation: fadeIn 0.2s ease;
     }
 
-    .modal-content button {
-      margin-top: 10px;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 15px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border-radius: 8px;
+      }
+
+      td {
+        border: none;
+        padding: 10px 15px;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        display: block;
+        color: var(--gray);
+        margin-bottom: 4px;
+      }
+
+      .action-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <div class="app-container">
-    <h1>Biblioteca de Prompts – Contador 4.0</h1>
-    <p class="subtitle">Tu colección personal de prompts (guardar, editar, exportar)</p>
+  <div class="container">
+    <h1>📚 Biblioteca de Prompts – Contador 4.0</h1>
 
-    <div class="actions">
-      <button class="btn-orange" id="exportExcel">Exportar a Excel</button>
-      <button class="btn-clear" id="clearLibrary">🗑️ Limpiar Biblioteca</button>
+    <div class="action-bar">
+      <button class="btn" id="newPromptBtn">➕ Nuevo Prompt</button>
+      <button class="btn" id="exportExcelBtn">⬇️ Exportar a Excel</button>
     </div>
 
     <table id="promptTable">
       <thead>
         <tr>
           <th>#</th>
-          <th>Categoría</th>
-          <th>Nombre</th>
+          <th>Nombre del Prompt</th>
           <th>Cuándo Usar</th>
-          <th>Personalización</th>
-          <th>Tiempo</th>
           <th>Frecuencia</th>
-          <th>Acciones</th>
         </tr>
       </thead>
-      <tbody id="promptTableBody">
-        <tr><td colspan="8" style="text-align:center; color:#888;">No hay prompts aún. Usa el botón “+” para agregar uno nuevo.</td></tr>
-      </tbody>
+      <tbody></tbody>
     </table>
   </div>
 
-  <!-- Botón flotante -->
-  <button class="floating-btn" id="addPromptBtn">+</button>
-
   <!-- Modal -->
-  <div class="modal" id="promptModal">
+  <div class="modal" id="viewPromptModal">
     <div class="modal-content">
-      <h2>Nuevo Prompt</h2>
-      <input type="text" id="promptName" placeholder="Nombre del Prompt">
-      <input type="text" id="promptCategory" placeholder="Categoría">
-      <textarea id="promptWhen" placeholder="¿Cuándo usar este prompt?"></textarea>
-      <textarea id="promptCustom" placeholder="Personalización habitual"></textarea>
-      <input type="number" id="promptTime" placeholder="Tiempo estimado (min)">
-      <select id="promptFrequency">
-        <option value="Diario">Diario</option>
-        <option value="Semanal" selected>Semanal</option>
-        <option value="Mensual">Mensual</option>
-      </select>
-      <button class="btn-orange" id="savePromptBtn">Guardar Prompt</button>
-      <button class="btn-clear" id="closeModalBtn">Cancelar</button>
+      <h2 id="viewPromptTitle"></h2>
+      <p id="viewPromptBody" style="white-space: pre-line; line-height:1.6;"></p>
+
+      <div class="modal-actions">
+        <button class="btn" id="copyPrompt">📋 Copiar Prompt</button>
+        <button class="btn" id="closeModalBtn" style="background:#ccc; color:#000;">Cerrar</button>
+      </div>
     </div>
   </div>
 
-  <script type="module" src="./script.js" defer></script>
+  <script type="module" defer>
+    const prompts = [
+      {
+        nombre: "Análisis Express Rentabilidad PYME",
+        cuando: "Cliente pregunta por qué bajó la utilidad neta",
+        frecuencia: "Semanal",
+        contenido: `Analiza la rentabilidad mensual de una PYME del sector retail en Colombia. 
+Incluye causas posibles de variación en utilidad neta, compara con promedios del sector 
+y presenta recomendaciones claras en lenguaje no técnico.`
+      },
+      {
+        nombre: "Propuesta Premium de Servicios Contables",
+        cuando: "Prospecto solicita cotización o upgrade de cliente actual",
+        frecuencia: "Mensual",
+        contenido: `Genera una propuesta comercial de servicios contables premium orientada a ROI. 
+Usa tono profesional, enfatiza beneficios financieros y eficiencia con IA.`
+      },
+      {
+        nombre: "Calendario Fiscal Automatizado",
+        cuando: "Inicio de mes para planificar obligaciones",
+        frecuencia: "Mensual",
+        contenido: `Crea un calendario fiscal automatizado con fechas de vencimiento, 
+tipo de obligación y alertas anticipadas. Presenta en formato tabla, 
+solo para régimen común Colombia.`
+      },
+      {
+        nombre: "Reporte Ejecutivo Semanal",
+        cuando: "Lunes por la mañana para clientes premium",
+        frecuencia: "Semanal",
+        contenido: `Diseña un reporte ejecutivo de 1 página con 3 métricas clave: 
+ingresos, gastos y margen. Añade breve análisis narrativo y recomendaciones.`
+      },
+      {
+        nombre: "Detección de Irregularidades en Nómina",
+        cuando: "Antes de procesar nómina mensual",
+        frecuencia: "Mensual",
+        contenido: `Analiza datos de nómina en busca de duplicados, 
+horas extras inusuales o registros sospechosos. 
+Sugiere un resumen de hallazgos con posibles impactos financieros.`
+      }
+    ];
+
+    const tbody = document.querySelector("#promptTable tbody");
+    const modal = document.getElementById("viewPromptModal");
+    const title = document.getElementById("viewPromptTitle");
+    const body = document.getElementById("viewPromptBody");
+    const closeModal = document.getElementById("closeModalBtn");
+    const copyBtn = document.getElementById("copyPrompt");
+
+    // Render table
+    function renderPrompts() {
+      tbody.innerHTML = "";
+      prompts.forEach((p, i) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td data-label="#">${i + 1}</td>
+          <td data-label="Nombre"><a class="prompt-link" data-index="${i}">${p.nombre}</a></td>
+          <td data-label="Cuándo usar">${p.cuando}</td>
+          <td data-label="Frecuencia">${p.frecuencia}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    renderPrompts();
+
+    // View modal
+    tbody.addEventListener("click", (e) => {
+      if (e.target.classList.contains("prompt-link")) {
+        const index = e.target.dataset.index;
+        const p = prompts[index];
+        title.innerText = p.nombre;
+        body.innerText = p.contenido;
+        modal.style.display = "flex";
+
+        copyBtn.onclick = () => {
+          navigator.clipboard.writeText(p.contenido);
+          alert("Prompt copiado al portapapeles ✅");
+        };
+      }
+    });
+
+    closeModal.onclick = () => (modal.style.display = "none");
+    window.onclick = (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    };
+
+    // Excel export
+    document.getElementById("exportExcelBtn").onclick = () => {
+      const csv = [
+        ["Nombre", "Cuándo Usar", "Frecuencia", "Contenido"],
+        ...prompts.map(p => [p.nombre, p.cuando, p.frecuencia, p.contenido])
+      ]
+        .map(r => r.map(v => `"${v}"`).join(","))
+        .join("\n");
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "Biblioteca_Prompts_Contador4.csv";
+      link.click();
+    };
+
+    // Placeholder for future "Nuevo Prompt"
+    document.getElementById("newPromptBtn").onclick = () => {
+      alert("Funcionalidad próximamente: Agregar nuevo prompt ✅");
+    };
+  </script>
 </body>
 </html>
