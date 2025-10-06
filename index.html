@@ -1,258 +1,63 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Biblioteca de Prompts – Contador 4.0</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #E86C2A;
-      --bg: #f8f9fa;
-      --text: #2c3e50;
-      --card-bg: #ffffff;
-      --border: #e5e7eb;
-    }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500&family=Poppins:wght@900&display=swap" rel="stylesheet">
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      padding: 20px;
-    }
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css" />
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      color: var(--primary);
-      text-align: center;
-    }
-
-    .prompt-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--card-bg);
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .prompt-table th, .prompt-table td {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-    }
-
-    .prompt-table th {
-      background: #f1f3f5;
-      color: #555;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .prompt-table td {
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
-
-    .prompt-table tr:hover {
-      background: #fdf4ee;
-    }
-
-    .add-button {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      background: var(--primary);
-      color: #fff;
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      font-size: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 15px rgba(232, 108, 42, 0.3);
-      cursor: pointer;
-      border: none;
-      transition: all 0.25s ease;
-    }
-
-    .add-button:hover {
-      background: #cf581c;
-      transform: translateY(-2px);
-    }
-
-    .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      visibility: hidden;
-      opacity: 0;
-      transition: 0.3s;
-    }
-
-    .modal.active {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .modal-content {
-      background: var(--card-bg);
-      padding: 25px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 550px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    }
-
-    .modal-content h2 {
-      color: var(--primary);
-      margin-bottom: 15px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-family: inherit;
-    }
-
-    button.submit {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-
-    button.submit:hover {
-      background: #cf581c;
-    }
-
-    @media (max-width: 768px) {
-      body {
-        padding: 10px;
-      }
-      h1 {
-        font-size: 1.4rem;
-      }
-      .prompt-table th, .prompt-table td {
-        padding: 10px;
-        font-size: 0.85rem;
-      }
-      .add-button {
-        width: 50px;
-        height: 50px;
-        font-size: 26px;
-      }
-      .modal-content {
-        width: 95%;
-      }
-    }
-  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Biblioteca de Prompts – Contador 4.0</h1>
-    <table class="prompt-table" id="promptTable">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Nombre del Prompt</th>
-          <th>Cuándo Usar</th>
-          <th>Tiempo (min)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td><strong>Análisis Express Rentabilidad PYME</strong></td>
-          <td>Cuando cliente pregunta por caída en utilidad</td>
-          <td>20</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td><strong>Propuesta Premium Servicios</strong></td>
-          <td>Cuando un prospecto solicita cotización</td>
-          <td>30</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td><strong>Calendario Fiscal Automatizado</strong></td>
-          <td>Inicio de mes para planificar obligaciones</td>
-          <td>15</td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td><strong>Reporte Ejecutivo Semanal</strong></td>
-          <td>Todos los lunes para clientes premium</td>
-          <td>12</td>
-        </tr>
-        <tr>
-          <td>5</td>
-          <td><strong>Detección Irregularidades Nómina</strong></td>
-          <td>Antes de procesar nómina mensual</td>
-          <td>25</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="app-container">
+    <header class="app-header">
+      <h1>Biblioteca de Prompts – <span>Contador 4.0</span></h1>
+      <button id="addPromptBtn" class="btn-add">+ Nuevo Prompt</button>
+    </header>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Buscar un prompt..." />
+      <button id="exportBtn" class="btn-export">📤 Exportar Excel</button>
+    </div>
+
+    <main class="prompt-list" id="promptList"></main>
   </div>
 
-  <button class="add-button" id="addPromptBtn">+</button>
-
-  <div class="modal" id="modal">
+  <!-- Modal Ver / Editar Prompt -->
+  <div id="promptModal" class="modal">
     <div class="modal-content">
-      <h2>Agregar Nuevo Prompt</h2>
+      <span class="close">&times;</span>
+      <h2 id="modalTitle">Nuevo Prompt</h2>
+
       <form id="promptForm">
-        <div class="form-group">
-          <label>Nombre del Prompt</label>
-          <input type="text" id="nombre" required>
+        <label for="promptName">Nombre del Prompt</label>
+        <input type="text" id="promptName" required />
+
+        <label for="promptContext">Contexto / Cuándo usarlo</label>
+        <textarea id="promptContext" required></textarea>
+
+        <label for="promptPersonalization">Personalización</label>
+        <textarea id="promptPersonalization"></textarea>
+
+        <label for="promptText">Contenido del Prompt</label>
+        <textarea id="promptText" placeholder="Escribe el prompt completo aquí..." required></textarea>
+
+        <label for="promptFrequency">Frecuencia</label>
+        <select id="promptFrequency">
+          <option value="diario">Diario</option>
+          <option value="semanal" selected>Semanal</option>
+          <option value="mensual">Mensual</option>
+          <option value="ocasional">Ocasional</option>
+        </select>
+
+        <div class="modal-actions">
+          <button type="submit" id="savePrompt" class="btn-primary">Guardar</button>
+          <button type="button" id="cancelBtn" class="btn-secondary">Cancelar</button>
         </div>
-        <div class="form-group">
-          <label>Cuándo Usar</label>
-          <input type="text" id="cuando" required>
-        </div>
-        <div class="form-group">
-          <label>Tiempo Estimado (min)</label>
-          <input type="number" id="tiempo" required>
-        </div>
-        <div class="form-group">
-          <label>Prompt Completo</label>
-          <textarea id="contenido" rows="4" placeholder="Escribe aquí el contenido completo del prompt..."></textarea>
-        </div>
-        <button type="submit" class="submit">Guardar</button>
       </form>
     </div>
   </div>
