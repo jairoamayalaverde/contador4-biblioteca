@@ -1,3 +1,19 @@
+// ====================================================
+// CONTROL DE VERSIÓN LOCAL - CONTADOR 4.0
+// ====================================================
+
+// Cambia este número cuando actualices tu app:
+const APP_VERSION = "1.1.0";
+
+// Verifica si hay una versión guardada
+const storedVersion = localStorage.getItem("appVersion");
+
+// Si es una versión nueva, limpia datos antiguos
+if (storedVersion !== APP_VERSION) {
+  console.log(`⚙️ Actualizando a nueva versión ${APP_VERSION}... limpiando caché local.`);
+  localStorage.clear();
+  localStorage.setItem("appVersion", APP_VERSION);
+}
 // ===============================
 // BIBLIOTECA DE PROMPTS – CONTADOR 4.0
 // ===============================
