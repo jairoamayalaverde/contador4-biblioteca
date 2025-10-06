@@ -5,6 +5,50 @@
 // Cambia este número cuando actualices tu app:
 const APP_VERSION = "1.1.0";
 
+// Crear notificación visual
+function showUpdateToast(version) {
+  const toast = document.createElement("div");
+  toast.textContent = `Biblioteca actualizada a la versión ${version} ✅`;
+  toast.style.position = "fixed";
+  toast.style.top = "20px";
+  toast.style.right = "20px";
+  toast.style.background = "#1e3a8a"; // azul oscuro
+  toast.style.color = "white";
+  toast.style.padding = "12px 18px";
+  toast.style.borderRadius = "8px";
+  toast.style.fontFamily = "Lato, sans-serif";
+  toast.style.fontSize = "14px";
+  toast.style.boxShadow = "0 4px 10px rgba(0,0,0,0.2)";
+  toast.style.opacity = "0";
+  toast.style.transition = "opacity 0.4s ease";
+  toast.style.zIndex = "9999";
+  document.body.appendChild(toast);
+
+  // animación suave
+  setTimeout(() => (toast.style.opacity = "1"), 100);
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    setTimeout(() => toast.remove(), 400);
+  }, 4000);
+}
+
+// Verifica si hay una versión guardada
+const storedVersion = localStorage.getItem("appVersion");
+
+// Si es una versión nueva, limpiar datos antiguos y mostrar aviso
+if (storedVersion !== APP_VERSION) {
+  console.log(`⚙️ Actualizando a nueva versión ${APP_VERSION}... limpiando caché local.`);
+  localStorage.clear();
+  localStorage.setItem("appVersion", APP_VERSION);
+  window.addEventListener("load", () => showUpdateToast(APP_VERSION));
+}
+// ====================================================
+// CONTROL DE VERSIÓN LOCAL - CONTADOR 4.0
+// ====================================================
+
+// Cambia este número cuando actualices tu app:
+const APP_VERSION = "1.1.0";
+
 // Verifica si hay una versión guardada
 const storedVersion = localStorage.getItem("appVersion");
 
