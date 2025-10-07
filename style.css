@@ -1,271 +1,265 @@
-/* ====================================================
+/* ===============================
    BIBLIOTECA DE PROMPTS – CONTADOR 4.0
-   Estilo limpio tipo Notion con acento naranja y azul
-==================================================== */
+   Estilos limpios tipo Notion / Paleta corporativa
+   =============================== */
 
-:root {
-  --naranja: #E86C2A;
-  --azul: #1E3A8A;
-  --gris: #f5f5f7;
-  --texto: #222;
-  --borde: #e0e0e0;
-  --radius: 10px;
-  --sombra: 0 4px 10px rgba(0, 0, 0, 0.05);
+/* --- Reset --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  font-family: "Lato", sans-serif;
-  margin: 0;
-  padding: 0;
-  background: var(--gris);
-  color: var(--texto);
+  font-family: 'Lato', sans-serif;
+  background-color: #f9fafc;
+  color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
   min-height: 100vh;
+  padding: 2rem;
 }
 
-/* ================= HEADER ================= */
-
+/* --- Contenedor principal --- */
 .app-container {
-  max-width: 1000px;
-  margin: 40px auto;
   background: #fff;
-  border-radius: var(--radius);
-  box-shadow: var(--sombra);
-  padding: 30px;
+  width: 100%;
+  max-width: 960px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
 }
 
+/* --- Header --- */
 .app-header {
+  background: #0A2342; /* azul corporativo oscuro */
+  color: #fff;
+  padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid var(--borde);
-  padding-bottom: 20px;
-  margin-bottom: 25px;
+  flex-wrap: wrap;
 }
 
 .app-header h1 {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 900;
-  color: var(--azul);
   font-size: 1.6rem;
 }
 
 .app-header h1 span {
-  color: var(--naranja);
+  color: #E86C2A; /* naranja corporativo */
 }
 
 .btn-add {
-  background: var(--naranja);
+  background-color: #E86C2A;
   color: #fff;
   border: none;
-  padding: 10px 20px;
-  border-radius: var(--radius);
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .btn-add:hover {
-  background: #d85c1e;
-  transform: translateY(-1px);
+  background-color: #d65f20;
+  transform: scale(1.03);
 }
 
-/* ================= SEARCH BAR ================= */
-
+/* --- Barra de búsqueda --- */
 .search-bar {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 0.6rem;
+  padding: 1.2rem 2rem;
+  background: #f3f5f8;
+  border-bottom: 1px solid #e1e5ea;
 }
 
 .search-bar input {
   flex: 1;
-  padding: 10px 14px;
-  border: 2px solid var(--borde);
-  border-radius: var(--radius);
-  font-size: 15px;
-  transition: 0.3s ease;
-}
-
-.search-bar input:focus {
-  border-color: var(--azul);
+  padding: 0.7rem 1rem;
+  border: 1px solid #d0d5da;
+  border-radius: 8px;
+  font-size: 1rem;
   outline: none;
 }
 
 .btn-export {
-  background: var(--azul);
-  color: #fff;
+  background: #0A2342;
+  color: white;
   border: none;
-  border-radius: var(--radius);
-  padding: 10px 20px;
-  font-weight: 600;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.2s ease;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .btn-export:hover {
-  background: #142766;
+  background: #0d2f5c;
 }
 
-/* ================= PROMPT LIST ================= */
-
+/* --- Lista de Prompts --- */
 .prompt-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
+  gap: 1rem;
+  padding: 1.5rem 2rem 2rem;
 }
 
-.prompt-card {
+.prompt-item {
   background: #fff;
-  border: 1px solid var(--borde);
-  border-radius: var(--radius);
-  padding: 18px;
-  cursor: pointer;
+  border: 1px solid #e1e5ea;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
   transition: all 0.25s ease;
-  box-shadow: var(--sombra);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
-.prompt-card:hover {
-  border-color: var(--azul);
-  box-shadow: 0 4px 15px rgba(30, 58, 138, 0.15);
-  transform: translateY(-2px);
+.prompt-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-color: #E86C2A;
 }
 
-.prompt-title {
-  font-family: "Poppins", sans-serif;
-  font-weight: 700;
-  color: var(--azul);
-  margin-bottom: 8px;
+.prompt-item.fixed {
+  background: #f6f8fb;
+  border-left: 4px solid #0A2342;
+  cursor: default;
+}
+
+.prompt-item h3 {
   font-size: 1.1rem;
+  font-weight: 700;
+  color: #0A2342;
+  margin-bottom: 0.5rem;
 }
 
-/* ================= MODAL ================= */
+.prompt-item p {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.4;
+  margin-bottom: 0.4rem;
+}
 
+/* --- Modal --- */
 .modal {
   display: none;
   position: fixed;
-  z-index: 1000;
+  z-index: 50;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(10, 35, 66, 0.65);
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-content {
   background-color: #fff;
-  margin: 5% auto;
-  padding: 25px 30px;
-  border-radius: var(--radius);
-  width: 95%;
+  width: 90%;
   max-width: 600px;
-  box-shadow: var(--sombra);
+  border-radius: 16px;
+  padding: 2rem;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 .close {
-  color: #aaa;
-  float: right;
-  font-size: 24px;
-  font-weight: bold;
+  position: absolute;
+  top: 1rem;
+  right: 1.3rem;
+  font-size: 1.4rem;
+  color: #666;
   cursor: pointer;
 }
 
 .close:hover {
-  color: var(--naranja);
+  color: #E86C2A;
 }
 
-.modal h2 {
-  font-family: "Poppins", sans-serif;
-  color: var(--azul);
-  font-weight: 800;
-  margin-bottom: 20px;
+.modal-content h2 {
+  font-family: 'Poppins', sans-serif;
+  color: #0A2342;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
 }
 
-/* ================= FORM ================= */
-
-label {
+/* --- Formulario --- */
+form label {
   font-weight: 600;
+  color: #0A2342;
   display: block;
-  margin-top: 15px;
-  color: var(--azul);
+  margin-bottom: 0.3rem;
+  margin-top: 0.8rem;
 }
 
-input,
-textarea,
-select {
+form input,
+form textarea,
+form select {
   width: 100%;
-  padding: 10px;
-  margin-top: 6px;
-  border-radius: var(--radius);
-  border: 2px solid var(--borde);
-  font-family: "Lato", sans-serif;
-  font-size: 15px;
-  transition: border-color 0.2s ease;
-}
-
-textarea {
-  min-height: 80px;
-  resize: vertical;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: var(--naranja);
+  padding: 0.6rem;
+  border: 1px solid #d0d5da;
+  border-radius: 6px;
+  font-size: 0.95rem;
   outline: none;
+}
+
+form textarea {
+  resize: vertical;
+  min-height: 70px;
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
 }
 
 .btn-primary {
-  background: var(--naranja);
+  background-color: #E86C2A;
   color: #fff;
   border: none;
-  padding: 10px 20px;
-  border-radius: var(--radius);
+  padding: 0.7rem 1.3rem;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
-  background: #d75b1a;
+  background-color: #d65f20;
 }
 
 .btn-secondary {
-  background: #ccc;
+  background-color: #ddd;
   color: #333;
   border: none;
-  padding: 10px 20px;
-  border-radius: var(--radius);
-  font-weight: 600;
+  padding: 0.7rem 1.3rem;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: 500;
 }
 
 .btn-secondary:hover {
-  background: #bbb;
+  background-color: #ccc;
 }
 
-/* ================= RESPONSIVE ================= */
-
-@media (max-width: 700px) {
-  .app-container {
-    margin: 20px;
-    padding: 20px;
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
   }
 
   .app-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 15px;
-  }
-
-  .app-header h1 {
-    font-size: 1.3rem;
+    gap: 0.8rem;
   }
 
   .search-bar {
@@ -274,10 +268,5 @@ select:focus {
 
   .prompt-list {
     grid-template-columns: 1fr;
-  }
-
-  .btn-add,
-  .btn-export {
-    width: 100%;
   }
 }
