@@ -1,151 +1,145 @@
-/* =========================
-   BASE / TIPOGRAFÍA
-========================= */
+/* ====================================================
+   BIBLIOTECA DE PROMPTS – CONTADOR 4.0
+   Estilo limpio tipo Notion con acento naranja y azul
+==================================================== */
+
 :root {
-  --orange: #E86C2A;
-  --blue: #2C3E50;
-  --gray-bg: #f6f7f9;
-  --gray-text: #6c757d;
-  --white: #ffffff;
-  --border: #e1e4e8;
+  --naranja: #E86C2A;
+  --azul: #1E3A8A;
+  --gris: #f5f5f7;
+  --texto: #222;
+  --borde: #e0e0e0;
+  --radius: 10px;
+  --sombra: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 body {
-  font-family: 'Lato', sans-serif;
-  background: var(--gray-bg);
+  font-family: "Lato", sans-serif;
   margin: 0;
   padding: 0;
-  color: var(--blue);
+  background: var(--gris);
+  color: var(--texto);
   min-height: 100vh;
 }
 
-/* =========================
-   CONTENEDOR PRINCIPAL
-========================= */
+/* ================= HEADER ================= */
+
 .app-container {
-  max-width: 1100px;
-  margin: 50px auto;
-  background: var(--white);
-  border-radius: 12px;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
-  padding: 30px 40px;
+  max-width: 1000px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--sombra);
+  padding: 30px;
 }
 
-/* =========================
-   HEADER
-========================= */
 .app-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
+  align-items: center;
+  border-bottom: 2px solid var(--borde);
+  padding-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .app-header h1 {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 900;
-  font-size: 1.8rem;
-  color: var(--blue);
+  color: var(--azul);
+  font-size: 1.6rem;
 }
 
-.app-header span {
-  color: var(--orange);
+.app-header h1 span {
+  color: var(--naranja);
 }
 
 .btn-add {
-  background: var(--orange);
-  color: white;
+  background: var(--naranja);
+  color: #fff;
   border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
+  padding: 10px 20px;
+  border-radius: var(--radius);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: 0.2s ease;
 }
 
 .btn-add:hover {
-  background: #d65c1f;
+  background: #d85c1e;
   transform: translateY(-1px);
 }
 
-/* =========================
-   SEARCH BAR
-========================= */
+/* ================= SEARCH BAR ================= */
+
 .search-bar {
   display: flex;
   gap: 10px;
-  margin: 30px 0;
+  margin-bottom: 20px;
 }
 
 .search-bar input {
   flex: 1;
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 1rem;
-  transition: border 0.2s ease-in-out;
+  padding: 10px 14px;
+  border: 2px solid var(--borde);
+  border-radius: var(--radius);
+  font-size: 15px;
+  transition: 0.3s ease;
 }
 
 .search-bar input:focus {
-  border-color: var(--orange);
+  border-color: var(--azul);
   outline: none;
 }
 
 .btn-export {
-  background: var(--blue);
-  color: white;
+  background: var(--azul);
+  color: #fff;
   border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
+  border-radius: var(--radius);
+  padding: 10px 20px;
   font-weight: 600;
-  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .btn-export:hover {
-  background: #233140;
+  background: #142766;
 }
 
-/* =========================
-   LISTA DE PROMPTS
-========================= */
+/* ================= PROMPT LIST ================= */
+
 .prompt-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
 }
 
 .prompt-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 20px;
-  transition: all 0.2s ease-in-out;
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: var(--radius);
+  padding: 18px;
   cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: var(--sombra);
 }
 
 .prompt-card:hover {
-  border-color: var(--orange);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border-color: var(--azul);
+  box-shadow: 0 4px 15px rgba(30, 58, 138, 0.15);
+  transform: translateY(-2px);
 }
 
-.prompt-card h3 {
-  margin: 0 0 5px 0;
-  color: var(--blue);
+.prompt-title {
+  font-family: "Poppins", sans-serif;
   font-weight: 700;
+  color: var(--azul);
+  margin-bottom: 8px;
   font-size: 1.1rem;
 }
 
-.prompt-card p {
-  margin: 0;
-  color: var(--gray-text);
-  font-size: 0.95rem;
-}
+/* ================= MODAL ================= */
 
-/* =========================
-   MODAL
-========================= */
 .modal {
   display: none;
   position: fixed;
@@ -154,66 +148,70 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  justify-content: center;
-  align-items: center;
-  animation: fadeIn 0.3s ease forwards;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
-  background: var(--white);
-  padding: 30px;
-  border-radius: 10px;
+  background-color: #fff;
+  margin: 5% auto;
+  padding: 25px 30px;
+  border-radius: var(--radius);
   width: 95%;
   max-width: 600px;
-  position: relative;
-  animation: slideUp 0.3s ease forwards;
+  box-shadow: var(--sombra);
 }
 
 .close {
-  position: absolute;
-  right: 15px;
-  top: 10px;
-  font-size: 1.6rem;
-  color: var(--gray-text);
+  color: #aaa;
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
   cursor: pointer;
 }
 
 .close:hover {
-  color: var(--orange);
+  color: var(--naranja);
 }
 
-.modal-content h2 {
-  margin-top: 0;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 900;
-  color: var(--blue);
-  font-size: 1.4rem;
+.modal h2 {
+  font-family: "Poppins", sans-serif;
+  color: var(--azul);
+  font-weight: 800;
+  margin-bottom: 20px;
 }
 
-/* =========================
-   FORMULARIO
-========================= */
-form label {
-  display: block;
-  margin: 15px 0 6px;
+/* ================= FORM ================= */
+
+label {
   font-weight: 600;
-  color: var(--blue);
+  display: block;
+  margin-top: 15px;
+  color: var(--azul);
 }
 
-form input, form textarea, form select {
+input,
+textarea,
+select {
   width: 100%;
   padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 0.95rem;
-  resize: vertical;
-  transition: border 0.2s ease-in-out;
+  margin-top: 6px;
+  border-radius: var(--radius);
+  border: 2px solid var(--borde);
+  font-family: "Lato", sans-serif;
+  font-size: 15px;
+  transition: border-color 0.2s ease;
 }
 
-form input:focus, form textarea:focus, form select:focus {
-  border-color: var(--orange);
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--naranja);
   outline: none;
 }
 
@@ -225,59 +223,60 @@ form input:focus, form textarea:focus, form select:focus {
 }
 
 .btn-primary {
-  background: var(--orange);
-  color: white;
+  background: var(--naranja);
+  color: #fff;
   border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: var(--radius);
   font-weight: 600;
-}
-
-.btn-secondary {
-  background: var(--gray-bg);
-  color: var(--blue);
-  border: 1px solid var(--border);
-  padding: 10px 16px;
-  border-radius: 6px;
   cursor: pointer;
 }
 
 .btn-primary:hover {
-  background: #d65c1f;
+  background: #d75b1a;
+}
+
+.btn-secondary {
+  background: #ccc;
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .btn-secondary:hover {
-  background: #e9ebee;
+  background: #bbb;
 }
 
-/* =========================
-   ANIMACIONES
-========================= */
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
+/* ================= RESPONSIVE ================= */
 
-@keyframes slideUp {
-  from {transform: translateY(30px); opacity: 0;}
-  to {transform: translateY(0); opacity: 1;}
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
 @media (max-width: 700px) {
   .app-container {
-    padding: 20px;
     margin: 20px;
+    padding: 20px;
   }
+
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
   .app-header h1 {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
   }
+
   .search-bar {
     flex-direction: column;
   }
+
+  .prompt-list {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-add,
   .btn-export {
     width: 100%;
   }
