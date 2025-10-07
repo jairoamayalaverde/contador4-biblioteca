@@ -1,8 +1,7 @@
 // ===============================
-// BIBLIOTECA DE PROMPTS – CONTADOR 4.0 (Versión Opción B)
+// BIBLIOTECA DE PROMPTS – CONTADOR 4.0 (Versión Opción B + íconos)
 // ===============================
 
-// === Referencias DOM ===
 const addPromptBtn = document.getElementById("addPromptBtn");
 const promptModal = document.getElementById("promptModal");
 const closeModal = document.querySelector(".close");
@@ -13,14 +12,13 @@ const modalTitle = document.getElementById("modalTitle");
 const exportBtn = document.getElementById("exportBtn");
 const searchInput = document.getElementById("searchInput");
 
-// === Campos del formulario ===
 const nameInput = document.getElementById("promptName");
 const contextInput = document.getElementById("promptContext");
 const personalizationInput = document.getElementById("promptPersonalization");
 const textInput = document.getElementById("promptText");
 const freqSelect = document.getElementById("promptFrequency");
 
-// === Prompts base (no se borran) ===
+// --- Prompts base (inamovibles) ---
 const defaultPrompts = [
   {
     id: "base-1",
@@ -69,15 +67,15 @@ const defaultPrompts = [
   }
 ];
 
-// === Prompts del usuario ===
+// --- Prompts personales del usuario ---
 let userPrompts = JSON.parse(localStorage.getItem("userPrompts")) || [];
 
-// === Render combinado ===
+// Combinar todos
 function getAllPrompts() {
   return [...defaultPrompts, ...userPrompts];
 }
 
-// === Renderizar lista ===
+// --- Renderizar lista ---
 function renderPrompts(list = getAllPrompts()) {
   promptList.innerHTML = "";
 
@@ -86,8 +84,15 @@ function renderPrompts(list = getAllPrompts()) {
     div.classList.add("prompt-item");
     if (p.fixed) div.classList.add("fixed");
 
+    // Icono tipo (SVG inline minimalista)
+    const icon = p.fixed
+      ? `<svg width="18" height="18" fill="#0A2342" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H17.5A2.5 2.5 0 0 0 20 19.5V4.5A2.5 2.5 0 0 0 17.5 2H6.5A2.5 2.5 0 0 0 4 4.5V19.5ZM6 4.5A.5.5 0 0 1 6.5 4H17.5A.5.5 0 0 1 18 4.5V19.5A.5.5 0 0 1 17.5 20H6.5A.5.5 0 0 1 6 19.5V4.5ZM8 6H16V8H8V6Z"/></svg>`
+      : `<svg width="18" height="18" fill="#E86C2A" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.001 1.001 0 0 0 0-1.42l-2.34-2.34a1.001 1.001 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>`;
+
     div.innerHTML = `
-      <h3>${p.name}</h3>
+      <div class="prompt-header">
+        <h3>${icon} ${p.name}</h3>
+      </div>
       <p><strong>Frecuencia:</strong> ${p.frequency.charAt(0).toUpperCase() + p.frequency.slice(1)}</p>
       <p><strong>Contexto:</strong> ${p.context}</p>
     `;
@@ -97,7 +102,7 @@ function renderPrompts(list = getAllPrompts()) {
   });
 }
 
-// === Modal ===
+// --- Modal ---
 function openModal(prompt = null) {
   if (prompt) {
     modalTitle.textContent = prompt.fixed ? "Vista de Prompt Base" : "Editar Prompt";
@@ -126,7 +131,7 @@ function closeModalWindow() {
   promptModal.style.display = "none";
 }
 
-// === Guardar / actualizar ===
+// --- Guardar / actualizar ---
 promptForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -156,7 +161,7 @@ promptForm.addEventListener("submit", (e) => {
   closeModalWindow();
 });
 
-// === Buscar ===
+// --- Buscar ---
 searchInput.addEventListener("input", (e) => {
   const query = e.target.value.toLowerCase();
   const filtered = getAllPrompts().filter(p =>
@@ -166,7 +171,7 @@ searchInput.addEventListener("input", (e) => {
   renderPrompts(filtered);
 });
 
-// === Exportar a Excel (CSV) ===
+// --- Exportar CSV ---
 exportBtn.addEventListener("click", () => {
   const headers = ["Nombre", "Contexto", "Personalización", "Texto", "Frecuencia", "Tipo"];
   const rows = getAllPrompts().map(p => [
@@ -181,10 +186,10 @@ exportBtn.addEventListener("click", () => {
   link.click();
 });
 
-// === Botones ===
+// --- Botones principales ---
 addPromptBtn.addEventListener("click", () => openModal());
 closeModal.addEventListener("click", closeModalWindow);
 cancelBtn.addEventListener("click", closeModalWindow);
 
-// === Render inicial ===
+// --- Render inicial ---
 renderPrompts();
