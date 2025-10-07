@@ -133,17 +133,12 @@ function openModal(prompt = null) {
 }
 
 function closeModalWindow() {
-  promptModal.style.display = "none";
+  promptModal.classList.add("closing");
+  setTimeout(() => {
+    promptModal.style.display = "none";
+    promptModal.classList.remove("closing");
+  }, 250);
 }
-
-// --- Guardar / actualizar ---
-promptForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  if (promptForm.dataset.isFixed === "true") {
-    alert("Los prompts base no se pueden editar.");
-    return;
-  }
 
   const promptData = {
     id: promptForm.dataset.editId ? promptForm.dataset.editId : Date.now(),
