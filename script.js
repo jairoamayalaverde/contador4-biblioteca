@@ -11,6 +11,7 @@ const promptList = document.getElementById("promptList");
 const modalTitle = document.getElementById("modalTitle");
 const exportBtn = document.getElementById("exportBtn");
 const searchInput = document.getElementById("searchInput");
+const deleteBtn = document.getElementById("deletePrompt");
 
 const nameInput = document.getElementById("promptName");
 const contextInput = document.getElementById("promptContext");
@@ -78,17 +79,19 @@ function renderPrompts(list = getAllPrompts()) {
   list.forEach((p) => {
     const div = document.createElement("div");
     div.classList.add("prompt-item");
-    div.innerHTML = `
-      <h3>${p.name}</h3>
-      <p><strong>Frecuencia:</strong> ${p.frequency}</p>
-      <p><strong>Contexto:</strong> ${p.context}</p>
-    `;
+    if (p.fixed) div.classList.add("fixed");
+
+    div.innerHTML = `<h3>${p.name}</h3>`;
     div.addEventListener("click", () => openModal(p));
     promptList.appendChild(div);
   });
 }
 
+// --- Modal ---
 function openModal(prompt = null) {
+  deleteBtn.style.display = "none";
+  promptForm.reset();
+
   if (prompt) {
     modalTitle.textContent = prompt.fixed ? "Vista de Prompt Base" : "Editar Prompt";
     nameInput.value = prompt.name;
@@ -98,10 +101,16 @@ function openModal(prompt = null) {
     freqSelect.value = prompt.frequency;
     promptForm.dataset.editId = prompt.id;
     promptForm.dataset.isFixed = prompt.fixed || false;
+
+    promptForm.querySelectorAll("input, textarea, select").forEach(el => {
+      el.disabled = prompt.fixed ? true : false;
+    });
+
+    if (!prompt.fixed) deleteBtn.style.display = "inline-block";
   } else {
     modalTitle.textContent = "Nuevo Prompt";
-    promptForm.reset();
     delete promptForm.dataset.editId;
+    promptForm.querySelectorAll("input, textarea, select").forEach(el => el.disabled = false);
   }
   promptModal.style.display = "flex";
 }
@@ -110,27 +119,29 @@ function closeModalWindow() {
   promptModal.style.display = "none";
 }
 
+// --- Guardar / actualizar ---
 promptForm.addEventListener("submit", (e) => {
   e.preventDefault();
+
   if (promptForm.dataset.isFixed === "true") {
     alert("Los prompts base no se pueden editar.");
     return;
   }
 
-  const data = {
-    id: promptForm.dataset.editId || Date.now(),
+  const promptData = {
+    id: promptForm.dataset.editId ? promptForm.dataset.editId : Date.now(),
     name: nameInput.value.trim(),
-    text: textInput.value.trim(),
     context: contextInput.value.trim(),
     personalization: personalizationInput.value.trim(),
+    text: textInput.value.trim(),
     frequency: freqSelect.value
   };
 
   if (promptForm.dataset.editId) {
-    const i = userPrompts.findIndex(p => p.id == promptForm.dataset.editId);
-    if (i > -1) userPrompts[i] = data;
+    const index = userPrompts.findIndex(p => p.id == promptForm.dataset.editId);
+    if (index > -1) userPrompts[index] = promptData;
   } else {
-    userPrompts.push(data);
+    userPrompts.push(promptData);
   }
 
   localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
@@ -138,75 +149,47 @@ promptForm.addEventListener("submit", (e) => {
   closeModalWindow();
 });
 
-searchInput.addEventListener("input", e => {
-  const q = e.target.value.toLowerCase();
+// --- Eliminar prompt ---
+deleteBtn.addEventListener("click", () => {
+  const id = promptForm.dataset.editId;
+  if (!id) return;
+  if (confirm("¿Seguro que deseas eliminar este prompt?")) {
+    userPrompts = userPrompts.filter(p => p.id != id);
+    localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
+    renderPrompts();
+    closeModalWindow();
+  }
+});
+
+// --- Buscar ---
+searchInput.addEventListener("input", (e) => {
+  const query = e.target.value.toLowerCase();
   const filtered = getAllPrompts().filter(p =>
-    p.name.toLowerCase().includes(q) || p.context.toLowerCase().includes(q)
+    p.name.toLowerCase().includes(query) ||
+    p.context.toLowerCase().includes(query)
   );
   renderPrompts(filtered);
 });
 
+// --- Exportar Excel (versión profesional próxima etapa) ---
+exportBtn.addEventListener("click", () => {
+  const headers = ["Nombre", "Contexto", "Personalización", "Texto", "Frecuencia", "Tipo"];
+  const rows = getAllPrompts().map(p => [
+    p.name, p.context, p.personalization, p.text, p.frequency, p.fixed ? "Base" : "Personal"
+  ]);
+  const csv = [headers, ...rows].map(r => r.join(",")).join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "biblioteca_prompts_contador4.csv";
+  link.click();
+});
+
+// --- Eventos principales ---
 addPromptBtn.addEventListener("click", () => openModal());
 closeModal.addEventListener("click", closeModalWindow);
 cancelBtn.addEventListener("click", closeModalWindow);
+
+// --- Render inicial ---
 renderPrompts();
-
-// ========================================
-// EXPORTAR A EXCEL CON FORMATO PROFESIONAL
-// ========================================
-exportBtn.addEventListener("click", exportToExcel);
-
-function exportToExcel() {
-  const prompts = getAllPrompts();
-
-  // Crea el libro
-  const wb = XLSX.utils.book_new();
-
-  // Define los encabezados y datos
-  const data = [
-    ["Biblioteca de Prompts – Contador 4.0"],
-    [],
-    ["Nombre del Prompt", "Frecuencia", "Contexto", "Personalización", "Contenido del Prompt"]
-  ];
-
-  prompts.forEach(p => {
-    data.push([p.name, p.frequency, p.context, p.personalization, p.text]);
-  });
-
-  const ws = XLSX.utils.aoa_to_sheet(data);
-
-  // Estilos manuales de columnas
-  ws['!cols'] = [
-    { wch: 35 }, // Nombre
-    { wch: 12 }, // Frecuencia
-    { wch: 40 }, // Contexto
-    { wch: 35 }, // Personalización
-    { wch: 60 }  // Contenido
-  ];
-
-  // Aplica negrita y colores de encabezado
-  const range = XLSX.utils.decode_range(ws['!ref']);
-  for (let C = range.s.c; C <= range.e.c; ++C) {
-    const cell = ws[XLSX.utils.encode_cell({ r: 2, c: C })];
-    if (cell && cell.v) {
-      cell.s = {
-        font: { bold: true, color: { rgb: "FFFFFF" } },
-        fill: { fgColor: { rgb: "E86C2A" } },
-        alignment: { horizontal: "center", vertical: "center" },
-        border: {
-          top: { style: "thin", color: { rgb: "FFFFFF" } },
-          bottom: { style: "thin", color: { rgb: "FFFFFF" } }
-        }
-      };
-    }
-  }
-
-  // Título estilizado
-  ws["A1"].s = {
-    font: { bold: true, sz: 16, color: { rgb: "0A2342" } },
-    alignment: { horizontal: "left" }
-  };
-
-  XLSX.utils.book_append_sheet(wb, ws, "Prompts");
-  XLSX.writeFile(wb, "Biblioteca_Prompts_Contador40.xlsx");
-}
