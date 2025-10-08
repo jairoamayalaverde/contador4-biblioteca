@@ -150,3 +150,63 @@ addPromptBtn.addEventListener("click", () => openModal());
 closeModal.addEventListener("click", closeModalWindow);
 cancelBtn.addEventListener("click", closeModalWindow);
 renderPrompts();
+
+// ========================================
+// EXPORTAR A EXCEL CON FORMATO PROFESIONAL
+// ========================================
+exportBtn.addEventListener("click", exportToExcel);
+
+function exportToExcel() {
+  const prompts = getAllPrompts();
+
+  // Crea el libro
+  const wb = XLSX.utils.book_new();
+
+  // Define los encabezados y datos
+  const data = [
+    ["Biblioteca de Prompts – Contador 4.0"],
+    [],
+    ["Nombre del Prompt", "Frecuencia", "Contexto", "Personalización", "Contenido del Prompt"]
+  ];
+
+  prompts.forEach(p => {
+    data.push([p.name, p.frequency, p.context, p.personalization, p.text]);
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+
+  // Estilos manuales de columnas
+  ws['!cols'] = [
+    { wch: 35 }, // Nombre
+    { wch: 12 }, // Frecuencia
+    { wch: 40 }, // Contexto
+    { wch: 35 }, // Personalización
+    { wch: 60 }  // Contenido
+  ];
+
+  // Aplica negrita y colores de encabezado
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  for (let C = range.s.c; C <= range.e.c; ++C) {
+    const cell = ws[XLSX.utils.encode_cell({ r: 2, c: C })];
+    if (cell && cell.v) {
+      cell.s = {
+        font: { bold: true, color: { rgb: "FFFFFF" } },
+        fill: { fgColor: { rgb: "E86C2A" } },
+        alignment: { horizontal: "center", vertical: "center" },
+        border: {
+          top: { style: "thin", color: { rgb: "FFFFFF" } },
+          bottom: { style: "thin", color: { rgb: "FFFFFF" } }
+        }
+      };
+    }
+  }
+
+  // Título estilizado
+  ws["A1"].s = {
+    font: { bold: true, sz: 16, color: { rgb: "0A2342" } },
+    alignment: { horizontal: "left" }
+  };
+
+  XLSX.utils.book_append_sheet(wb, ws, "Prompts");
+  XLSX.writeFile(wb, "Biblioteca_Prompts_Contador40.xlsx");
+}
