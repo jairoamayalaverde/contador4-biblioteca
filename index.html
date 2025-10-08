@@ -7,22 +7,20 @@
 
   <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500&family=Poppins:wght@900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app-container">
     <header class="app-header">
       <h1>Biblioteca de Prompts – <span>Contador 4.0</span></h1>
-      <div class="header-buttons">
-        <button id="addPromptBtn" class="btn-add">+ Nuevo Prompt</button>
-        <button id="exportBtn" class="btn-export">📤 Exportar Excel</button>
-      </div>
+      <button id="addPromptBtn" class="btn-add">+ Nuevo Prompt</button>
     </header>
 
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Buscar un prompt..." />
+      <button id="exportBtn" class="btn-export">📤 Exportar Excel</button>
     </div>
 
     <main class="prompt-list" id="promptList"></main>
@@ -57,6 +55,7 @@
 
         <div class="modal-actions">
           <button type="submit" id="savePrompt" class="btn-primary">Guardar</button>
+          <button type="button" id="deletePrompt" class="btn-danger">🗑️ Eliminar</button>
           <button type="button" id="cancelBtn" class="btn-secondary">Cancelar</button>
         </div>
       </form>
