@@ -7,33 +7,26 @@
 
   <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500&family=Poppins:wght@900&display=swap" rel="stylesheet">
-
-  <!-- Estilos -->
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Librería para exportar Excel -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.13/dist/xlsx.full.min.js"></script>
 </head>
-
 <body>
   <div class="app-container">
-    <!-- ====== Encabezado ====== -->
     <header class="app-header">
       <h1>Biblioteca de Prompts – <span>Contador 4.0</span></h1>
-      <button id="addPromptBtn" class="btn-add">+ Nuevo Prompt</button>
+      <div class="header-buttons">
+        <button id="addPromptBtn" class="btn-add">+ Nuevo Prompt</button>
+        <button id="exportBtn" class="btn-export">📤 Exportar Excel</button>
+      </div>
     </header>
 
-    <!-- ====== Barra de búsqueda y exportación ====== -->
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Buscar un prompt..." />
-      <button id="exportBtn" class="btn-export">📤 Exportar Excel</button>
     </div>
 
-    <!-- ====== Lista de prompts ====== -->
     <main class="prompt-list" id="promptList"></main>
   </div>
 
-  <!-- ====== Modal para Ver / Editar / Agregar Prompt ====== -->
+  <!-- Modal Ver / Editar Prompt -->
   <div id="promptModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
@@ -68,7 +61,6 @@
     </div>
   </div>
 
-  <!-- Script principal -->
   <script src="script.js" type="module" defer></script>
 </body>
 </html>
