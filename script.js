@@ -193,6 +193,20 @@ exportBtn.addEventListener("click", () => {
   link.download = "biblioteca_prompts_contador4.csv";
   link.click();
 });
+// --- Toast notifications ---
+function showToast(message, type = "success") {
+  const container = document.getElementById("toastContainer");
+  const toast = document.createElement("div");
+  toast.classList.add("toast", type);
+  toast.textContent = message;
+  container.appendChild(toast);
+
+  // Desaparecer después de 3s
+  setTimeout(() => {
+    toast.style.animation = "toast-out 0.4s forwards";
+    setTimeout(() => toast.remove(), 400);
+  }, 3000);
+}
 
 // --- Eventos principales ---
 addPromptBtn.addEventListener("click", () => openModal());
