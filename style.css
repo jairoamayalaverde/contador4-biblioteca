@@ -86,6 +86,13 @@ body {
   border: 1px solid var(--gris-medio);
   border-radius: 8px;
   font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+#searchInput:focus {
+  outline: none;
+  border-color: var(--naranja);
+  box-shadow: 0 0 0 2px rgba(232,108,42,0.15);
 }
 
 .btn-export {
@@ -112,10 +119,10 @@ body {
 
 .prompt-item {
   background-color: var(--blanco);
-  border: 1px solid var(--gris-medio);
+  border: 1px solid #e4e4e4;
   border-radius: 12px;
   padding: 18px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
   cursor: pointer;
 }
@@ -252,6 +259,21 @@ textarea {
 }
 .btn-danger:hover {
   background-color: #a31e1e;
+}
+
+/* ===============================
+   FOOTER
+   =============================== */
+.footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 30px;
+}
+
+.footer span {
+  color: var(--naranja);
+  font-weight: 600;
 }
 
 /* ===============================
