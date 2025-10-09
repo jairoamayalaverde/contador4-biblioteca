@@ -5,265 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Biblioteca de Prompts – Contador 4.0</title>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="FAVICON-CONTADOR-4.0.png" />
+
   <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500&family=Poppins:wght@900&display=swap" rel="stylesheet">
 
   <!-- Estilos -->
-  <style>
-    :root {
-      --naranja: #E66E33;
-      --azul: #0A2342;
-      --gris-claro: #f7f8fa;
-      --borde: #e2e5ea;
-    }
+  <link rel="stylesheet" href="style.css" />
 
-    body {
-      margin: 0;
-      font-family: 'Lato', sans-serif;
-      background: #fff;
-      color: #222;
-    }
-
-    .app-container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-    }
-
-    /* Header */
-    .app-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .app-header h1 {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 900;
-      font-size: 1.8rem;
-      color: var(--azul);
-      margin: 0;
-    }
-
-    .app-header span {
-      color: var(--naranja);
-    }
-
-    .btn-add {
-      background: var(--naranja);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    .btn-add:hover {
-      background: #d55f22;
-    }
-
-    /* Search bar */
-    .search-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    #searchInput {
-      flex: 1;
-      padding: 10px 14px;
-      border: 1px solid var(--borde);
-      border-radius: 8px;
-      font-size: 1rem;
-      background: var(--gris-claro);
-    }
-
-    .btn-export {
-      background: var(--azul);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    .btn-export:hover {
-      background: #04162e;
-    }
-
-    /* Lista de prompts */
-    .prompt-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
-    }
-
-    .prompt-item {
-      background: #fff;
-      border: 1px solid var(--borde);
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-      padding: 20px;
-      transition: transform 0.1s ease, box-shadow 0.2s ease;
-      cursor: pointer;
-    }
-
-    .prompt-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-    }
-
-    .prompt-item h3 {
-      font-size: 1rem;
-      color: var(--azul);
-      margin: 0;
-      font-weight: 600;
-    }
-
-    .prompt-item.fixed {
-      border-left: 4px solid var(--azul);
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .modal-content {
-      background: #fff;
-      border-radius: 16px;
-      max-width: 600px;
-      width: 100%;
-      padding: 30px;
-      position: relative;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-      overflow-y: auto;
-      max-height: 90vh;
-    }
-
-    .close {
-      position: absolute;
-      right: 18px;
-      top: 14px;
-      font-size: 22px;
-      color: #777;
-      cursor: pointer;
-    }
-
-    .modal-content h2 {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 900;
-      color: var(--azul);
-      margin-top: 0;
-      margin-bottom: 16px;
-    }
-
-    form label {
-      display: block;
-      font-weight: 600;
-      color: var(--azul);
-      margin-top: 16px;
-      margin-bottom: 6px;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--borde);
-      border-radius: 8px;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.95rem;
-      background: var(--gris-claro);
-    }
-
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-
-    .modal-actions {
-      margin-top: 24px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      background: var(--azul);
-      color: #fff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-primary:hover {
-      background: #04162e;
-    }
-
-    .btn-secondary {
-      background: #ccc;
-      color: #222;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .btn-secondary:hover {
-      background: #bbb;
-    }
-
-    .btn-delete {
-      background: var(--naranja);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 18px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-right: auto;
-    }
-
-    .btn-delete:hover {
-      background: #d65f25;
-    }
-
-    @media (max-width: 600px) {
-      .modal-content {
-        padding: 20px;
-      }
-    }
-  </style>
-
-  <!-- Librería para exportar Excel con estilos -->
+  <!-- Librería Excel -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.13/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
   <div class="app-container">
     <header class="app-header">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:black;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#0A2342;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="50" r="48" fill="#E66E33"/>
+          <text x="50%" y="58%" text-anchor="middle" font-size="50" fill="url(#grad)" font-family="Poppins" font-weight="900">$</text>
+        </svg>
+      </div>
       <h1>Biblioteca de Prompts – <span>Contador 4.0</span></h1>
       <button id="addPromptBtn" class="btn-add">+ Nuevo Prompt</button>
     </header>
