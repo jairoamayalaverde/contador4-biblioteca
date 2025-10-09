@@ -93,8 +93,8 @@ function renderPrompts(list = getAllPrompts()) {
 
 // --- Modal ---
 function openModal(prompt = null) {
-  deleteBtn.style.display = "none";
   promptForm.reset();
+  deleteBtn.style.display = "none"; // Por defecto, oculto
 
   if (prompt) {
     modalTitle.textContent = prompt.fixed ? "Vista de Prompt Base" : "Editar Prompt";
@@ -110,13 +110,16 @@ function openModal(prompt = null) {
       el.disabled = prompt.fixed ? true : false;
     });
 
-    if (!prompt.fixed) deleteBtn.style.display = "inline-block";
+    if (!prompt.fixed) {
+      deleteBtn.style.display = "inline-block"; // ✅ Mostrar botón eliminar
+    }
   } else {
     modalTitle.textContent = "Nuevo Prompt";
     delete promptForm.dataset.editId;
     promptForm.querySelectorAll("input, textarea, select").forEach(el => el.disabled = false);
     setTimeout(() => nameInput.focus(), 100);
   }
+
   promptModal.style.display = "flex";
 }
 
