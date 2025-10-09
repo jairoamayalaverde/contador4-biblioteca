@@ -76,6 +76,10 @@ function getAllPrompts() {
 
 function renderPrompts(list = getAllPrompts()) {
   promptList.innerHTML = "";
+  if (list.length === 0) {
+    promptList.innerHTML = "<p style='text-align:center;color:#888;'>No hay prompts disponibles.</p>";
+    return;
+  }
   list.forEach((p) => {
     const div = document.createElement("div");
     div.classList.add("prompt-item");
@@ -111,6 +115,7 @@ function openModal(prompt = null) {
     modalTitle.textContent = "Nuevo Prompt";
     delete promptForm.dataset.editId;
     promptForm.querySelectorAll("input, textarea, select").forEach(el => el.disabled = false);
+    setTimeout(() => nameInput.focus(), 100);
   }
   promptModal.style.display = "flex";
 }
@@ -171,7 +176,7 @@ searchInput.addEventListener("input", (e) => {
   renderPrompts(filtered);
 });
 
-// --- Exportar Excel (versión profesional próxima etapa) ---
+// --- Exportar CSV ---
 exportBtn.addEventListener("click", () => {
   const headers = ["Nombre", "Contexto", "Personalización", "Texto", "Frecuencia", "Tipo"];
   const rows = getAllPrompts().map(p => [
