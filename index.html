@@ -5,83 +5,251 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Biblioteca de Prompts – Contador 4.0</title>
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="FAVICON-CONTADOR-4.0.png" />
+  <!-- ✅ Nuevo favicon -->
+  <link rel="icon" type="image/png" href="/Favicon-app.png" />
 
   <!-- Fuentes -->
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500&family=Poppins:wght@900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Estilos -->
-  <link rel="stylesheet" href="style.css" />
+  <!-- Estilos base -->
+  <style>
+    :root {
+      --brand-orange: #e66e33;
+      --brand-dark: #0a1e33;
+      --bg-light: #f8f9fa;
+      --border-radius: 14px;
+    }
 
-  <!-- Librería Excel -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.13/dist/xlsx.full.min.js"></script>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-light);
+      margin: 0;
+      padding: 2rem;
+      color: var(--brand-dark);
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    h1 span {
+      color: var(--brand-orange);
+    }
+
+    /* Controles superiores */
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-bar {
+      width: 100%;
+      max-width: 80%;
+      padding: 0.9rem 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .search-bar:focus {
+      border-color: var(--brand-orange);
+      box-shadow: 0 0 0 3px rgba(230, 110, 51, 0.2);
+    }
+
+    .btn {
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      padding: 0.8rem 1.4rem;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+
+    .btn-primary {
+      background-color: var(--brand-orange);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background-color: #cc5f2b;
+    }
+
+    .btn-secondary {
+      background-color: var(--brand-dark);
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background-color: #142c47;
+    }
+
+    /* Grid de tarjetas */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.2rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 1.2rem 1.4rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0 0 0.4rem 0;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: #333;
+      margin: 0.2rem 0;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .close {
+      cursor: pointer;
+      font-size: 1.4rem;
+      color: #666;
+      transition: 0.2s;
+    }
+
+    .close:hover {
+      color: var(--brand-orange);
+    }
+
+    label {
+      font-weight: 600;
+      margin-top: 1rem;
+      display: block;
+    }
+
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: var(--border-radius);
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      margin-top: 0.3rem;
+      resize: none;
+      box-sizing: border-box;
+      background-color: #fefefe;
+    }
+
+    textarea {
+      height: 90px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.8rem;
+      margin-top: 1.2rem;
+    }
+  </style>
 </head>
 
 <body>
-  <div class="app-container">
-    <header class="app-header">
-      <div class="logo">
-        <svg width="32" height="32" viewBox="0 0 100 100">
-          <defs>
-            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:black;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#0A2342;stop-opacity:1" />
-            </linearGradient>
-          </defs>
-          <circle cx="50" cy="50" r="48" fill="#E66E33"/>
-          <text x="50%" y="58%" text-anchor="middle" font-size="50" fill="url(#grad)" font-family="Poppins" font-weight="900">$</text>
-        </svg>
-      </div>
-      <h1>Biblioteca de Prompts – <span>Contador 4.0</span></h1>
-      <button id="addPromptBtn" class="btn-add">+ Nuevo Prompt</button>
-    </header>
+  <h1>Biblioteca de Prompts – <span>Contador 4.0</span></h1>
 
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Buscar un prompt..." />
-      <button id="exportBtn" class="btn-export">📤 Exportar Excel</button>
-    </div>
-
-    <main class="prompt-list" id="promptList"></main>
+  <div class="top-bar">
+    <input type="text" id="search" class="search-bar" placeholder="Buscar un prompt..." />
+    <button id="exportExcel" class="btn btn-secondary">📤 Exportar Excel</button>
+    <button id="newPrompt" class="btn btn-primary">+ Nuevo Prompt</button>
   </div>
 
-  <!-- Modal Ver / Editar Prompt -->
+  <div id="promptList" class="grid"></div>
+
+  <!-- Modal -->
   <div id="promptModal" class="modal">
     <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2 id="modalTitle">Nuevo Prompt</h2>
+      <div class="modal-header">
+        <h2 id="modalTitle">Nuevo Prompt</h2>
+        <span class="close" id="closeModal">&times;</span>
+      </div>
 
-      <form id="promptForm">
-        <label for="promptName">Nombre del Prompt</label>
-        <input type="text" id="promptName" required />
+      <label>Nombre del Prompt</label>
+      <input type="text" id="promptName" placeholder="Escribe el nombre..." />
 
-        <label for="promptText">Contenido del Prompt</label>
-        <textarea id="promptText" placeholder="Escribe el prompt completo aquí..." required></textarea>
+      <label>Contenido del Prompt</label>
+      <textarea id="promptContent" placeholder="Escribe el prompt completo aquí..."></textarea>
 
-        <label for="promptContext">Contexto / Cuándo usarlo</label>
-        <textarea id="promptContext"></textarea>
+      <label>Contexto / Cuándo usarlo</label>
+      <textarea id="promptContext" placeholder="Describe cuándo usarlo..."></textarea>
 
-        <label for="promptPersonalization">Personalización</label>
-        <textarea id="promptPersonalization"></textarea>
+      <label>Personalización</label>
+      <textarea id="promptCustomization" placeholder="Notas o variantes..."></textarea>
 
-        <label for="promptFrequency">Frecuencia</label>
-        <select id="promptFrequency">
-          <option value="diario">Diario</option>
-          <option value="semanal" selected>Semanal</option>
-          <option value="mensual">Mensual</option>
-          <option value="ocasional">Ocasional</option>
-        </select>
+      <label>Frecuencia</label>
+      <select id="promptFrequency">
+        <option value="Semanal">Semanal</option>
+        <option value="Mensual">Mensual</option>
+        <option value="Trimestral">Trimestral</option>
+      </select>
 
-        <div class="modal-actions">
-          <button type="button" id="deletePrompt" class="btn-delete" style="display:none;">🗑️ Eliminar</button>
-          <button type="submit" id="savePrompt" class="btn-primary">Guardar</button>
-          <button type="button" id="cancelBtn" class="btn-secondary">Cancelar</button>
-        </div>
-      </form>
+      <div class="modal-footer">
+        <button id="savePrompt" class="btn btn-secondary">Guardar</button>
+        <button id="cancelPrompt" class="btn">Cancelar</button>
+      </div>
     </div>
   </div>
 
   <!-- Script principal -->
-  <script src="script.js" type="module" defer></script>
+  <script src="script.js"></script>
 </body>
 </html>
