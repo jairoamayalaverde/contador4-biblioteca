@@ -1,254 +1,274 @@
-:root {
-  --naranja: #E66E33;
-  --azul: #0A2342;
-  --gris-fondo: #F8F9FA;
-  --gris-borde: #e2e5ea;
-}
-
-body {
+/* --- Reset y base --- */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
   font-family: 'Lato', sans-serif;
-  background: var(--gris-fondo);
-  color: #222;
+  background-color: #F8F9FA;
+  color: #0B2545;
+  height: 100%;
+  line-height: 1.5;
 }
 
-/* App Container */
+/* --- Layout principal --- */
 .app-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 40px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 24px;
 }
 
-/* Header */
+/* --- Header --- */
 .app-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 12px;
+  align-items: center;
+  padding: 24px 0;
+  border-bottom: 1px solid #E0E3E7;
 }
 
 .app-header h1 {
   font-family: 'Poppins', sans-serif;
-  font-weight: 900;
-  font-size: 1.8rem;
-  color: var(--azul);
-  margin: 0;
+  font-size: 1.6rem;
+  color: #0B2545;
 }
 
-.app-header span {
-  color: var(--naranja);
+.app-header h1 span {
+  color: #E66E33;
 }
 
-.logo svg {
-  display: block;
+.header-actions {
+  display: flex;
+  gap: 12px;
 }
 
-/* Buttons */
-.btn-add {
-  background: var(--naranja);
-  color: #fff;
+/* --- Botones --- */
+button {
   border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border-radius: 10px;
+  font-family: inherit;
+}
+
+.btn-add {
+  background-color: #E66E33;
+  color: white;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(230, 110, 51, 0.2);
 }
 
 .btn-add:hover {
-  background: #d55f22;
+  background-color: #cc5d2c;
 }
 
 .btn-export {
-  background: var(--azul);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  background-color: #0B2545;
+  color: white;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(11, 37, 69, 0.2);
 }
 
 .btn-export:hover {
-  background: #04162e;
+  background-color: #15396e;
 }
 
-/* Search bar */
+/* --- Buscador --- */
 .search-bar {
+  margin: 24px 0;
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
+  justify-content: center;
 }
 
-#searchInput {
-  flex: 1;
-  padding: 10px 14px;
-  border: 1px solid var(--gris-borde);
-  border-radius: 8px;
+.search-bar input {
+  width: 100%;
+  max-width: 1200px;
+  padding: 14px 20px;
   font-size: 1rem;
+  border: 1px solid #DDE1E5;
+  border-radius: 12px;
   background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
-/* Prompt list */
+.search-bar input:focus {
+  outline: none;
+  border-color: #E66E33;
+  box-shadow: 0 0 0 3px rgba(230, 110, 51, 0.15);
+}
+
+/* --- Lista de prompts --- */
 .prompt-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+  padding-bottom: 40px;
 }
 
 .prompt-item {
-  background: #fff;
-  border: 1px solid var(--gris-borde);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  padding: 20px;
-  transition: transform 0.1s ease, box-shadow 0.2s ease;
+  background-color: #fff;
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .prompt-item:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
 .prompt-item h3 {
   font-size: 1rem;
-  color: var(--azul);
-  margin: 0;
+  color: #0B2545;
   font-weight: 600;
 }
 
 .prompt-item.fixed {
-  border-left: 4px solid var(--azul);
+  border-left: 4px solid #E66E33;
 }
 
-/* Modal */
+/* --- Footer --- */
+.footer {
+  margin-top: auto;
+  padding: 24px 0;
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+/* --- Modal --- */
 .modal {
   display: none;
   position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
   justify-content: center;
   align-items: center;
-  padding: 20px;
 }
 
 .modal-content {
-  background: #fff;
+  background-color: #fff;
   border-radius: 16px;
-  max-width: 600px;
-  width: 100%;
-  padding: 30px;
+  padding: 28px 32px;
+  width: 90%;
+  max-width: 520px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
   position: relative;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  overflow-y: auto;
-  max-height: 90vh;
 }
 
 .close {
   position: absolute;
   right: 18px;
   top: 14px;
-  font-size: 22px;
-  color: #777;
+  font-size: 24px;
+  color: #666;
   cursor: pointer;
 }
 
-.modal-content h2 {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 900;
-  color: var(--azul);
-  margin-top: 0;
-  margin-bottom: 16px;
+.close:hover {
+  color: #E66E33;
 }
 
-/* Form fields */
-form label {
-  display: block;
+/* --- Formulario del modal --- */
+#promptForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+#promptForm label {
   font-weight: 600;
-  color: var(--azul);
-  margin-top: 16px;
-  margin-bottom: 6px;
+  color: #0B2545;
+  margin-top: 6px;
 }
 
-input, textarea, select {
+#promptForm input,
+#promptForm textarea,
+#promptForm select {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid var(--gris-borde);
+  border: 1px solid #DDE1E5;
   border-radius: 8px;
-  font-family: 'Lato', sans-serif;
   font-size: 0.95rem;
-  background: var(--gris-fondo);
+  background-color: #FAFBFC;
 }
 
-textarea {
-  min-height: 80px;
+#promptForm textarea {
+  min-height: 70px;
   resize: vertical;
 }
 
-/* Modal buttons */
+#promptForm input:focus,
+#promptForm textarea:focus,
+#promptForm select:focus {
+  outline: none;
+  border-color: #E66E33;
+  box-shadow: 0 0 0 2px rgba(230, 110, 51, 0.15);
+}
+
+/* --- Acciones modal --- */
 .modal-actions {
-  margin-top: 24px;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  flex-wrap: wrap;
+  margin-top: 16px;
 }
 
 .btn-primary {
-  background: var(--azul);
-  color: #fff;
-  border: none;
-  padding: 10px 18px;
+  background-color: #E66E33;
+  color: white;
+  padding: 10px 20px;
   border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
 }
 
 .btn-primary:hover {
-  background: #04162e;
+  background-color: #cc5d2c;
 }
 
 .btn-secondary {
-  background: #ccc;
-  color: #222;
-  border: none;
-  padding: 10px 18px;
+  background-color: #E9ECEF;
+  color: #0B2545;
+  padding: 10px 20px;
   border-radius: 8px;
-  cursor: pointer;
 }
 
 .btn-secondary:hover {
-  background: #bbb;
+  background-color: #DDE1E5;
 }
 
 .btn-delete {
-  background: var(--naranja);
-  color: #fff;
-  border: none;
+  background-color: #d9534f;
+  color: white;
+  padding: 10px 20px;
   border-radius: 8px;
-  padding: 10px 18px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-right: auto;
 }
 
 .btn-delete:hover {
-  background: #d65f25;
+  background-color: #b0413f;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .modal-content {
-    padding: 20px;
+/* --- Responsivo --- */
+@media (max-width: 768px) {
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .prompt-list {
+    grid-template-columns: 1fr;
   }
 }
