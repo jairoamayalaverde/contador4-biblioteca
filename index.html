@@ -8,231 +8,38 @@
   <!-- Favicon actualizado -->
   <link rel="icon" type="image/png" href="Favicon-app.png" />
 
-  <!-- Estilos base (minimalista estilo Notion) -->
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #F8F9FA;
-      margin: 0;
-      padding: 0;
-      color: #0A2342;
-    }
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500&family=Poppins:wght@900&display=swap" rel="stylesheet">
 
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.5rem 2rem;
-      background: #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css" />
 
-    header h1 {
-      font-size: 1.6rem;
-      margin: 0;
-      font-weight: 800;
-      color: #0A2342;
-    }
-
-    header h1 span {
-      color: #E66E33;
-    }
-
-    .actions {
-      display: flex;
-      gap: 1rem;
-    }
-
-    button {
-      border: none;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    #addPromptBtn {
-      background: #E66E33;
-      color: white;
-      padding: 10px 18px;
-    }
-
-    #addPromptBtn:hover {
-      opacity: 0.9;
-    }
-
-    #exportBtn {
-      background: #0A2342;
-      color: white;
-      padding: 10px 18px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    #exportBtn:hover {
-      opacity: 0.9;
-    }
-
-    #searchInput {
-      width: 90%;
-      margin: 1.5rem auto;
-      display: block;
-      padding: 12px 18px;
-      border-radius: 10px;
-      border: 1px solid #d0d4da;
-      font-size: 1rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
-
-    #promptList {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.2rem;
-      padding: 2rem;
-    }
-
-    .prompt-item {
-      background: #fff;
-      border-radius: 14px;
-      padding: 1.4rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    .prompt-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-
-    .prompt-item.fixed {
-      border-left: 5px solid #E66E33;
-    }
-
-    .prompt-item h3 {
-      margin: 0;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #0A2342;
-    }
-
-    /* ===== MODAL ===== */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .modal-content {
-      background: #fff;
-      border-radius: 14px;
-      padding: 2rem;
-      width: 90%;
-      max-width: 700px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      position: relative;
-    }
-
-    .modal h2 {
-      margin-top: 0;
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: #0A2342;
-    }
-
-    .close {
-      position: absolute;
-      top: 18px;
-      right: 24px;
-      font-size: 22px;
-      cursor: pointer;
-      color: #666;
-    }
-
-    form label {
-      display: block;
-      font-weight: 600;
-      margin-top: 1.2rem;
-      color: #0A2342;
-    }
-
-    form input, form textarea, form select {
-      width: 100%;
-      margin-top: 0.3rem;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      background: #fdfdfd;
-    }
-
-    form textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    .form-buttons {
-      margin-top: 1.8rem;
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.8rem;
-    }
-
-    .btn-delete {
-      background: #d9534f;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 10px;
-    }
-
-    .btn-delete:hover {
-      opacity: 0.9;
-    }
-
-    .btn-cancel {
-      background: #bfc1c3;
-      color: #222;
-      padding: 10px 16px;
-      border-radius: 10px;
-    }
-
-    .btn-save {
-      background: #0A2342;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 10px;
-    }
-
-    footer {
-      text-align: center;
-      font-size: 0.85rem;
-      color: #777;
-      margin: 1rem 0 2rem;
-    }
-  </style>
+  <!-- Librería XLSX para exportar a Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
-  <header>
-    <h1>Biblioteca de Prompts – <span>Contador 4.0</span></h1>
-    <div class="actions">
-      <button id="addPromptBtn">+ Nuevo Prompt</button>
-      <button id="exportBtn">📤 Exportar Excel</button>
+  <div class="app-container">
+    <header class="app-header">
+      <h1>Biblioteca de Prompts – <span>Contador 4.0</span></h1>
+      <div class="header-actions">
+        <button id="addPromptBtn" class="btn-add">+ Nuevo Prompt</button>
+        <button id="exportBtn" class="btn-export">📤 Exportar Excel</button>
+      </div>
+    </header>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Buscar un prompt..." />
     </div>
-  </header>
 
-  <input type="text" id="searchInput" placeholder="Buscar un prompt..." />
+    <main class="prompt-list" id="promptList"></main>
 
-  <div id="promptList"></div>
+    <footer class="footer">
+      <p>© 2025 <strong>Contador 4.0</strong> — Biblioteca de Prompts</p>
+    </footer>
+  </div>
 
-  <!-- Modal -->
+  <!-- Modal Ver / Editar / Crear Prompt -->
   <div id="promptModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
@@ -243,7 +50,7 @@
         <input type="text" id="promptName" required />
 
         <label for="promptText">Contenido del Prompt</label>
-        <textarea id="promptText" placeholder="Escribe el prompt completo aquí..."></textarea>
+        <textarea id="promptText" placeholder="Escribe el prompt completo aquí..." required></textarea>
 
         <label for="promptContext">Contexto / Cuándo usarlo</label>
         <textarea id="promptContext"></textarea>
@@ -253,28 +60,22 @@
 
         <label for="promptFrequency">Frecuencia</label>
         <select id="promptFrequency">
-          <option value="semanal">Semanal</option>
+          <option value="diario">Diario</option>
+          <option value="semanal" selected>Semanal</option>
           <option value="mensual">Mensual</option>
           <option value="ocasional">Ocasional</option>
         </select>
 
-        <div class="form-buttons">
-          <button type="button" id="deletePrompt" class="btn-delete" style="display:none;">Eliminar</button>
-          <button type="button" id="cancelBtn" class="btn-cancel">Cancelar</button>
-          <button type="submit" class="btn-save">Guardar</button>
+        <div class="modal-actions">
+          <button type="submit" id="savePrompt" class="btn-primary">Guardar</button>
+          <button type="button" id="deletePrompt" class="btn-delete" style="display: none;">Eliminar</button>
+          <button type="button" id="cancelBtn" class="btn-secondary">Cancelar</button>
         </div>
       </form>
     </div>
   </div>
 
-  <footer>© 2025 Contador 4.0 — Biblioteca de Prompts</footer>
-
-  <!-- Librería XLSX (para exportar Excel) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-  <!-- Script funcional -->
-   ...
-  <script src="./script.js" type="module"></script>
-
+  <!-- Script final cargado al final (corrige el error de addEventListener) -->
+  <script type="module" src="./script.js"></script>
 </body>
 </html>
