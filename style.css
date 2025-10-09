@@ -1,274 +1,278 @@
-/* --- Reset y base --- */
-* {
+/* ===============================
+   ESTILO GENERAL - CONTADOR 4.0
+   =============================== */
+
+:root {
+  --naranja: #E86C2A;
+  --azul: #0A2342;
+  --gris-claro: #f8f9fa;
+  --gris-medio: #e0e0e0;
+  --texto: #333;
+  --blanco: #fff;
+}
+
+body {
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  font-family: 'Lato', sans-serif;
-  background-color: #F8F9FA;
-  color: #0B2545;
-  height: 100%;
-  line-height: 1.5;
-}
-
-/* --- Layout principal --- */
-.app-container {
+  font-family: "Lato", sans-serif;
+  background-color: var(--gris-claro);
+  color: var(--texto);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
   min-height: 100vh;
-  padding: 0 24px;
 }
 
-/* --- Header --- */
+/* ===============================
+   CONTENEDOR PRINCIPAL
+   =============================== */
+.app-container {
+  width: 95%;
+  max-width: 950px;
+  margin: 40px auto;
+  background: var(--blanco);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  padding: 24px;
+}
+
+/* ===============================
+   HEADER
+   =============================== */
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 0;
-  border-bottom: 1px solid #E0E3E7;
+  margin-bottom: 20px;
 }
 
 .app-header h1 {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+  color: var(--azul);
   font-size: 1.6rem;
-  color: #0B2545;
 }
 
 .app-header h1 span {
-  color: #E66E33;
-}
-
-.header-actions {
-  display: flex;
-  gap: 12px;
-}
-
-/* --- Botones --- */
-button {
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  border-radius: 10px;
-  font-family: inherit;
+  color: var(--naranja);
 }
 
 .btn-add {
-  background-color: #E66E33;
-  color: white;
-  padding: 10px 20px;
-  box-shadow: 0 2px 4px rgba(230, 110, 51, 0.2);
+  background-color: var(--naranja);
+  border: none;
+  color: var(--blanco);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.btn-add:hover {
+  background-color: #d85e20;
 }
 
-.btn-add:hover {
-  background-color: #cc5d2c;
+/* ===============================
+   BARRA DE BÚSQUEDA Y EXPORTACIÓN
+   =============================== */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+#searchInput {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--gris-medio);
+  border-radius: 8px;
+  font-size: 0.95rem;
 }
 
 .btn-export {
-  background-color: #0B2545;
-  color: white;
-  padding: 10px 20px;
-  box-shadow: 0 2px 4px rgba(11, 37, 69, 0.2);
+  background-color: var(--azul);
+  color: var(--blanco);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
-
 .btn-export:hover {
-  background-color: #15396e;
+  background-color: #082b55;
 }
 
-/* --- Buscador --- */
-.search-bar {
-  margin: 24px 0;
-  display: flex;
-  justify-content: center;
-}
-
-.search-bar input {
-  width: 100%;
-  max-width: 1200px;
-  padding: 14px 20px;
-  font-size: 1rem;
-  border: 1px solid #DDE1E5;
-  border-radius: 12px;
-  background: white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-}
-
-.search-bar input:focus {
-  outline: none;
-  border-color: #E66E33;
-  box-shadow: 0 0 0 3px rgba(230, 110, 51, 0.15);
-}
-
-/* --- Lista de prompts --- */
+/* ===============================
+   TARJETAS DE PROMPTS
+   =============================== */
 .prompt-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 18px;
-  padding-bottom: 40px;
+  gap: 16px;
 }
 
 .prompt-item {
-  background-color: #fff;
-  border-radius: 14px;
-  padding: 18px 20px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  background-color: var(--blanco);
+  border: 1px solid var(--gris-medio);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .prompt-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+  border-color: var(--naranja);
+  box-shadow: 0 4px 12px rgba(232, 108, 42, 0.2);
 }
 
 .prompt-item h3 {
-  font-size: 1rem;
-  color: #0B2545;
+  font-size: 1.05rem;
   font-weight: 600;
+  color: var(--azul);
+  margin: 0;
 }
 
-.prompt-item.fixed {
-  border-left: 4px solid #E66E33;
+.prompt-item.fixed h3 {
+  color: var(--naranja);
 }
 
-/* --- Footer --- */
-.footer {
-  margin-top: auto;
-  padding: 24px 0;
-  text-align: center;
-  color: #888;
-  font-size: 0.9rem;
-}
-
-/* --- Modal --- */
+/* ===============================
+   MODAL
+   =============================== */
 .modal {
   display: none;
   position: fixed;
-  z-index: 9999;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
 .modal-content {
-  background-color: #fff;
-  border-radius: 16px;
-  padding: 28px 32px;
-  width: 90%;
-  max-width: 520px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  background: var(--blanco);
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  padding: 24px;
   position: relative;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
 .close {
   position: absolute;
-  right: 18px;
   top: 14px;
+  right: 18px;
   font-size: 24px;
-  color: #666;
+  color: var(--azul);
   cursor: pointer;
 }
 
-.close:hover {
-  color: #E66E33;
+.modal-content h2 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+  color: var(--azul);
+  margin-bottom: 18px;
 }
 
-/* --- Formulario del modal --- */
-#promptForm {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+/* ===============================
+   CAMPOS DEL FORMULARIO
+   =============================== */
+label {
+  display: block;
   margin-top: 12px;
-}
-
-#promptForm label {
   font-weight: 600;
-  color: #0B2545;
-  margin-top: 6px;
+  color: var(--azul);
 }
 
-#promptForm input,
-#promptForm textarea,
-#promptForm select {
+input, textarea, select {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #DDE1E5;
+  padding: 10px;
+  margin-top: 6px;
   border-radius: 8px;
+  border: 1px solid var(--gris-medio);
   font-size: 0.95rem;
-  background-color: #FAFBFC;
+  font-family: "Lato", sans-serif;
 }
 
-#promptForm textarea {
-  min-height: 70px;
+textarea {
   resize: vertical;
+  min-height: 80px;
 }
 
-#promptForm input:focus,
-#promptForm textarea:focus,
-#promptForm select:focus {
-  outline: none;
-  border-color: #E66E33;
-  box-shadow: 0 0 0 2px rgba(230, 110, 51, 0.15);
-}
-
-/* --- Acciones modal --- */
+/* ===============================
+   BOTONES DEL MODAL
+   =============================== */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 20px;
 }
 
 .btn-primary {
-  background-color: #E66E33;
-  color: white;
-  padding: 10px 20px;
+  background-color: var(--naranja);
+  color: var(--blanco);
+  border: none;
   border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
-
 .btn-primary:hover {
-  background-color: #cc5d2c;
+  background-color: #cf5e22;
 }
 
 .btn-secondary {
-  background-color: #E9ECEF;
-  color: #0B2545;
-  padding: 10px 20px;
+  background-color: var(--gris-medio);
+  color: var(--azul);
+  border: none;
   border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  cursor: pointer;
 }
-
 .btn-secondary:hover {
-  background-color: #DDE1E5;
+  background-color: #d0d0d0;
 }
 
-.btn-delete {
-  background-color: #d9534f;
-  color: white;
-  padding: 10px 20px;
+.btn-danger {
+  background-color: #c62828;
+  color: var(--blanco);
+  border: none;
   border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-danger:hover {
+  background-color: #a31e1e;
 }
 
-.btn-delete:hover {
-  background-color: #b0413f;
-}
-
-/* --- Responsivo --- */
-@media (max-width: 768px) {
+/* ===============================
+   RESPONSIVE
+   =============================== */
+@media (max-width: 600px) {
   .app-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
 
-  .header-actions {
-    width: 100%;
-    justify-content: flex-start;
+  .search-bar {
+    flex-direction: column;
   }
 
-  .prompt-list {
-    grid-template-columns: 1fr;
+  .prompt-item h3 {
+    font-size: 0.95rem;
+  }
+
+  .modal-content {
+    padding: 18px;
   }
 }
