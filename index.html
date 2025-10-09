@@ -5,251 +5,274 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Biblioteca de Prompts – Contador 4.0</title>
 
-  <!-- ✅ Nuevo favicon -->
-  <link rel="icon" type="image/png" href="/Favicon-app.png" />
+  <!-- Favicon actualizado -->
+  <link rel="icon" type="image/png" href="Favicon-app.png" />
 
-  <!-- Fuentes -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-
-  <!-- Estilos base -->
+  <!-- Estilos base (minimalista estilo Notion) -->
   <style>
-    :root {
-      --brand-orange: #e66e33;
-      --brand-dark: #0a1e33;
-      --bg-light: #f8f9fa;
-      --border-radius: 14px;
-    }
-
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-light);
+      background-color: #F8F9FA;
       margin: 0;
-      padding: 2rem;
-      color: var(--brand-dark);
+      padding: 0;
+      color: #0A2342;
     }
 
-    h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-
-    h1 span {
-      color: var(--brand-orange);
-    }
-
-    /* Controles superiores */
-    .top-bar {
+    header {
       display: flex;
-      justify-content: flex-end;
       align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
+      justify-content: space-between;
+      padding: 1.5rem 2rem;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
-    .search-bar {
-      width: 100%;
-      max-width: 80%;
-      padding: 0.9rem 1rem;
-      border: 1px solid #e0e0e0;
-      border-radius: var(--border-radius);
-      font-size: 1rem;
-      outline: none;
+    header h1 {
+      font-size: 1.6rem;
+      margin: 0;
+      font-weight: 800;
+      color: #0A2342;
+    }
+
+    header h1 span {
+      color: #E66E33;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
       transition: 0.2s;
     }
 
-    .search-bar:focus {
-      border-color: var(--brand-orange);
-      box-shadow: 0 0 0 3px rgba(230, 110, 51, 0.2);
+    #addPromptBtn {
+      background: #E66E33;
+      color: white;
+      padding: 10px 18px;
     }
 
-    .btn {
-      border: none;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      padding: 0.8rem 1.4rem;
-      font-weight: 600;
+    #addPromptBtn:hover {
+      opacity: 0.9;
+    }
+
+    #exportBtn {
+      background: #0A2342;
+      color: white;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #exportBtn:hover {
+      opacity: 0.9;
+    }
+
+    #searchInput {
+      width: 90%;
+      margin: 1.5rem auto;
+      display: block;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 1px solid #d0d4da;
       font-size: 1rem;
-      transition: 0.3s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
-    .btn-primary {
-      background-color: var(--brand-orange);
-      color: #fff;
-    }
-
-    .btn-primary:hover {
-      background-color: #cc5f2b;
-    }
-
-    .btn-secondary {
-      background-color: var(--brand-dark);
-      color: #fff;
-    }
-
-    .btn-secondary:hover {
-      background-color: #142c47;
-    }
-
-    /* Grid de tarjetas */
-    .grid {
+    #promptList {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 1.2rem;
-      margin-top: 1rem;
+      padding: 2rem;
     }
 
-    .card {
-      background: white;
-      border-radius: var(--border-radius);
-      padding: 1.2rem 1.4rem;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    .prompt-item {
+      background: #fff;
+      border-radius: 14px;
+      padding: 1.4rem;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    .prompt-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
 
-    .card h3 {
+    .prompt-item.fixed {
+      border-left: 5px solid #E66E33;
+    }
+
+    .prompt-item h3 {
+      margin: 0;
       font-size: 1.1rem;
       font-weight: 700;
-      margin: 0 0 0.4rem 0;
+      color: #0A2342;
     }
 
-    .card p {
-      font-size: 0.95rem;
-      color: #333;
-      margin: 0.2rem 0;
-    }
-
-    /* Modal */
+    /* ===== MODAL ===== */
     .modal {
       display: none;
       position: fixed;
-      z-index: 999;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.4);
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
       align-items: center;
       justify-content: center;
+      z-index: 1000;
     }
 
     .modal-content {
-      background-color: white;
-      border-radius: var(--border-radius);
+      background: #fff;
+      border-radius: 14px;
       padding: 2rem;
       width: 90%;
-      max-width: 600px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      max-width: 700px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
     }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .modal-header h2 {
-      margin: 0;
+    .modal h2 {
+      margin-top: 0;
       font-size: 1.4rem;
-      font-weight: 700;
+      font-weight: 800;
+      color: #0A2342;
     }
 
     .close {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      font-size: 22px;
       cursor: pointer;
-      font-size: 1.4rem;
       color: #666;
-      transition: 0.2s;
     }
 
-    .close:hover {
-      color: var(--brand-orange);
-    }
-
-    label {
-      font-weight: 600;
-      margin-top: 1rem;
+    form label {
       display: block;
+      font-weight: 600;
+      margin-top: 1.2rem;
+      color: #0A2342;
     }
 
-    input[type="text"], textarea, select {
+    form input, form textarea, form select {
       width: 100%;
-      padding: 0.7rem;
-      border-radius: var(--border-radius);
-      border: 1px solid #ccc;
-      font-size: 1rem;
       margin-top: 0.3rem;
-      resize: none;
-      box-sizing: border-box;
-      background-color: #fefefe;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      background: #fdfdfd;
     }
 
-    textarea {
-      height: 90px;
+    form textarea {
+      resize: vertical;
+      min-height: 80px;
     }
 
-    .modal-footer {
+    .form-buttons {
+      margin-top: 1.8rem;
       display: flex;
       justify-content: flex-end;
       gap: 0.8rem;
-      margin-top: 1.2rem;
+    }
+
+    .btn-delete {
+      background: #d9534f;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 10px;
+    }
+
+    .btn-delete:hover {
+      opacity: 0.9;
+    }
+
+    .btn-cancel {
+      background: #bfc1c3;
+      color: #222;
+      padding: 10px 16px;
+      border-radius: 10px;
+    }
+
+    .btn-save {
+      background: #0A2342;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 10px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+      margin: 1rem 0 2rem;
     }
   </style>
 </head>
 
 <body>
-  <h1>Biblioteca de Prompts – <span>Contador 4.0</span></h1>
+  <header>
+    <h1>Biblioteca de Prompts – <span>Contador 4.0</span></h1>
+    <div class="actions">
+      <button id="addPromptBtn">+ Nuevo Prompt</button>
+      <button id="exportBtn">📤 Exportar Excel</button>
+    </div>
+  </header>
 
-  <div class="top-bar">
-    <input type="text" id="search" class="search-bar" placeholder="Buscar un prompt..." />
-    <button id="exportExcel" class="btn btn-secondary">📤 Exportar Excel</button>
-    <button id="newPrompt" class="btn btn-primary">+ Nuevo Prompt</button>
-  </div>
+  <input type="text" id="searchInput" placeholder="Buscar un prompt..." />
 
-  <div id="promptList" class="grid"></div>
+  <div id="promptList"></div>
 
   <!-- Modal -->
   <div id="promptModal" class="modal">
     <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modalTitle">Nuevo Prompt</h2>
-        <span class="close" id="closeModal">&times;</span>
-      </div>
+      <span class="close">&times;</span>
+      <h2 id="modalTitle">Nuevo Prompt</h2>
 
-      <label>Nombre del Prompt</label>
-      <input type="text" id="promptName" placeholder="Escribe el nombre..." />
+      <form id="promptForm">
+        <label for="promptName">Nombre del Prompt</label>
+        <input type="text" id="promptName" required />
 
-      <label>Contenido del Prompt</label>
-      <textarea id="promptContent" placeholder="Escribe el prompt completo aquí..."></textarea>
+        <label for="promptText">Contenido del Prompt</label>
+        <textarea id="promptText" placeholder="Escribe el prompt completo aquí..."></textarea>
 
-      <label>Contexto / Cuándo usarlo</label>
-      <textarea id="promptContext" placeholder="Describe cuándo usarlo..."></textarea>
+        <label for="promptContext">Contexto / Cuándo usarlo</label>
+        <textarea id="promptContext"></textarea>
 
-      <label>Personalización</label>
-      <textarea id="promptCustomization" placeholder="Notas o variantes..."></textarea>
+        <label for="promptPersonalization">Personalización</label>
+        <textarea id="promptPersonalization"></textarea>
 
-      <label>Frecuencia</label>
-      <select id="promptFrequency">
-        <option value="Semanal">Semanal</option>
-        <option value="Mensual">Mensual</option>
-        <option value="Trimestral">Trimestral</option>
-      </select>
+        <label for="promptFrequency">Frecuencia</label>
+        <select id="promptFrequency">
+          <option value="semanal">Semanal</option>
+          <option value="mensual">Mensual</option>
+          <option value="ocasional">Ocasional</option>
+        </select>
 
-      <div class="modal-footer">
-        <button id="savePrompt" class="btn btn-secondary">Guardar</button>
-        <button id="cancelPrompt" class="btn">Cancelar</button>
-      </div>
+        <div class="form-buttons">
+          <button type="button" id="deletePrompt" class="btn-delete" style="display:none;">Eliminar</button>
+          <button type="button" id="cancelBtn" class="btn-cancel">Cancelar</button>
+          <button type="submit" class="btn-save">Guardar</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- Script principal -->
+  <footer>© 2025 Contador 4.0 — Biblioteca de Prompts</footer>
+
+  <!-- Librería XLSX (para exportar Excel) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <!-- Script funcional -->
   <script src="script.js"></script>
 </body>
 </html>
