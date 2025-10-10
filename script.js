@@ -87,10 +87,14 @@ function renderPrompts(list = getAllPrompts()) {
     promptList.appendChild(div);
   });
 }
-// --- Modal ---
+// --- Abrir modal (ver/editar/nuevo) ---
 function openModal(prompt = null) {
   deleteBtn.style.display = "none";
   promptForm.reset();
+
+  // limpiar flags siempre
+  delete promptForm.dataset.editId;
+  delete promptForm.dataset.isFixed;
 
   if (prompt) {
     modalTitle.textContent = prompt.fixed ? "Vista de Prompt Base" : "Editar Prompt";
@@ -100,8 +104,9 @@ function openModal(prompt = null) {
     personalizationInput.value = prompt.personalization;
     freqSelect.value = prompt.frequency;
     promptForm.dataset.editId = prompt.id;
-    promptForm.dataset.isFixed = prompt.fixed || false;
+    if (prompt.fixed) promptForm.dataset.isFixed = "true";
 
+    // deshabilitar solo si es base
     promptForm.querySelectorAll("input, textarea, select").forEach(el => {
       el.disabled = prompt.fixed ? true : false;
     });
@@ -109,15 +114,48 @@ function openModal(prompt = null) {
     if (!prompt.fixed) deleteBtn.style.display = "inline-block";
   } else {
     modalTitle.textContent = "Nuevo Prompt";
-    delete promptForm.dataset.editId;
-    promptForm.querySelectorAll("input, textarea, select").forEach(el => el.disabled = false);
+    promptForm.querySelectorAll("input, textarea, select").forEach(el => {
+      el.disabled = false;
+    });
   }
 
-  // Mostrar modal con clase animada y bloquear scroll del body
   document.body.classList.add("modal-open");
-  promptModal.classList.add("show");
   promptModal.style.display = "flex";
 }
+
+
+// --- Guardar / actualizar ---
+promptForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  // prevenir guardado de base
+  if (promptForm.dataset.isFixed === "true") {
+    alert("Los prompts base no se pueden editar.");
+    return;
+  }
+
+  const promptData = {
+    id: promptForm.dataset.editId || Date.now(),
+    name: nameInput.value.trim(),
+    context: contextInput.value.trim(),
+    personalization: personalizationInput.value.trim(),
+    text: textInput.value.trim(),
+    frequency: freqSelect.value,
+    fixed: false
+  };
+
+  const existingIndex = userPrompts.findIndex(p => p.id == promptForm.dataset.editId);
+  if (existingIndex > -1) {
+    userPrompts[existingIndex] = promptData;
+  } else {
+    userPrompts.push(promptData);
+  }
+
+  localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
+  renderPrompts();
+  closeModalWindow();
+});
+
 
 function closeModalWindow() {
   // Ocultar modal con transición suave
