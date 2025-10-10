@@ -367,3 +367,67 @@ textarea {
     transform: translateY(20px);
   }
 }
+/* ===============================
+   OPTIMIZACIÓN RESPONSIVE DEL MODAL (VERSIÓN MÓVIL)
+   =============================== */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    max-width: 95%;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 12px;
+    padding: 20px;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: var(--naranja) #f1f1f1;
+  }
+
+  .modal-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  .modal-content::-webkit-scrollbar-thumb {
+    background-color: var(--naranja);
+    border-radius: 10px;
+  }
+
+  /* Evita que se desplace el fondo cuando el modal está abierto */
+  body.modal-open {
+    overflow: hidden;
+  }
+
+  /* Botón cerrar más accesible */
+  .close {
+    top: 10px;
+    right: 14px;
+    font-size: 22px;
+    background: #fff;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    line-height: 26px;
+    text-align: center;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
+  }
+
+  /* Texto más legible en pantallas pequeñas */
+  input, textarea, select {
+    font-size: 0.9rem;
+  }
+
+  .modal-content h2 {
+    font-size: 1.1rem;
+    text-align: center;
+  }
+
+  /* Botones verticales */
+  .modal-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .modal-actions button {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+}
