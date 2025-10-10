@@ -1,5 +1,5 @@
 // ===============================
-// BIBLIOTECA DE PROMPTS – CONTADOR 4.0
+// BIBLIOTECA DE PROMPTS – CONTADOR 4.0 (Versión MVP Mejorada)
 // ===============================
 
 const addPromptBtn = document.getElementById("addPromptBtn");
@@ -74,12 +74,9 @@ function getAllPrompts() {
   return [...defaultPrompts, ...userPrompts];
 }
 
+// --- Renderizar lista ---
 function renderPrompts(list = getAllPrompts()) {
   promptList.innerHTML = "";
-  if (list.length === 0) {
-    promptList.innerHTML = "<p style='text-align:center;color:#888;'>No hay prompts disponibles.</p>";
-    return;
-  }
   list.forEach((p) => {
     const div = document.createElement("div");
     div.classList.add("prompt-item");
@@ -93,8 +90,8 @@ function renderPrompts(list = getAllPrompts()) {
 
 // --- Modal ---
 function openModal(prompt = null) {
+  deleteBtn.style.display = "none";
   promptForm.reset();
-  deleteBtn.style.display = "none"; // Por defecto, oculto
 
   if (prompt) {
     modalTitle.textContent = prompt.fixed ? "Vista de Prompt Base" : "Editar Prompt";
@@ -110,21 +107,22 @@ function openModal(prompt = null) {
       el.disabled = prompt.fixed ? true : false;
     });
 
-    if (!prompt.fixed) {
-      deleteBtn.style.display = "inline-block"; // ✅ Mostrar botón eliminar
-    }
+    if (!prompt.fixed) deleteBtn.style.display = "inline-block";
   } else {
     modalTitle.textContent = "Nuevo Prompt";
     delete promptForm.dataset.editId;
     promptForm.querySelectorAll("input, textarea, select").forEach(el => el.disabled = false);
-    setTimeout(() => nameInput.focus(), 100);
   }
 
+  promptModal.classList.add("show");
   promptModal.style.display = "flex";
 }
 
 function closeModalWindow() {
-  promptModal.style.display = "none";
+  promptModal.classList.remove("show");
+  setTimeout(() => {
+    promptModal.style.display = "none";
+  }, 200);
 }
 
 // --- Guardar / actualizar ---
@@ -155,6 +153,7 @@ promptForm.addEventListener("submit", (e) => {
   localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
   renderPrompts();
   closeModalWindow();
+  showToast(promptForm.dataset.editId ? "Prompt actualizado" : "Prompt creado");
 });
 
 // --- Eliminar prompt ---
@@ -166,6 +165,7 @@ deleteBtn.addEventListener("click", () => {
     localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
     renderPrompts();
     closeModalWindow();
+    showToast("Prompt eliminado", "error");
   }
 });
 
@@ -193,6 +193,7 @@ exportBtn.addEventListener("click", () => {
   link.download = "biblioteca_prompts_contador4.csv";
   link.click();
 });
+
 // --- Toast notifications ---
 function showToast(message, type = "success") {
   const container = document.getElementById("toastContainer");
@@ -201,7 +202,6 @@ function showToast(message, type = "success") {
   toast.textContent = message;
   container.appendChild(toast);
 
-  // Desaparecer después de 3s
   setTimeout(() => {
     toast.style.animation = "toast-out 0.4s forwards";
     setTimeout(() => toast.remove(), 400);
@@ -212,6 +212,12 @@ function showToast(message, type = "success") {
 addPromptBtn.addEventListener("click", () => openModal());
 closeModal.addEventListener("click", closeModalWindow);
 cancelBtn.addEventListener("click", closeModalWindow);
+promptModal.addEventListener("click", (e) => {
+  if (e.target === promptModal) closeModalWindow();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && promptModal.style.display === "flex") closeModalWindow();
+});
 
 // --- Render inicial ---
 renderPrompts();
