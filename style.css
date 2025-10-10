@@ -86,13 +86,6 @@ body {
   border: 1px solid var(--gris-medio);
   border-radius: 8px;
   font-size: 0.95rem;
-  transition: all 0.2s ease;
-}
-
-#searchInput:focus {
-  outline: none;
-  border-color: var(--naranja);
-  box-shadow: 0 0 0 2px rgba(232,108,42,0.15);
 }
 
 .btn-export {
@@ -119,10 +112,10 @@ body {
 
 .prompt-item {
   background-color: var(--blanco);
-  border: 1px solid #e4e4e4;
+  border: 1px solid var(--gris-medio);
   border-radius: 12px;
   padding: 18px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
   cursor: pointer;
 }
@@ -145,19 +138,23 @@ body {
 }
 
 /* ===============================
-   MODAL
+   MODAL CON ANIMACIÓN Y RESPONSIVE
    =============================== */
 .modal {
   display: none;
   position: fixed;
   z-index: 1000;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(0, 0, 0, 0.45);
   justify-content: center;
   align-items: center;
   padding: 20px;
+  transition: opacity 0.25s ease;
+}
+
+.modal.show {
+  display: flex;
+  opacity: 1;
 }
 
 .modal-content {
@@ -168,6 +165,20 @@ body {
   padding: 24px;
   position: relative;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .close {
@@ -184,6 +195,7 @@ body {
   font-weight: 900;
   color: var(--azul);
   margin-bottom: 18px;
+  font-size: 1.4rem;
 }
 
 /* ===============================
@@ -217,6 +229,7 @@ textarea {
 .modal-actions {
   display: flex;
   justify-content: flex-end;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 20px;
 }
@@ -262,24 +275,9 @@ textarea {
 }
 
 /* ===============================
-   FOOTER
-   =============================== */
-.footer {
-  text-align: center;
-  font-size: 0.85rem;
-  color: #777;
-  margin-top: 30px;
-}
-
-.footer span {
-  color: var(--naranja);
-  font-weight: 600;
-}
-
-/* ===============================
    RESPONSIVE
    =============================== */
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .app-header {
     flex-direction: column;
     align-items: flex-start;
@@ -290,144 +288,18 @@ textarea {
     flex-direction: column;
   }
 
-  .prompt-item h3 {
-    font-size: 0.95rem;
-  }
-
   .modal-content {
-    padding: 18px;
-  }
-}
-/* ===============================
-   ANIMACIONES MODAL
-   =============================== */
-.modal {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-}
-
-.modal.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.modal-content {
-  transform: translateY(-20px);
-  transition: transform 0.3s ease;
-}
-
-.modal.show .modal-content {
-  transform: translateY(0);
-}
-
-/* ===============================
-   TOAST (NOTIFICACIÓN)
-   =============================== */
-.toast-container {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 2000;
-}
-
-.toast {
-  background-color: var(--azul);
-  color: var(--blanco);
-  padding: 12px 18px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  opacity: 0;
-  transform: translateY(20px);
-  animation: toast-in 0.3s forwards;
-}
-
-.toast.success {
-  background-color: #2e7d32; /* Verde éxito */
-}
-.toast.error {
-  background-color: #c62828; /* Rojo error */
-}
-
-@keyframes toast-in {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes toast-out {
-  to {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-}
-/* ===============================
-   OPTIMIZACIÓN RESPONSIVE DEL MODAL (VERSIÓN MÓVIL)
-   =============================== */
-@media (max-width: 768px) {
-  .modal-content {
-    width: 95%;
     max-width: 95%;
-    max-height: 85vh;
-    overflow-y: auto;
-    border-radius: 12px;
-    padding: 20px;
-    box-sizing: border-box;
-    scrollbar-width: thin;
-    scrollbar-color: var(--naranja) #f1f1f1;
-  }
-
-  .modal-content::-webkit-scrollbar {
-    width: 6px;
-  }
-  .modal-content::-webkit-scrollbar-thumb {
-    background-color: var(--naranja);
+    height: 90%;
     border-radius: 10px;
-  }
-
-  /* Evita que se desplace el fondo cuando el modal está abierto */
-  body.modal-open {
-    overflow: hidden;
-  }
-
-  /* Botón cerrar más accesible */
-  .close {
-    top: 10px;
-    right: 14px;
-    font-size: 22px;
-    background: #fff;
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    line-height: 26px;
-    text-align: center;
-    box-shadow: 0 0 4px rgba(0,0,0,0.1);
-  }
-
-  /* Texto más legible en pantallas pequeñas */
-  input, textarea, select {
-    font-size: 0.9rem;
+    padding: 18px;
   }
 
   .modal-content h2 {
-    font-size: 1.1rem;
-    text-align: center;
+    font-size: 1.2rem;
   }
 
-  /* Botones verticales */
-  .modal-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .modal-actions button {
-    width: 100%;
+  .prompt-item h3 {
     font-size: 0.95rem;
   }
 }
