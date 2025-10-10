@@ -337,3 +337,33 @@ textarea {
     font-size: 0.95rem;
   }
 }
+/* ===============================
+   FOOTER
+   =============================== */
+.app-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 40px;
+  padding: 24px 16px;
+  border-top: 1px solid var(--gris-borde);
+  background-color: var(--gris-base);
+  border-radius: 0 0 16px 16px;
+}
+
+.app-footer a {
+  color: var(--naranja);
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.app-footer a:hover {
+  color: var(--azul);
+  text-decoration: underline;
+}
+
+.app-footer em {
+  font-style: italic;
+  color: #333;
+}
