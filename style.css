@@ -10,6 +10,7 @@ body {
   background-color: #f8f9fa;
   color: #1c2431;
   line-height: 1.5;
+  overflow-x: hidden;
 }
 
 /* === CONTENEDOR PRINCIPAL === */
@@ -19,7 +20,7 @@ body {
   background: #ffffff;
   padding: 40px 50px;
   border-radius: 16px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
 }
 
 /* === HEADER === */
@@ -93,7 +94,7 @@ button {
   border-color: #e86c2a;
 }
 
-/* === TARJETAS (CATEGORÍAS) === */
+/* === TARJETAS === */
 .prompt-list {
   display: flex;
   flex-wrap: wrap;
@@ -104,7 +105,7 @@ button {
 .prompt-card {
   background: #fff;
   border-radius: 12px;
-  padding: 18px 20px;
+  padding: 20px 22px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
   flex: 1 1 calc(25% - 20px);
   min-width: 250px;
@@ -128,30 +129,39 @@ button {
   display: none;
   position: fixed;
   z-index: 200;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
   overflow-y: auto;
-  background-color: rgba(0, 0, 0, 0.4);
-  padding: 20px;
+  padding: 30px 15px;
 }
 
 .modal-content {
-  background: #fff;
-  margin: 60px auto;
+  background: #ffffff;
+  margin: 50px auto;
   padding: 30px;
   border-radius: 12px;
   max-width: 600px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   position: relative;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .close {
   position: absolute;
-  top: 12px;
-  right: 16px;
-  font-size: 1.5rem;
+  top: 14px;
+  right: 18px;
+  font-size: 1.6rem;
   color: #666;
   cursor: pointer;
 }
@@ -166,7 +176,7 @@ button {
   margin-bottom: 20px;
 }
 
-/* FORMULARIO DEL MODAL */
+/* === FORMULARIO DEL MODAL === */
 .modal-content label {
   display: block;
   font-weight: 600;
@@ -181,8 +191,11 @@ button {
   padding: 10px 12px;
   border: 1.5px solid #dcdcdc;
   border-radius: 8px;
+  font-family: "Lato", sans-serif;
   font-size: 1rem;
   resize: vertical;
+  color: #333;
+  background: #fdfdfd;
 }
 
 .modal-content textarea {
@@ -229,7 +242,7 @@ button {
 /* === FOOTER === */
 .app-footer {
   text-align: center;
-  padding: 30px 20px 40px;
+  padding: 40px 20px 60px;
   background: #fff;
   color: #444;
   font-size: 0.95rem;
@@ -267,7 +280,8 @@ button {
 
   .modal-content {
     width: 100%;
-    margin: 40px auto;
+    margin: 30px auto;
+    padding: 25px;
   }
 
   .app-footer {
