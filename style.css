@@ -1,25 +1,28 @@
 /* ===============================
-   ESTILO GENERAL - CONTADOR 4.0
+   ESTILO GENERAL - CONTADOR 4.0 (Look Notion)
    =============================== */
 
 :root {
   --naranja: #E86C2A;
   --azul: #0A2342;
   --gris-claro: #f8f9fa;
+  --gris-base: #f6f6f6;
   --gris-medio: #e0e0e0;
-  --texto: #333;
-  --blanco: #fff;
+  --gris-borde: #dcdcdc;
+  --texto: #2b2b2b;
+  --blanco: #ffffff;
 }
 
 body {
   margin: 0;
   font-family: "Lato", sans-serif;
-  background-color: var(--gris-claro);
+  background-color: var(--gris-base);
   color: var(--texto);
   display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ===============================
@@ -31,7 +34,8 @@ body {
   margin: 40px auto;
   background: var(--blanco);
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--gris-borde);
   overflow: hidden;
   padding: 24px;
 }
@@ -51,6 +55,7 @@ body {
   font-weight: 900;
   color: var(--azul);
   font-size: 1.6rem;
+  letter-spacing: -0.5px;
 }
 
 .app-header h1 span {
@@ -62,13 +67,15 @@ body {
   border: none;
   color: var(--blanco);
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 10px 18px;
   cursor: pointer;
   transition: 0.2s ease;
+  box-shadow: 0 3px 8px rgba(232, 108, 42, 0.25);
 }
 .btn-add:hover {
   background-color: #d85e20;
+  transform: translateY(-1px);
 }
 
 /* ===============================
@@ -82,48 +89,59 @@ body {
 
 #searchInput {
   flex: 1;
-  padding: 10px;
-  border: 1px solid var(--gris-medio);
-  border-radius: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--gris-borde);
+  border-radius: 10px;
+  background-color: var(--gris-claro);
   font-size: 0.95rem;
+  transition: 0.2s ease;
+}
+
+#searchInput:focus {
+  outline: none;
+  border-color: var(--naranja);
+  background-color: var(--blanco);
+  box-shadow: 0 0 0 2px rgba(232, 108, 42, 0.2);
 }
 
 .btn-export {
   background-color: var(--azul);
   color: var(--blanco);
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 10px 16px;
   cursor: pointer;
+  font-weight: 600;
   transition: 0.2s ease;
+  box-shadow: 0 3px 8px rgba(10, 35, 66, 0.2);
 }
 .btn-export:hover {
   background-color: #082b55;
 }
 
 /* ===============================
-   TARJETAS DE PROMPTS
+   TARJETAS DE PROMPTS (Look Notion)
    =============================== */
 .prompt-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
+  gap: 18px;
 }
 
 .prompt-item {
   background-color: var(--blanco);
-  border: 1px solid var(--gris-medio);
+  border: 1px solid var(--gris-borde);
   border-radius: 12px;
   padding: 18px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .prompt-item:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   border-color: var(--naranja);
-  box-shadow: 0 4px 12px rgba(232, 108, 42, 0.2);
+  box-shadow: 0 4px 14px rgba(232, 108, 42, 0.15);
 }
 
 .prompt-item h3 {
@@ -138,14 +156,14 @@ body {
 }
 
 /* ===============================
-   MODAL CON ANIMACIÓN Y RESPONSIVE
+   MODAL CON ANIMACIÓN Y ESTILO NOTION
    =============================== */
 .modal {
   display: none;
   position: fixed;
   z-index: 1000;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.35);
   justify-content: center;
   align-items: center;
   padding: 20px;
@@ -159,15 +177,16 @@ body {
 
 .modal-content {
   background: var(--blanco);
-  border-radius: 12px;
-  max-width: 600px;
+  border-radius: 16px;
+  max-width: 620px;
   width: 100%;
-  padding: 24px;
+  padding: 28px;
   position: relative;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   animation: slideUp 0.3s ease;
   overflow-y: auto;
   max-height: 90vh;
+  border: 1px solid var(--gris-borde);
 }
 
 @keyframes slideUp {
@@ -188,6 +207,11 @@ body {
   font-size: 24px;
   color: var(--azul);
   cursor: pointer;
+  opacity: 0.8;
+  transition: 0.2s ease;
+}
+.close:hover {
+  opacity: 1;
 }
 
 .modal-content h2 {
@@ -196,6 +220,7 @@ body {
   color: var(--azul);
   margin-bottom: 18px;
   font-size: 1.4rem;
+  letter-spacing: -0.3px;
 }
 
 /* ===============================
@@ -210,12 +235,21 @@ label {
 
 input, textarea, select {
   width: 100%;
-  padding: 10px;
+  padding: 10px 12px;
   margin-top: 6px;
-  border-radius: 8px;
-  border: 1px solid var(--gris-medio);
+  border-radius: 10px;
+  border: 1px solid var(--gris-borde);
+  background-color: var(--gris-claro);
   font-size: 0.95rem;
   font-family: "Lato", sans-serif;
+  transition: 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--naranja);
+  background-color: var(--blanco);
+  box-shadow: 0 0 0 2px rgba(232, 108, 42, 0.15);
 }
 
 textarea {
@@ -231,14 +265,14 @@ textarea {
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
 .btn-primary {
   background-color: var(--naranja);
   color: var(--blanco);
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 10px 18px;
   font-weight: 600;
   cursor: pointer;
@@ -249,29 +283,29 @@ textarea {
 }
 
 .btn-secondary {
-  background-color: var(--gris-medio);
+  background-color: var(--gris-claro);
   color: var(--azul);
-  border: none;
-  border-radius: 8px;
+  border: 1px solid var(--gris-borde);
+  border-radius: 10px;
   padding: 10px 18px;
   font-weight: 600;
   cursor: pointer;
 }
 .btn-secondary:hover {
-  background-color: #d0d0d0;
+  background-color: #eaeaea;
 }
 
 .btn-danger {
-  background-color: #c62828;
+  background-color: #d33b3b;
   color: var(--blanco);
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 10px 18px;
   font-weight: 600;
   cursor: pointer;
 }
 .btn-danger:hover {
-  background-color: #a31e1e;
+  background-color: #a52727;
 }
 
 /* ===============================
@@ -290,9 +324,9 @@ textarea {
 
   .modal-content {
     max-width: 95%;
-    height: 90%;
-    border-radius: 10px;
-    padding: 18px;
+    height: 92%;
+    border-radius: 14px;
+    padding: 20px;
   }
 
   .modal-content h2 {
