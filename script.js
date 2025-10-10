@@ -1,5 +1,5 @@
 // ===============================
-// BIBLIOTECA DE PROMPTS – CONTADOR 4.0 (Versión MVP Mejorada)
+// BIBLIOTECA DE PROMPTS – CONTADOR 4.0
 // ===============================
 
 const addPromptBtn = document.getElementById("addPromptBtn");
@@ -68,15 +68,26 @@ const defaultPrompts = [
   }
 ];
 
+// --- Datos del usuario (almacenados en localStorage) ---
 let userPrompts = JSON.parse(localStorage.getItem("userPrompts")) || [];
 
+// --- Combina los prompts base y los personales ---
 function getAllPrompts() {
   return [...defaultPrompts, ...userPrompts];
 }
 
-// --- Renderizar lista ---
+// --- Renderiza los prompts ---
 function renderPrompts(list = getAllPrompts()) {
   promptList.innerHTML = "";
+
+  if (!list.length) {
+    const empty = document.createElement("p");
+    empty.textContent = "No hay prompts aún. Crea uno nuevo.";
+    empty.style.textAlign = "center";
+    promptList.appendChild(empty);
+    return;
+  }
+
   list.forEach((p) => {
     const div = document.createElement("div");
     div.classList.add("prompt-item");
@@ -87,54 +98,56 @@ function renderPrompts(list = getAllPrompts()) {
     promptList.appendChild(div);
   });
 }
-// --- Abrir modal (ver/editar/nuevo) ---
-function openModal(prompt = null) {
-  deleteBtn.style.display = "none";
-  promptForm.reset();
 
-  // limpiar flags siempre
+// --- Abrir modal (nuevo o existente) ---
+function openModal(prompt = null) {
+  // Reset y limpiar flags
+  promptForm.reset();
   delete promptForm.dataset.editId;
   delete promptForm.dataset.isFixed;
 
+  deleteBtn.style.display = "none";
+
   if (prompt) {
     modalTitle.textContent = prompt.fixed ? "Vista de Prompt Base" : "Editar Prompt";
-    nameInput.value = prompt.name;
-    textInput.value = prompt.text;
-    contextInput.value = prompt.context;
-    personalizationInput.value = prompt.personalization;
-    freqSelect.value = prompt.frequency;
+    nameInput.value = prompt.name || "";
+    textInput.value = prompt.text || "";
+    contextInput.value = prompt.context || "";
+    personalizationInput.value = prompt.personalization || "";
+    freqSelect.value = prompt.frequency || "semanal";
     promptForm.dataset.editId = prompt.id;
     if (prompt.fixed) promptForm.dataset.isFixed = "true";
 
-    // deshabilitar solo si es base
+    // Deshabilitar si es base
     promptForm.querySelectorAll("input, textarea, select").forEach(el => {
-      el.disabled = prompt.fixed ? true : false;
+      el.disabled = prompt.fixed;
     });
 
+    // Solo mostrar eliminar si es personal
     if (!prompt.fixed) deleteBtn.style.display = "inline-block";
   } else {
     modalTitle.textContent = "Nuevo Prompt";
-    promptForm.querySelectorAll("input, textarea, select").forEach(el => {
-      el.disabled = false;
-    });
+    promptForm.querySelectorAll("input, textarea, select").forEach(el => el.disabled = false);
   }
 
-  document.body.classList.add("modal-open");
   promptModal.style.display = "flex";
 }
 
+// --- Cerrar modal ---
+function closeModalWindow() {
+  promptModal.style.display = "none";
+}
 
-// --- Guardar / actualizar ---
+// --- Guardar / Actualizar prompt ---
 promptForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  // prevenir guardado de base
   if (promptForm.dataset.isFixed === "true") {
     alert("Los prompts base no se pueden editar.");
     return;
   }
 
-  const promptData = {
+  const newPrompt = {
     id: promptForm.dataset.editId || Date.now(),
     name: nameInput.value.trim(),
     context: contextInput.value.trim(),
@@ -144,93 +157,48 @@ promptForm.addEventListener("submit", (e) => {
     fixed: false
   };
 
-  const existingIndex = userPrompts.findIndex(p => p.id == promptForm.dataset.editId);
-  if (existingIndex > -1) {
-    userPrompts[existingIndex] = promptData;
+  const index = userPrompts.findIndex(p => p.id == promptForm.dataset.editId);
+  if (index > -1) {
+    userPrompts[index] = newPrompt;
   } else {
-    userPrompts.push(promptData);
+    userPrompts.push(newPrompt);
   }
 
   localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
   renderPrompts();
   closeModalWindow();
-});
-
-
-function closeModalWindow() {
-  // Ocultar modal con transición suave
-  promptModal.classList.remove("show");
-  document.body.classList.remove("modal-open");
-  setTimeout(() => {
-    promptModal.style.display = "none";
-  }, 200);
-}
-
-
-   
-
-// --- Guardar / actualizar ---
-promptForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  if (promptForm.dataset.isFixed === "true") {
-    alert("Los prompts base no se pueden editar.");
-    return;
-  }
-
-  const promptData = {
-    id: promptForm.dataset.editId ? promptForm.dataset.editId : Date.now(),
-    name: nameInput.value.trim(),
-    context: contextInput.value.trim(),
-    personalization: personalizationInput.value.trim(),
-    text: textInput.value.trim(),
-    frequency: freqSelect.value
-  };
-
-  if (promptForm.dataset.editId) {
-    const index = userPrompts.findIndex(p => p.id == promptForm.dataset.editId);
-    if (index > -1) userPrompts[index] = promptData;
-  } else {
-    userPrompts.push(promptData);
-  }
-
-  localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
-  renderPrompts();
-  closeModalWindow();
-  showToast(promptForm.dataset.editId ? "Prompt actualizado" : "Prompt creado");
 });
 
 // --- Eliminar prompt ---
 deleteBtn.addEventListener("click", () => {
   const id = promptForm.dataset.editId;
   if (!id) return;
+
   if (confirm("¿Seguro que deseas eliminar este prompt?")) {
     userPrompts = userPrompts.filter(p => p.id != id);
     localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
     renderPrompts();
     closeModalWindow();
-    showToast("Prompt eliminado", "error");
   }
 });
 
-// --- Buscar ---
+// --- Buscar prompt ---
 searchInput.addEventListener("input", (e) => {
-  const query = e.target.value.toLowerCase();
+  const q = e.target.value.toLowerCase();
   const filtered = getAllPrompts().filter(p =>
-    p.name.toLowerCase().includes(query) ||
-    p.context.toLowerCase().includes(query)
+    p.name.toLowerCase().includes(q) ||
+    p.context.toLowerCase().includes(q)
   );
   renderPrompts(filtered);
 });
 
-// --- Exportar CSV ---
+// --- Exportar a CSV ---
 exportBtn.addEventListener("click", () => {
   const headers = ["Nombre", "Contexto", "Personalización", "Texto", "Frecuencia", "Tipo"];
   const rows = getAllPrompts().map(p => [
     p.name, p.context, p.personalization, p.text, p.frequency, p.fixed ? "Base" : "Personal"
   ]);
   const csv = [headers, ...rows].map(r => r.join(",")).join("\n");
-
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
@@ -238,30 +206,15 @@ exportBtn.addEventListener("click", () => {
   link.click();
 });
 
-// --- Toast notifications ---
-function showToast(message, type = "success") {
-  const container = document.getElementById("toastContainer");
-  const toast = document.createElement("div");
-  toast.classList.add("toast", type);
-  toast.textContent = message;
-  container.appendChild(toast);
-
-  setTimeout(() => {
-    toast.style.animation = "toast-out 0.4s forwards";
-    setTimeout(() => toast.remove(), 400);
-  }, 3000);
-}
-
 // --- Eventos principales ---
 addPromptBtn.addEventListener("click", () => openModal());
 closeModal.addEventListener("click", closeModalWindow);
 cancelBtn.addEventListener("click", closeModalWindow);
+
+// Cerrar modal al hacer clic fuera del contenido
 promptModal.addEventListener("click", (e) => {
   if (e.target === promptModal) closeModalWindow();
 });
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && promptModal.style.display === "flex") closeModalWindow();
-});
 
-// --- Render inicial ---
+// Inicialización
 renderPrompts();
