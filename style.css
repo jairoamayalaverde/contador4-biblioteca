@@ -254,26 +254,38 @@ textarea {
 }
 
 /* ===============================
-   FOOTER
+   FOOTER (Versión refinada y centrada)
    =============================== */
 .app-footer {
   width: 100%;
   border-top: 1px solid var(--gris-medio);
   background: var(--blanco);
   text-align: center;
-  padding: 20px 10px;
-  font-size: 0.9rem;
-  color: #555;
+  padding: 28px 16px;
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-footer p {
+  max-width: 800px;
+  margin: 0;
 }
 
 .app-footer a {
   color: var(--azul);
   font-weight: 600;
   text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s ease;
 }
 
 .app-footer a:hover {
   color: var(--naranja);
+  border-bottom: 1px solid var(--naranja);
 }
 
 .app-footer em {
@@ -282,30 +294,13 @@ textarea {
   font-weight: 600;
 }
 
-/* ===============================
-   RESPONSIVE
-   =============================== */
 @media (max-width: 600px) {
-  .app-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .search-bar {
-    flex-direction: column;
-  }
-
-  .prompt-item h3 {
-    font-size: 0.95rem;
-  }
-
-  .modal-content {
-    padding: 18px;
-  }
-
   .app-footer {
     font-size: 0.85rem;
-    padding: 16px;
+    padding: 20px;
+  }
+
+  .app-footer p {
+    max-width: 95%;
   }
 }
