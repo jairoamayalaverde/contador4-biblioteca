@@ -87,7 +87,6 @@ function renderPrompts(list = getAllPrompts()) {
     promptList.appendChild(div);
   });
 }
-
 // --- Modal ---
 function openModal(prompt = null) {
   deleteBtn.style.display = "none";
@@ -114,16 +113,23 @@ function openModal(prompt = null) {
     promptForm.querySelectorAll("input, textarea, select").forEach(el => el.disabled = false);
   }
 
+  // Mostrar modal con clase animada y bloquear scroll del body
+  document.body.classList.add("modal-open");
   promptModal.classList.add("show");
   promptModal.style.display = "flex";
 }
 
 function closeModalWindow() {
+  // Ocultar modal con transición suave
   promptModal.classList.remove("show");
+  document.body.classList.remove("modal-open");
   setTimeout(() => {
     promptModal.style.display = "none";
   }, 200);
 }
+
+
+   
 
 // --- Guardar / actualizar ---
 promptForm.addEventListener("submit", (e) => {
