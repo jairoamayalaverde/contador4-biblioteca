@@ -66,6 +66,31 @@
       </form>
     </div>
   </div>
+<!-- Modal para Google Sheets (modo editable) -->
+<div id="sheetModal" class="modal">
+  <div class="modal-content modal-sheet">
+    <span class="close-sheet">&times;</span>
+    <h2>📊 Biblioteca de Prompts – Hoja editable</h2>
+
+    <iframe
+      src="https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing"
+      width="100%"
+      height="500"
+      allow="clipboard-write"
+      allowfullscreen>
+    </iframe>
+
+    <div class="sheet-actions">
+      <a
+        href="https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing"
+        target="_blank"
+        class="btn-primary open-sheet-btn">
+        🔗 Abrir en pestaña nueva
+      </a>
+      <button class="btn-secondary" id="closeSheetBtn">Cerrar</button>
+    </div>
+  </div>
+</div>
 
   <!-- Footer -->
   <footer class="app-footer">
