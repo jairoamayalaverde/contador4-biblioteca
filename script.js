@@ -12,6 +12,7 @@ const modalTitle = document.getElementById("modalTitle");
 const exportBtn = document.getElementById("exportBtn");
 const searchInput = document.getElementById("searchInput");
 const deleteBtn = document.getElementById("deletePrompt");
+const saveBtn = document.getElementById("savePrompt");
 
 const nameInput = document.getElementById("promptName");
 const contextInput = document.getElementById("promptContext");
@@ -68,26 +69,14 @@ const defaultPrompts = [
   }
 ];
 
-// --- Datos del usuario (almacenados en localStorage) ---
 let userPrompts = JSON.parse(localStorage.getItem("userPrompts")) || [];
 
-// --- Combina los prompts base y los personales ---
 function getAllPrompts() {
   return [...defaultPrompts, ...userPrompts];
 }
 
-// --- Renderiza los prompts ---
 function renderPrompts(list = getAllPrompts()) {
   promptList.innerHTML = "";
-
-  if (!list.length) {
-    const empty = document.createElement("p");
-    empty.textContent = "No hay prompts aún. Crea uno nuevo.";
-    empty.style.textAlign = "center";
-    promptList.appendChild(empty);
-    return;
-  }
-
   list.forEach((p) => {
     const div = document.createElement("div");
     div.classList.add("prompt-item");
@@ -99,46 +88,51 @@ function renderPrompts(list = getAllPrompts()) {
   });
 }
 
-// --- Abrir modal (nuevo o existente) ---
+// --- Modal ---
 function openModal(prompt = null) {
-  // Reset y limpiar flags
-  promptForm.reset();
-  delete promptForm.dataset.editId;
-  delete promptForm.dataset.isFixed;
-
   deleteBtn.style.display = "none";
+  saveBtn.style.display = "inline-block";
+  promptForm.reset();
 
   if (prompt) {
-    modalTitle.textContent = prompt.fixed ? "Vista de Prompt Base" : "Editar Prompt";
-    nameInput.value = prompt.name || "";
-    textInput.value = prompt.text || "";
-    contextInput.value = prompt.context || "";
-    personalizationInput.value = prompt.personalization || "";
-    freqSelect.value = prompt.frequency || "semanal";
+    const isFixed = prompt.fixed;
+    modalTitle.textContent = isFixed ? "Vista de Prompt Base" : "Editar Prompt";
+    nameInput.value = prompt.name;
+    textInput.value = prompt.text;
+    contextInput.value = prompt.context;
+    personalizationInput.value = prompt.personalization;
+    freqSelect.value = prompt.frequency;
     promptForm.dataset.editId = prompt.id;
-    if (prompt.fixed) promptForm.dataset.isFixed = "true";
+    promptForm.dataset.isFixed = isFixed;
 
-    // Deshabilitar si es base
     promptForm.querySelectorAll("input, textarea, select").forEach(el => {
-      el.disabled = prompt.fixed;
+      el.disabled = isFixed;
     });
 
-    // Solo mostrar eliminar si es personal
-    if (!prompt.fixed) deleteBtn.style.display = "inline-block";
+    if (isFixed) {
+      // Oculta botones para los prompts base
+      deleteBtn.style.display = "none";
+      saveBtn.style.display = "none";
+    } else {
+      // Muestra botones para prompts personales
+      deleteBtn.style.display = "inline-block";
+      saveBtn.style.display = "inline-block";
+    }
   } else {
     modalTitle.textContent = "Nuevo Prompt";
+    delete promptForm.dataset.editId;
     promptForm.querySelectorAll("input, textarea, select").forEach(el => el.disabled = false);
+    saveBtn.style.display = "inline-block";
+    deleteBtn.style.display = "none";
   }
-
   promptModal.style.display = "flex";
 }
 
-// --- Cerrar modal ---
 function closeModalWindow() {
   promptModal.style.display = "none";
 }
 
-// --- Guardar / Actualizar prompt ---
+// --- Guardar / actualizar ---
 promptForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -147,21 +141,20 @@ promptForm.addEventListener("submit", (e) => {
     return;
   }
 
-  const newPrompt = {
-    id: promptForm.dataset.editId || Date.now(),
+  const promptData = {
+    id: promptForm.dataset.editId ? promptForm.dataset.editId : Date.now(),
     name: nameInput.value.trim(),
     context: contextInput.value.trim(),
     personalization: personalizationInput.value.trim(),
     text: textInput.value.trim(),
-    frequency: freqSelect.value,
-    fixed: false
+    frequency: freqSelect.value
   };
 
-  const index = userPrompts.findIndex(p => p.id == promptForm.dataset.editId);
-  if (index > -1) {
-    userPrompts[index] = newPrompt;
+  if (promptForm.dataset.editId) {
+    const index = userPrompts.findIndex(p => p.id == promptForm.dataset.editId);
+    if (index > -1) userPrompts[index] = promptData;
   } else {
-    userPrompts.push(newPrompt);
+    userPrompts.push(promptData);
   }
 
   localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
@@ -173,7 +166,6 @@ promptForm.addEventListener("submit", (e) => {
 deleteBtn.addEventListener("click", () => {
   const id = promptForm.dataset.editId;
   if (!id) return;
-
   if (confirm("¿Seguro que deseas eliminar este prompt?")) {
     userPrompts = userPrompts.filter(p => p.id != id);
     localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
@@ -182,23 +174,24 @@ deleteBtn.addEventListener("click", () => {
   }
 });
 
-// --- Buscar prompt ---
+// --- Buscar ---
 searchInput.addEventListener("input", (e) => {
-  const q = e.target.value.toLowerCase();
+  const query = e.target.value.toLowerCase();
   const filtered = getAllPrompts().filter(p =>
-    p.name.toLowerCase().includes(q) ||
-    p.context.toLowerCase().includes(q)
+    p.name.toLowerCase().includes(query) ||
+    p.context.toLowerCase().includes(query)
   );
   renderPrompts(filtered);
 });
 
-// --- Exportar a CSV ---
+// --- Exportar CSV (temporal hasta Excel Pro) ---
 exportBtn.addEventListener("click", () => {
   const headers = ["Nombre", "Contexto", "Personalización", "Texto", "Frecuencia", "Tipo"];
   const rows = getAllPrompts().map(p => [
     p.name, p.context, p.personalization, p.text, p.frequency, p.fixed ? "Base" : "Personal"
   ]);
   const csv = [headers, ...rows].map(r => r.join(",")).join("\n");
+
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
@@ -211,10 +204,5 @@ addPromptBtn.addEventListener("click", () => openModal());
 closeModal.addEventListener("click", closeModalWindow);
 cancelBtn.addEventListener("click", closeModalWindow);
 
-// Cerrar modal al hacer clic fuera del contenido
-promptModal.addEventListener("click", (e) => {
-  if (e.target === promptModal) closeModalWindow();
-});
-
-// Inicialización
+// --- Render inicial ---
 renderPrompts();
