@@ -6,8 +6,7 @@
   <title>Biblioteca de Prompts – Contador 4.0</title>
 
   <!-- Favicon -->
-  <link rel="icon" href="/Favicon-app.png" sizes="32x32" type="image/png" />
-  <link rel="apple-touch-icon" href="/Favicon-app.png" />
+  <link rel="icon" href="Favicon-app.png" sizes="32x32" type="image/png" />
   <meta name="theme-color" content="#E86C2A">
 
   <!-- Fuentes -->
@@ -25,85 +24,76 @@
     </header>
 
     <div class="search-bar">
-  <input type="text" id="searchInput" placeholder="Buscar un prompt..." />
-  <button id="exportBtn" class="btn-export">📤 Exportar Excel</button>
-  <button id="exportBtnSheet" class="btn-secondary">🌐 Ver / Editar en Google Sheets</button>
-</div>
+      <input type="text" id="searchInput" placeholder="Buscar un prompt..." />
+      <button id="exportBtn" class="btn-export">📤 Exportar Excel</button>
+      <button id="exportBtnSheet" class="btn-sheet">🌐 Ver / Editar en Google Sheets</button>
+    </div>
 
+    <!-- Contenedor de tarjetas tipo Notion -->
+    <main id="promptList" class="prompt-list"></main>
 
-  <!-- Modal -->
-  <div id="promptModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2 id="modalTitle">Nuevo Prompt</h2>
+    <!-- Modal principal -->
+    <div id="promptModal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">Nuevo Prompt</h2>
+        <form id="promptForm">
+          <label>Nombre del Prompt</label>
+          <input id="promptName" required />
 
-      <form id="promptForm">
-        <label for="promptName">Nombre del Prompt</label>
-        <input type="text" id="promptName" required />
+          <label>Contenido del Prompt</label>
+          <textarea id="promptText" placeholder="Escribe el prompt completo aquí..." required></textarea>
 
-        <label for="promptText">Contenido del Prompt</label>
-        <textarea id="promptText" placeholder="Escribe el prompt completo aquí..." required></textarea>
+          <label>Contexto / Cuándo usarlo</label>
+          <textarea id="promptContext"></textarea>
 
-        <label for="promptContext">Contexto / Cuándo usarlo</label>
-        <textarea id="promptContext" required></textarea>
+          <label>Personalización</label>
+          <textarea id="promptPersonalization"></textarea>
 
-        <label for="promptPersonalization">Personalización</label>
-        <textarea id="promptPersonalization"></textarea>
+          <label>Frecuencia</label>
+          <select id="promptFrequency">
+            <option value="diario">Diario</option>
+            <option value="semanal" selected>Semanal</option>
+            <option value="mensual">Mensual</option>
+            <option value="ocasional">Ocasional</option>
+          </select>
 
-        <label for="promptFrequency">Frecuencia</label>
-        <select id="promptFrequency">
-          <option value="diario">Diario</option>
-          <option value="semanal" selected>Semanal</option>
-          <option value="mensual">Mensual</option>
-          <option value="ocasional">Ocasional</option>
-        </select>
+          <div class="modal-actions">
+            <button type="submit" id="savePrompt" class="btn-primary">Guardar</button>
+            <button type="button" id="deletePrompt" class="btn-danger">Eliminar</button>
+            <button type="button" id="cancelBtn" class="btn-secondary">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
+    <!-- Modal de Google Sheets -->
+    <div id="sheetModal" class="modal" style="display:none;">
+      <div class="modal-content sheet">
+        <span class="close-sheet">&times;</span>
+        <iframe 
+          src="https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing" 
+          width="100%" height="500" frameborder="0" allowfullscreen>
+        </iframe>
         <div class="modal-actions">
-          <button type="submit" id="savePrompt" class="btn-primary">Guardar</button>
-          <button type="button" id="deletePrompt" class="btn-danger">🗑️ Eliminar</button>
-          <button type="button" id="cancelBtn" class="btn-secondary">Cancelar</button>
+          <button id="closeSheetBtn" class="btn-secondary">Cerrar</button>
         </div>
-      </form>
+      </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <img src="Favicon-app.png" alt="Favicon Contador 4.0" class="footer-icon" />
+      <p>
+        Biblioteca de Prompts es un desarrollo de 
+        <a href="https://jairoamaya.co" target="_blank">Jairo Amaya – Full Stack Marketer</a>, 
+        creado como complemento del <em>E.book Contador 4.0 – Sistema de Transformación con IA para Contadores</em>. 
+        <br>Todos los derechos reservados © 2025.
+      </p>
+    </footer>
   </div>
-<!-- Modal para Google Sheets (modo editable) -->
-<div id="sheetModal" class="modal">
-  <div class="modal-content modal-sheet">
-    <span class="close-sheet">&times;</span>
-    <h2>📊 Biblioteca de Prompts – Hoja editable</h2>
 
-    <iframe
-      src="https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing"
-      width="100%"
-      height="500"
-      allow="clipboard-write"
-      allowfullscreen>
-    </iframe>
-
-    <div class="sheet-actions">
-      <a
-        href="https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing"
-        target="_blank"
-        class="btn-primary open-sheet-btn">
-        🔗 Abrir en pestaña nueva
-      </a>
-      <button class="btn-secondary" id="closeSheetBtn">Cerrar</button>
-    </div>
-  </div>
-</div>
-
-  <!-- Footer -->
-  <footer class="app-footer">
-    <img src="/Favicon-app.png" alt="Favicon Contador 4.0" class="footer-icon" />
-    <p>
-      Biblioteca de Prompts es un desarrollo de 
-      <a href="https://jairoamaya.co" target="_blank">Jairo Amaya – Full Stack Marketer</a>, 
-      creado como complemento del 
-      <em>E.book Contador 4.0 – Sistema de Transformación con IA para Contadores</em>. 
-      <br>Todos los derechos reservados © 2025.
-    </p>
-  </footer>
-
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="script.js" type="module" defer></script>
 </body>
 </html>
