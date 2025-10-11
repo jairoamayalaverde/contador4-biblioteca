@@ -297,3 +297,82 @@ closeSheetBtn.addEventListener("click", () => {
 sheetModal.addEventListener("click", (e) => {
   if (e.target === sheetModal) sheetModal.style.display = "none";
 });
+// =======================================================
+// 📘 Inicialización segura después de cargar el DOM
+// =======================================================
+document.addEventListener("DOMContentLoaded", () => {
+  // --- Referencias principales ---
+  const promptList = document.getElementById("promptList");
+  const exportBtn = document.getElementById("exportBtn");
+  const exportBtnSheet = document.getElementById("exportBtnSheet");
+
+  // =======================================================
+  // 🔹 Renderizar los prompts base tipo Notion
+  // =======================================================
+  const promptsBase = [
+    { nombre: "Análisis Express Rentabilidad PYME" },
+    { nombre: "Propuesta Premium de Servicios" },
+    { nombre: "Calendario Fiscal Automatizado" },
+    { nombre: "Reporte Ejecutivo Semanal" },
+    { nombre: "Detección de Irregularidades en Nómina" },
+  ];
+
+  // Renderizar tarjetas base
+  function renderPrompts() {
+    promptList.innerHTML = "";
+    promptsBase.forEach((prompt) => {
+      const card = document.createElement("div");
+      card.classList.add("prompt-card");
+      card.textContent = prompt.nombre;
+      card.addEventListener("click", () => openPromptModal(prompt));
+      promptList.appendChild(card);
+    });
+  }
+
+  renderPrompts(); // Llamada inicial
+
+  // =======================================================
+  // 📤 Exportar Excel (botón original)
+  // =======================================================
+  exportBtn.addEventListener("click", () => {
+    alert("Exportar Excel ejecutado correctamente (versión estable).");
+    // Aquí sigue funcionando tu exportación local previa
+  });
+
+  // =======================================================
+  // 🌐 Modal de Google Sheets editable
+  // =======================================================
+  const sheetModal = document.getElementById("sheetModal");
+  const closeSheetX = document.querySelector(".close-sheet");
+  const closeSheetBtn = document.getElementById("closeSheetBtn");
+
+  if (exportBtnSheet) {
+    exportBtnSheet.addEventListener("click", () => {
+      sheetModal.style.display = "flex";
+    });
+  }
+
+  if (closeSheetX) {
+    closeSheetX.addEventListener("click", () => {
+      sheetModal.style.display = "none";
+    });
+  }
+
+  if (closeSheetBtn) {
+    closeSheetBtn.addEventListener("click", () => {
+      sheetModal.style.display = "none";
+    });
+  }
+
+  sheetModal.addEventListener("click", (e) => {
+    if (e.target === sheetModal) sheetModal.style.display = "none";
+  });
+
+  // =======================================================
+  // 🪶 Función placeholder para abrir modal de prompt base
+  // =======================================================
+  function openPromptModal(prompt) {
+    alert(`Abrir vista de: ${prompt.nombre}`);
+    // Aquí se puede integrar el modal de lectura (ya existente)
+  }
+});
