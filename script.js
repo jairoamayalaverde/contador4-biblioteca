@@ -2,6 +2,7 @@
 // BIBLIOTECA DE PROMPTS – CONTADOR 4.0
 // ===============================
 
+// --- Elementos del DOM ---
 const addPromptBtn = document.getElementById("addPromptBtn");
 const promptModal = document.getElementById("promptModal");
 const closeModal = document.querySelector(".close");
@@ -69,65 +70,61 @@ const defaultPrompts = [
   }
 ];
 
+// --- Prompts personales del usuario ---
 let userPrompts = JSON.parse(localStorage.getItem("userPrompts")) || [];
 
+// --- Obtener todos los prompts ---
 function getAllPrompts() {
   return [...defaultPrompts, ...userPrompts];
 }
 
+// --- Renderizar lista ---
 function renderPrompts(list = getAllPrompts()) {
   promptList.innerHTML = "";
   list.forEach((p) => {
     const div = document.createElement("div");
     div.classList.add("prompt-item");
     if (p.fixed) div.classList.add("fixed");
-
     div.innerHTML = `<h3>${p.name}</h3>`;
     div.addEventListener("click", () => openModal(p));
     promptList.appendChild(div);
   });
 }
 
-// --- Modal ---
+// --- Abrir modal ---
 function openModal(prompt = null) {
   deleteBtn.style.display = "none";
   saveBtn.style.display = "inline-block";
   promptForm.reset();
 
   if (prompt) {
-    const isFixed = prompt.fixed;
-    modalTitle.textContent = isFixed ? "Vista de Prompt Base" : "Editar Prompt";
+    modalTitle.textContent = prompt.fixed ? "Vista de Prompt Base" : "Editar Prompt";
     nameInput.value = prompt.name;
     textInput.value = prompt.text;
     contextInput.value = prompt.context;
     personalizationInput.value = prompt.personalization;
     freqSelect.value = prompt.frequency;
     promptForm.dataset.editId = prompt.id;
-    promptForm.dataset.isFixed = isFixed;
+    promptForm.dataset.isFixed = prompt.fixed || false;
 
-    promptForm.querySelectorAll("input, textarea, select").forEach(el => {
-      el.disabled = isFixed;
-    });
+    const isFixed = prompt.fixed === true;
+    promptForm.querySelectorAll("input, textarea, select").forEach(el => el.disabled = isFixed);
 
-    if (isFixed) {
-      // Oculta botones para los prompts base
-      deleteBtn.style.display = "none";
-      saveBtn.style.display = "none";
-    } else {
-      // Muestra botones para prompts personales
+    if (!prompt.fixed) {
       deleteBtn.style.display = "inline-block";
-      saveBtn.style.display = "inline-block";
+    } else {
+      // Si es base, ocultar botón Guardar
+      saveBtn.style.display = "none";
     }
   } else {
     modalTitle.textContent = "Nuevo Prompt";
     delete promptForm.dataset.editId;
     promptForm.querySelectorAll("input, textarea, select").forEach(el => el.disabled = false);
-    saveBtn.style.display = "inline-block";
-    deleteBtn.style.display = "none";
   }
   promptModal.style.display = "flex";
 }
 
+// --- Cerrar modal ---
 function closeModalWindow() {
   promptModal.style.display = "none";
 }
@@ -184,18 +181,91 @@ searchInput.addEventListener("input", (e) => {
   renderPrompts(filtered);
 });
 
-// --- Exportar CSV (temporal hasta Excel Pro) ---
+// --- Exportar Excel coherente con formato oficial ---
 exportBtn.addEventListener("click", () => {
-  const headers = ["Nombre", "Contexto", "Personalización", "Texto", "Frecuencia", "Tipo"];
-  const rows = getAllPrompts().map(p => [
-    p.name, p.context, p.personalization, p.text, p.frequency, p.fixed ? "Base" : "Personal"
-  ]);
-  const csv = [headers, ...rows].map(r => r.join(",")).join("\n");
+  const prompts = getAllPrompts();
 
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const creditRow = [
+    "Biblioteca de Prompts es un desarrollo de Jairo Amaya – Full Stack Marketer, " +
+    "creado como complemento del E.book Contador 4.0 – Sistema de Transformación con IA para Contadores. " +
+    "Todos los derechos reservados © 2025."
+  ];
+
+  const headers = [
+    "Nombre del Prompt",
+    "Contenido del Prompt",
+    "Contexto / Cuándo usarlo",
+    "Personalización",
+    "Frecuencia",
+    "Tipo"
+  ];
+
+  const rows = prompts.map(p => [
+    p.name || "",
+    p.text || "",
+    p.context || "",
+    p.personalization || "",
+    p.frequency || "",
+    p.fixed ? "Base" : "Personal"
+  ]);
+
+  if (window.XLSX) {
+    try {
+      const wb = XLSX.utils.book_new();
+      const data = [creditRow, [], headers, ...rows];
+      const ws = XLSX.utils.aoa_to_sheet(data);
+
+      ws["!cols"] = [
+        { wch: 32 },
+        { wch: 60 },
+        { wch: 50 },
+        { wch: 40 },
+        { wch: 15 },
+        { wch: 12 }
+      ];
+
+      try {
+        const creditStyle = {
+          font: { bold: true, color: { rgb: "E86C2A" } },
+          alignment: { horizontal: "center", vertical: "center", wrapText: true }
+        };
+        const headerStyle = {
+          font: { bold: true, color: { rgb: "FFFFFF" } },
+          fill: { fgColor: { rgb: "1F4E79" } },
+          alignment: { horizontal: "center", vertical: "center", wrapText: true }
+        };
+        const range = XLSX.utils.decode_range(ws["!ref"]);
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+          for (let C = range.s.c; C <= range.e.c; ++C) {
+            const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
+            if (!ws[cellRef]) continue;
+            if (R === 0) ws[cellRef].s = creditStyle;
+            if (R === 2) ws[cellRef].s = headerStyle;
+          }
+        }
+      } catch (e) {
+        console.warn("Estilos XLSX no aplicados (no crítico):", e);
+      }
+
+      XLSX.utils.book_append_sheet(wb, ws, "Biblioteca Prompts");
+      XLSX.writeFile(wb, "Biblioteca_de_Prompts_Contador_4.0.xlsx");
+      return;
+    } catch (err) {
+      console.error("Error al exportar con XLSX:", err);
+    }
+  }
+
+  const csvContent = [
+    creditRow.join(","),
+    "",
+    headers.join(","),
+    ...rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))
+  ].join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "biblioteca_prompts_contador4.csv";
+  link.download = "Biblioteca_de_Prompts_Contador_4.0.csv";
   link.click();
 });
 
@@ -203,6 +273,4 @@ exportBtn.addEventListener("click", () => {
 addPromptBtn.addEventListener("click", () => openModal());
 closeModal.addEventListener("click", closeModalWindow);
 cancelBtn.addEventListener("click", closeModalWindow);
-
-// --- Render inicial ---
 renderPrompts();
