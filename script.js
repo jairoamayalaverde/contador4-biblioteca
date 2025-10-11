@@ -274,3 +274,26 @@ addPromptBtn.addEventListener("click", () => openModal());
 closeModal.addEventListener("click", closeModalWindow);
 cancelBtn.addEventListener("click", closeModalWindow);
 renderPrompts();
+// --- Modal de Google Sheets editable ---
+const sheetModal = document.getElementById("sheetModal");
+const closeSheetX = document.querySelector(".close-sheet");
+const closeSheetBtn = document.getElementById("closeSheetBtn");
+const exportBtnSheet = document.getElementById("exportBtnSheet");
+
+// Abrir modal con hoja editable
+exportBtnSheet.addEventListener("click", () => {
+  sheetModal.style.display = "flex";
+});
+
+// Cerrar modal (X o botón)
+closeSheetX.addEventListener("click", () => {
+  sheetModal.style.display = "none";
+});
+closeSheetBtn.addEventListener("click", () => {
+  sheetModal.style.display = "none";
+});
+
+// Cerrar modal al hacer clic fuera
+sheetModal.addEventListener("click", (e) => {
+  if (e.target === sheetModal) sheetModal.style.display = "none";
+});
