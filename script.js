@@ -1,7 +1,3 @@
-// ===============================
-// BIBLIOTECA DE PROMPTS – CONTADOR 4.0
-// ===============================
-
 const addPromptBtn = document.getElementById("addPromptBtn");
 const promptModal = document.getElementById("promptModal");
 const closeModal = document.querySelector(".close");
@@ -10,7 +6,6 @@ const promptForm = document.getElementById("promptForm");
 const promptList = document.getElementById("promptList");
 const modalTitle = document.getElementById("modalTitle");
 const exportBtn = document.getElementById("exportBtn");
-const searchInput = document.getElementById("searchInput");
 const deleteBtn = document.getElementById("deletePrompt");
 const saveBtn = document.getElementById("savePrompt");
 
@@ -20,7 +15,6 @@ const personalizationInput = document.getElementById("promptPersonalization");
 const textInput = document.getElementById("promptText");
 const freqSelect = document.getElementById("promptFrequency");
 
-// --- Prompts base ---
 const defaultPrompts = [
   { id: "1", name: "Análisis Express Rentabilidad PYME", context: "Cliente pregunta por qué bajó la utilidad neta.", personalization: "Incluye 'sector retail Colombia' y lenguaje simple.", text: "Actúa como analista financiero experto. Evalúa los márgenes de utilidad neta de una PYME del sector retail colombiano.", frequency: "semanal", fixed: true },
   { id: "2", name: "Propuesta Premium de Servicios", context: "Prospecto solicita cotización o upgrade de cliente actual.", personalization: "Cambio CEO por Gerente, énfasis en ROI cuantificado.", text: "Redacta una propuesta contable con enfoque premium para retener clientes y destacar ROI con claridad.", frequency: "mensual", fixed: true },
@@ -31,7 +25,6 @@ const defaultPrompts = [
 
 let userPrompts = JSON.parse(localStorage.getItem("userPrompts")) || [];
 
-// --- Renderizar lista ---
 function renderPrompts(list = [...defaultPrompts, ...userPrompts]) {
   promptList.innerHTML = "";
   list.forEach((p) => {
@@ -44,7 +37,6 @@ function renderPrompts(list = [...defaultPrompts, ...userPrompts]) {
   });
 }
 
-// --- Abrir modal ---
 function openModal(prompt = null) {
   deleteBtn.style.display = "none";
   saveBtn.style.display = "inline-block";
@@ -71,10 +63,18 @@ function openModal(prompt = null) {
 
 function closeModalWindow() { promptModal.style.display = "none"; }
 
-// --- Eventos ---
 addPromptBtn.addEventListener("click", () => openModal());
 closeModal.addEventListener("click", closeModalWindow);
 cancelBtn.addEventListener("click", closeModalWindow);
 
-// Inicializar
+// ✅ Exportar Excel funcional
+exportBtn.addEventListener("click", () => {
+  const link = document.createElement("a");
+  link.href = "/Biblioteca de Prompts Contador 4.0.xlsx";
+  link.download = "Biblioteca de Prompts Contador 4.0.xlsx";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+});
+
 renderPrompts();
