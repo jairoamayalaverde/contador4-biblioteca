@@ -1,60 +1,59 @@
-// === ELEMENTOS ===
-const addPromptBtn = document.getElementById("addPromptBtn");
-const promptModal = document.getElementById("promptModal");
-const closeModal = document.querySelector(".close");
-const cancelBtn = document.getElementById("cancelBtn");
-const promptForm = document.getElementById("promptForm");
-const promptList = document.getElementById("promptList");
-const exportBtn = document.getElementById("exportBtn");
-const exportBtnSheet = document.getElementById("exportBtnSheet");
-
-const nameInput = document.getElementById("promptName");
-const contextInput = document.getElementById("promptContext");
-const personalizationInput = document.getElementById("promptPersonalization");
-const textInput = document.getElementById("promptText");
-const freqSelect = document.getElementById("promptFrequency");
-
-// === PROMPTS BASE ===
-const defaultPrompts = [
-  { name: "Análisis Express Rentabilidad PYME" },
-  { name: "Propuesta Premium de Servicios" },
-  { name: "Calendario Fiscal Automatizado" },
-  { name: "Reporte Ejecutivo Semanal" },
-  { name: "Detección de Irregularidades en Nómina" }
+const prompts = [
+  {
+    title: "Análisis Express Rentabilidad PYME",
+    description: "Genera un análisis rápido de rentabilidad para una empresa PYME con métricas clave."
+  },
+  {
+    title: "Propuesta Premium de Servicios",
+    description: "Crea una propuesta de servicios contables premium con valor agregado y diferenciación."
+  },
+  {
+    title: "Calendario Fiscal Automatizado",
+    description: "Desarrolla un calendario automatizado con fechas clave fiscales y recordatorios."
+  },
+  {
+    title: "Reporte Ejecutivo Semanal",
+    description: "Genera un informe ejecutivo semanal con métricas financieras relevantes."
+  },
+  {
+    title: "Detección de Irregularidades en Nómina",
+    description: "Analiza los datos de nómina para identificar irregularidades o anomalías."
+  }
 ];
 
-// === RENDER ===
-function renderPrompts() {
-  promptList.innerHTML = "";
-  defaultPrompts.forEach((p) => {
-    const card = document.createElement("div");
-    card.classList.add("prompt-card");
-    card.textContent = p.name;
-    promptList.appendChild(card);
-  });
+// Render de tarjetas
+const container = document.getElementById("promptsContainer");
+container.innerHTML = prompts
+  .map(p => `<div class="prompt-card" onclick="openPrompt('${p.title}','${p.description}')">${p.title}</div>`)
+  .join("");
+
+// Modal funcional
+const modal = document.getElementById("promptModal");
+const modalTitle = document.getElementById("modalTitle");
+const modalDescription = document.getElementById("modalDescription");
+const closeBtn = document.querySelector(".close");
+
+function openPrompt(title, description) {
+  modalTitle.textContent = title;
+  modalDescription.textContent = description;
+  modal.style.display = "block";
 }
-renderPrompts();
 
-// === MODAL ===
-addPromptBtn.addEventListener("click", () => {
-  promptModal.style.display = "flex";
-});
-closeModal.addEventListener("click", () => {
-  promptModal.style.display = "none";
-});
-cancelBtn.addEventListener("click", () => {
-  promptModal.style.display = "none";
-});
-window.addEventListener("click", (e) => {
-  if (e.target === promptModal) promptModal.style.display = "none";
-});
+closeBtn.onclick = () => modal.style.display = "none";
+window.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
 
-// === EXPORTAR EXCEL ===
-exportBtn.addEventListener("click", () => {
-  alert("La descarga Excel se ejecutará próximamente (versión en desarrollo).");
+// Botón Exportar Excel
+document.getElementById("exportExcel").addEventListener("click", () => {
+  const url = "https://github.com/jairoamayalaverde/contador4-biblioteca/raw/main/Biblioteca%20de%20Prompts%20Contador%204.0.xlsx";
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "Biblioteca de Prompts Contador 4.0.xlsx";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 });
 
-// === GOOGLE SHEETS ===
-exportBtnSheet.addEventListener("click", () => {
+// Botón Google Sheets
+document.getElementById("viewSheets").addEventListener("click", () => {
   window.open("https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing", "_blank");
 });
