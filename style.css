@@ -1,335 +1,214 @@
-/* ===============================
-   PALETA Y FUENTES BASE
-   =============================== */
-:root {
-  --naranja: #e86c2a;
-  --naranja-hover: #cf5e22;
-  --azul: #0a2342;
-  --gris-claro: #f8f9fa;
-  --gris-medio: #dee2e6;
-  --gris-oscuro: #495057;
-  --blanco: #fff;
-  --sombra: rgba(0, 0, 0, 0.08);
-  --radius: 12px;
-}
-
+/* === ESTILOS GENERALES === */
 body {
-  font-family: "Lato", sans-serif;
+  font-family: "Poppins", sans-serif;
+  background-color: #f7f7f7;
   margin: 0;
-  background-color: var(--gris-claro);
-  color: var(--azul);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
+  color: #222;
+  text-align: center;
 }
 
-/* ===============================
-   CONTENEDOR PRINCIPAL
-   =============================== */
-.app-container {
-  width: 95%;
-  max-width: 1000px;
-  margin: 40px auto;
-  background: var(--blanco);
-  border-radius: var(--radius);
-  box-shadow: 0 4px 16px var(--sombra);
-  overflow: hidden;
-  padding: 24px;
+header {
+  margin-top: 40px;
 }
 
-/* ===============================
-   CABECERA Y LOGO
-   =============================== */
-.app-logo {
-  display: block;
+.logo {
   width: 180px;
+  display: block;
   margin: 0 auto 10px auto;
 }
 
-.app-header {
-  text-align: center;
-  margin-bottom: 16px;
+h1 {
+  font-size: 1.8rem;
+  color: #0d1b2a;
 }
 
-.app-header h1 {
-  font-family: "Poppins", sans-serif;
-  font-weight: 900;
-  font-size: 1.6rem;
-  color: var(--azul);
-  margin: 0;
+h1 span {
+  color: #f36b2a;
+  font-weight: 700;
 }
 
-.app-header span {
-  color: var(--naranja);
+/* === CONTENEDOR PRINCIPAL === */
+main {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
 }
 
-/* ===============================
-   BARRA DE BÚSQUEDA Y BOTONES
-   =============================== */
-.search-bar {
+.controls {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
-  margin-bottom: 24px;
+  margin-bottom: 30px;
 }
 
-#searchInput {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid var(--gris-medio);
-  border-radius: var(--radius);
-  font-size: 0.95rem;
+input[type="text"] {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 260px;
 }
 
-.button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
+/* === BOTONES === */
 .btn {
   border: none;
-  border-radius: var(--radius);
-  padding: 10px 16px;
+  border-radius: 16px;
+  padding: 10px 22px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: white;
   font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: "Lato", sans-serif;
-  transition: 0.2s ease-in-out;
-}
-
-/* Colores de botones */
-.btn-orange {
-  background-color: var(--naranja);
-  color: var(--blanco);
-}
-.btn-orange:hover {
-  background-color: var(--naranja-hover);
-}
-
-.btn-dark {
-  background-color: var(--azul);
-  color: var(--blanco);
-}
-.btn-dark:hover {
-  background-color: #05172c;
-}
-
-.btn-gray {
-  background-color: var(--gris-medio);
-  color: var(--azul);
-}
-.btn-gray:hover {
-  background-color: #cfcfcf;
-}
-
-/* ===============================
-   TARJETAS DE PROMPTS (BASE + USUARIO)
-   =============================== */
-.prompts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 18px;
-}
-
-.prompt-item {
-  background-color: var(--blanco);
-  border: 1px solid var(--gris-medio);
-  border-radius: var(--radius);
-  box-shadow: 0 2px 6px var(--sombra);
-  padding: 18px;
-  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.prompt-item:hover {
-  transform: translateY(-3px);
-  border-color: var(--naranja);
-  box-shadow: 0 4px 12px rgba(232, 108, 42, 0.25);
+.btn.dark {
+  background-color: #0d1b2a;
 }
 
-.prompt-item h3 {
-  font-size: 1.05rem;
+.btn.dark:hover {
+  background-color: #1a2e45;
+}
+
+.btn.gray {
+  background-color: #85889b;
+}
+
+.btn.gray:hover {
+  background-color: #6d6f80;
+}
+
+.btn.orange {
+  background-color: #f36b2a;
+}
+
+.btn.orange:hover {
+  background-color: #d95f25;
+}
+
+.btn.danger {
+  background-color: #dc3545;
+}
+
+/* === TARJETAS DE PROMPTS === */
+.prompt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.prompt-card {
+  background-color: white;
+  border: 2px solid #f36b2a;
+  border-radius: 16px;
+  padding: 20px 15px;
   font-weight: 600;
-  color: var(--azul);
-  margin: 0;
+  color: #f36b2a;
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.prompt-item.fixed h3 {
-  color: var(--naranja);
+.prompt-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* ===============================
-   MODAL
-   =============================== */
+/* === MODAL === */
 .modal {
   display: none;
   position: fixed;
-  z-index: 1000;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
-  padding: 16px;
 }
 
 .modal-content {
-  background: var(--blanco);
-  border-radius: var(--radius);
-  max-width: 620px;
-  width: 100%;
-  padding: 26px;
-  position: relative;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.3s ease-in-out;
+  background-color: white;
+  border-radius: 12px;
+  padding: 30px;
+  width: 90%;
+  max-width: 500px;
+  text-align: left;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+.modal-content h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-content label {
+  display: block;
+  font-weight: 600;
+  margin: 10px 0 4px 0;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 .close {
   position: absolute;
-  top: 12px;
   right: 18px;
-  font-size: 26px;
-  color: var(--azul);
+  top: 12px;
+  font-size: 1.5rem;
+  color: #666;
   cursor: pointer;
 }
 
-.modal-content h2 {
-  font-family: "Poppins", sans-serif;
-  font-weight: 900;
-  color: var(--azul);
-  margin-bottom: 18px;
+/* === FOOTER === */
+footer {
+  margin-top: 60px;
+  padding: 20px;
+  color: #333;
 }
 
-/* ===============================
-   CAMPOS DE FORMULARIO
-   =============================== */
-label {
-  display: block;
-  margin-top: 12px;
-  font-weight: 600;
-  color: var(--azul);
-}
-
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 6px;
-  border-radius: var(--radius);
-  border: 1px solid var(--gris-medio);
-  font-size: 0.95rem;
-  font-family: "Lato", sans-serif;
-  background-color: var(--gris-claro);
-}
-
-textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-/* ===============================
-   BOTONES DEL MODAL
-   =============================== */
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.btn-primary {
-  background-color: var(--naranja);
-  color: var(--blanco);
-}
-.btn-primary:hover {
-  background-color: var(--naranja-hover);
-}
-
-.btn-secondary {
-  background-color: var(--gris-medio);
-  color: var(--azul);
-}
-.btn-secondary:hover {
-  background-color: #cfcfcf;
-}
-
-.btn-danger {
-  background-color: #c62828;
-  color: var(--blanco);
-}
-.btn-danger:hover {
-  background-color: #a31e1e;
-}
-
-/* ===============================
-   FOOTER
-   =============================== */
-.app-footer {
-  text-align: center;
-  border-top: 1px solid var(--gris-medio);
-  margin-top: 40px;
-  padding-top: 16px;
-  color: var(--gris-oscuro);
+footer p {
   font-size: 0.9rem;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
-.app-footer a {
-  color: var(--azul);
-  font-weight: 600;
-  text-decoration: none;
-}
-.app-footer a:hover {
-  color: var(--naranja);
+.footer-logo {
+  width: 60px;
+  margin-bottom: 10px;
 }
 
-.footer-icon {
-  width: 48px;
-  height: 48px;
-  display: block;
-  margin: 0 auto 10px auto;
-  opacity: 0.9;
-}
-
-/* ===============================
-   RESPONSIVE
-   =============================== */
-@media (max-width: 720px) {
-  .app-container {
-    padding: 16px;
-  }
-
-  .search-bar {
+/* === RESPONSIVO === */
+@media (max-width: 768px) {
+  .controls {
     flex-direction: column;
+    gap: 12px;
   }
 
-  .button-group {
-    justify-content: center;
-  }
-
-  .prompts-grid {
+  .prompt-grid {
     grid-template-columns: 1fr;
   }
 
-  .modal-content {
-    padding: 18px;
-  }
-
-  .app-logo {
-    width: 150px;
-  }
-
-  .app-header h1 {
-    font-size: 1.3rem;
+  .btn {
+    width: 90%;
+    font-size: 1rem;
   }
 }
