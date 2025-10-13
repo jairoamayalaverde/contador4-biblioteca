@@ -4,74 +4,59 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Biblioteca de Prompts – Contador 4.0</title>
+  <link rel="icon" href="Favicon-app.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
   <div class="app-container">
     <!-- LOGO -->
+    <img src="Logo-sistema-de-transformación-Contador-4.0.png" alt="Contador 4.0" class="app-logo" />
+
+    <!-- TÍTULO -->
     <header class="app-header">
-      <img src="logo-contador4.png" alt="Contador 4.0" />
       <h1>Biblioteca de Prompts <span>– Contador 4.0</span></h1>
     </header>
 
-    <!-- BARRA DE ACCIONES -->
-    <div class="actions-bar">
+    <!-- BARRA DE BÚSQUEDA Y BOTONES -->
+    <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Buscar Prompt" />
-      <button id="exportBtn" class="secondary">📤 Exportar Excel</button>
-      <button id="exportBtnSheet" class="light">🌐 Ver / Editar en Google Sheets</button>
-      <button id="addPromptBtn" class="primary">+ Nuevo Prompt</button>
+      <div class="button-group">
+        <button id="exportExcel" class="btn btn-dark">
+          📩 <span>Exportar Excel</span>
+        </button>
+        <button id="viewSheets" class="btn btn-gray">
+          🌐 <span>Ver / Editar en Google Sheets</span>
+        </button>
+        <button id="newPromptBtn" class="btn btn-orange">
+          + <span>Nuevo Prompt</span>
+        </button>
+      </div>
     </div>
 
-    <!-- LISTA DE PROMPTS -->
-    <div id="promptList" class="prompt-grid"></div>
+    <!-- LISTADO DE PROMPTS -->
+    <div id="promptsContainer" class="prompts-grid"></div>
 
-    <!-- MODAL -->
+    <!-- MODAL PARA PROMPTS -->
     <div id="promptModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
-        <h2 id="modalTitle">Nuevo Prompt</h2>
-        <form id="promptForm">
-          <label>Nombre del Prompt</label>
-          <input type="text" id="promptName" required />
-
-          <label>Contenido del Prompt</label>
-          <textarea id="promptText" placeholder="Escribe el prompt completo aquí..."></textarea>
-
-          <label>Contexto / Cuándo usarlo</label>
-          <textarea id="promptContext"></textarea>
-
-          <label>Personalización</label>
-          <textarea id="promptPersonalization"></textarea>
-
-          <label>Frecuencia</label>
-          <select id="promptFrequency">
-            <option value="semanal">Semanal</option>
-            <option value="mensual">Mensual</option>
-            <option value="ocasional">Ocasional</option>
-          </select>
-
-          <div class="modal-actions">
-            <button type="submit" id="savePrompt" class="primary">Guardar</button>
-            <button type="button" id="cancelBtn" class="light">Cancelar</button>
-          </div>
-        </form>
+        <h2 id="modalTitle"></h2>
+        <p id="modalDescription"></p>
       </div>
     </div>
 
     <!-- FOOTER -->
     <footer class="app-footer">
-      <img src="icono-contador4.png" alt="Contador 4.0" />
+      <img src="Logo-sistema-de-transformación-Contador-4.0.png" alt="Contador 4.0" class="footer-logo" />
       <p>
         Biblioteca de Prompts es un desarrollo de 
-        <strong>Jairo Amaya – Full Stack Marketer</strong>, creado como complemento del 
-        <em>E.book Contador 4.0 – Sistema de Transformación con IA para Contadores.</em><br>
+        <a href="https://jairoamaya.co" target="_blank">Jairo Amaya – Full Stack Marketer</a>, 
+        creado como complemento del <em>E.book Contador 4.0 – Sistema de Transformación con IA para Contadores</em>.<br>
         Todos los derechos reservados © 2025.
       </p>
     </footer>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="script.js" type="module"></script>
+  <script src="script.js"></script>
 </body>
 </html>
