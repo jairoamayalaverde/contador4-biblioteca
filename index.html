@@ -1,62 +1,100 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Biblioteca de Prompts – Contador 4.0</title>
-  <link rel="icon" href="Favicon-app.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="Favicon-app.png" type="image/png" />
+
+  <!-- Estilos -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Meta theme -->
+  <meta name="theme-color" content="#E86C2A" />
 </head>
 <body>
   <div class="app-container">
-    <!-- LOGO -->
+    <!-- Logo superior -->
     <img src="Logo-sistema-de-transformación-Contador-4.0.png" alt="Contador 4.0" class="app-logo" />
 
-    <!-- TÍTULO -->
+    <!-- Título -->
     <header class="app-header">
       <h1>Biblioteca de Prompts <span>– Contador 4.0</span></h1>
     </header>
 
-    <!-- BARRA DE BÚSQUEDA Y BOTONES -->
+    <!-- Barra de búsqueda + botones -->
     <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Buscar Prompt" />
+      <input id="searchInput" type="search" placeholder="Buscar prompt..." aria-label="Buscar prompt" />
+
       <div class="button-group">
-        <button id="exportExcel" class="btn btn-dark">
+        <button id="exportExcel" class="btn btn-dark" title="Exportar Excel">
           📩 <span>Exportar Excel</span>
         </button>
-        <button id="viewSheets" class="btn btn-gray">
+
+        <button id="viewSheets" class="btn btn-gray" title="Ver / Editar en Google Sheets">
           🌐 <span>Ver / Editar en Google Sheets</span>
         </button>
-        <button id="newPromptBtn" class="btn btn-orange">
+
+        <button id="newPromptBtn" class="btn btn-orange" title="Nuevo prompt">
           + <span>Nuevo Prompt</span>
         </button>
       </div>
     </div>
 
-    <!-- LISTADO DE PROMPTS -->
-    <div id="promptsContainer" class="prompts-grid"></div>
+    <!-- Contenedor de tarjetas (prompts) -->
+    <main id="promptsContainer" class="prompts-grid" aria-live="polite"></main>
 
-    <!-- MODAL PARA PROMPTS -->
-    <div id="promptModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2 id="modalTitle"></h2>
-        <p id="modalDescription"></p>
+    <!-- Modal (reutilizable para ver / editar / crear) -->
+    <div id="promptModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-content" role="document">
+        <button class="close" aria-label="Cerrar">&times;</button>
+        <h2 id="modalTitle">Nuevo Prompt</h2>
+
+        <form id="promptForm" autocomplete="off">
+          <label for="promptName">Nombre del Prompt</label>
+          <input id="promptName" type="text" required />
+
+          <label for="promptText">Contenido del Prompt</label>
+          <textarea id="promptText" rows="6" placeholder="Escribe el prompt completo aquí..." required></textarea>
+
+          <label for="promptContext">Contexto / Cuándo usarlo</label>
+          <textarea id="promptContext" rows="3"></textarea>
+
+          <label for="promptPersonalization">Personalización</label>
+          <textarea id="promptPersonalization" rows="3"></textarea>
+
+          <label for="promptFrequency">Frecuencia</label>
+          <select id="promptFrequency">
+            <option value="diario">Diario</option>
+            <option value="semanal" selected>Semanal</option>
+            <option value="mensual">Mensual</option>
+            <option value="ocasional">Ocasional</option>
+          </select>
+
+          <div class="modal-actions">
+            <button type="submit" id="savePrompt" class="btn btn-primary">Guardar</button>
+            <button type="button" id="deletePrompt" class="btn btn-danger">🗑️ Eliminar</button>
+            <button type="button" id="cancelBtn" class="btn btn-secondary">Cancelar</button>
+          </div>
+        </form>
       </div>
     </div>
 
-    <!-- FOOTER -->
+    <!-- Footer -->
     <footer class="app-footer">
-      <img src="Logo-sistema-de-transformación-Contador-4.0.png" alt="Contador 4.0" class="footer-logo" />
+      <img src="Favicon-app.png" alt="Contador 4.0 - icono" class="footer-icon" />
       <p>
-        Biblioteca de Prompts es un desarrollo de 
-        <a href="https://jairoamaya.co" target="_blank">Jairo Amaya – Full Stack Marketer</a>, 
-        creado como complemento del <em>E.book Contador 4.0 – Sistema de Transformación con IA para Contadores</em>.<br>
+        Biblioteca de Prompts es un desarrollo de
+        <a href="https://jairoamaya.co" target="_blank" rel="noopener noreferrer">Jairo Amaya – Full Stack Marketer</a>,
+        creado como complemento del <em>E.book Contador 4.0 – Sistema de Transformación con IA para Contadores</em>.<br />
         Todos los derechos reservados © 2025.
       </p>
     </footer>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Script principal -->
+  <script src="script.js" type="module"></script>
 </body>
 </html>
