@@ -285,3 +285,25 @@ header img:hover {
     border-bottom-color: #333;
   }
 }
+/* ======= HEADER RESPONSIVE ======= */
+@media (max-width: 768px) {
+  header img {
+    width: 140px; /* reduce el tamaño del logo en pantallas medianas */
+    margin-top: 5px;
+  }
+
+  header {
+    padding: 15px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  header img {
+    width: 110px; /* tamaño más pequeño para celulares */
+    margin-top: 0;
+  }
+
+  header {
+    padding: 10px 0;
+  }
+}
