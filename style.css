@@ -25,75 +25,138 @@ body{
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
-
-/* ========== HEADER (estático) ========== */
-.site-header{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: var(--blanco);
-  border-bottom: 1px solid var(--gris-medio);
-  z-index: 1200;
-  display:flex;
-  justify-content:center;
-  padding: 12px 18px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-}
-
-.header-inner{
-  width: 100%;
-  max-width: 1100px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+/* ===============================
+   🌿 Header tipo Notion elegante
+=============================== */
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 14px;
+  padding: 0.9rem 1.6rem;
+  background: #ffffffcc; /* Blanco con leve transparencia */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  transition: all 0.3s ease;
 }
 
-/* logo centered above title visually */
-.site-logo{
-  height:52px;
-  width:auto;
-  object-fit:contain;
-  display:block;
-  margin-right: 8px;
+.header-inner:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* title */
-.site-title{
-  font-family: "Poppins", sans-serif;
-  font-weight:900;
-  color:var(--azul);
-  margin:0;
-  font-size:1.05rem;
-}
-.site-title span{ color: var(--naranja); }
-
-/* header actions on the right (kept hidden visually in small widths) */
-.header-actions{
-  margin-left:auto;
-  display:flex;
-  align-items:center;
-  gap:8px;
+/* --- Logo y título --- */
+.site-logo {
+  height: 42px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s ease;
 }
 
-/* buttons */
-.btn{
-  border:none;
-  border-radius:10px;
-  padding:10px 14px;
-  cursor:pointer;
-  font-weight:600;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
+.site-logo:hover {
+  transform: scale(1.05);
 }
 
-.btn-add{ background:var(--naranja); color:#fff; box-shadow: 0 6px 18px rgba(232,108,42,0.12); }
-.btn-export{ background:var(--azul); color:#fff; box-shadow: 0 6px 18px rgba(15,35,66,0.08); }
-.btn-primary{ background:var(--naranja); color:#fff; border-radius:8px; padding:10px 16px; }
-.btn-secondary{ background:#f0f0f0; color:var(--azul); padding:10px 14px; border-radius:8px; }
-.btn-danger{ background:#c62828; color:#fff; padding:10px 14px; border-radius:8px; }
+.site-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: #333;
+  font-size: 1.25rem;
+  margin-left: 10px;
+  transition: color 0.3s ease;
+}
+
+.site-title span {
+  color: #E86C2A;
+}
+
+/* --- Botones del header --- */
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-add,
+.btn-secondary {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Botón “Nuevo Prompt” */
+.btn-add {
+  background: #E86C2A;
+  color: #fff;
+  border: none;
+  box-shadow: 0 2px 6px rgba(232, 108, 42, 0.3);
+}
+
+.btn-add:hover {
+  background: #cf5d22;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(232, 108, 42, 0.4);
+}
+
+/* Botón “Ver o editar en Google Sheets” */
+.btn-secondary {
+  background: #fff;
+  border: 2px solid #E86C2A;
+  color: #E86C2A;
+  box-shadow: 0 2px 6px rgba(232, 108, 42, 0.1);
+}
+
+.btn-secondary:hover {
+  background: #E86C2A;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(232, 108, 42, 0.3);
+}
+
+/* --- Efecto Notion-style en hover de header --- */
+.header-inner:hover .site-title span {
+  color: #cf5d22;
+}
+
+/* 🔹 Móvil */
+@media (max-width: 700px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 1rem;
+  }
+
+  .site-logo {
+    height: 36px;
+  }
+
+  .site-title {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .header-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .btn-add,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 
 /* ========== MAIN (space below header) ========== */
 .app-container{
