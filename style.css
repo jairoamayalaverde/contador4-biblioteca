@@ -329,3 +329,49 @@ header img,
     margin-top: 15px;
   }
 }
+/* === Header fijo y elegante === */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f9f9f9;
+  z-index: 1000;
+  text-align: center;
+  padding: 10px 0 5px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Espaciado para que el contenido no quede oculto debajo del header */
+main, .content, body {
+  padding-top: 160px; /* ajusta según el alto real del header */
+}
+
+/* Ajuste visual del logo dentro del header */
+header img {
+  max-width: 140px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px auto;
+}
+
+/* === Vista móvil: header más compacto === */
+@media (max-width: 768px) {
+  header {
+    padding: 6px 0 3px 0;
+  }
+
+  header img {
+    max-width: 90px;
+    margin-bottom: 6px;
+  }
+
+  main, .content, body {
+    padding-top: 120px; /* compensa el nuevo alto del header en móvil */
+  }
+
+  h1, h2 {
+    font-size: 1.1rem;
+    line-height: 1.3;
+  }
+}
