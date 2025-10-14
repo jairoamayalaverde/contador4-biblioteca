@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Biblioteca de Prompts – Contador 4.0</title>
 
   <!-- Favicon -->
@@ -16,43 +16,61 @@
   <!-- Estilos -->
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-  <header class="app-header">
-    <img src="Logo-sistema-de-transformación-Contador-4.0.png" alt="Logo Contador 4.0" class="header-logo" />
-    <h1>Biblioteca de Prompts – <span>Contador 4.0</span></h1>
-    <button id="addPromptBtn" class="btn-add">+ Nuevo Prompt</button>
+  <!-- ===========================
+       HEADER (logo centrado, título claro)
+       =========================== -->
+  <header class="site-header">
+    <img class="site-logo" src="Logo-sistema-de-transformación-Contador-4.0.png" alt="Contador 4.0" />
+    <h1 class="site-title">Biblioteca de Prompts – <span>Contador 4.0</span></h1>
+    <div class="header-actions">
+      <button id="addPromptBtn" class="btn btn-add">+ Nuevo Prompt</button>
+    </div>
   </header>
 
-  <div class="app-container">
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Buscar un prompt..." />
-      <button id="exportBtn" class="btn-export">📤 Exportar Excel</button>
-    </div>
+  <!-- ===========================
+       CONTENEDOR PRINCIPAL
+       =========================== -->
+  <main class="app-container">
+    <section class="controls">
+      <div class="search-wrap">
+        <input id="searchInput" type="search" placeholder="Buscar prompt por nombre, contexto o texto..." />
+      </div>
+      <div class="actions-wrap">
+        <button id="exportBtn" class="btn btn-export">📤 Exportar Excel</button>
+        <!-- optional: button to view Google Sheet (could be added later) -->
+      </div>
+    </section>
 
-    <main class="prompt-list" id="promptList"></main>
-  </div>
+    <!-- Lista de prompts -->
+    <section id="promptList" class="prompt-list" aria-live="polite"></section>
+  </main>
 
-  <!-- Modal general -->
-  <div id="modalOverlay" class="modal-overlay"></div>
+  <!-- ===========================
+       MODAL OVERLAY (global)
+       =========================== -->
+  <div id="modalOverlay" class="modal-overlay" aria-hidden="true"></div>
 
-  <!-- Modal de Prompt -->
-  <div id="promptModal" class="modal">
+  <!-- ===========================
+       MODAL: Ver / Editar / Nuevo Prompt
+       =========================== -->
+  <div id="promptModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal-content">
-      <span class="close close-modal">&times;</span>
+      <button class="close-btn close-modal" aria-label="Cerrar modal">&times;</button>
       <h2 id="modalTitle">Nuevo Prompt</h2>
-      <form id="promptForm">
+
+      <form id="promptForm" autocomplete="off">
         <label for="promptName">Nombre del Prompt</label>
-        <input type="text" id="promptName" required />
+        <input id="promptName" type="text" required />
 
         <label for="promptText">Contenido del Prompt</label>
-        <textarea id="promptText" placeholder="Escribe el prompt completo aquí..." required></textarea>
+        <textarea id="promptText" required placeholder="Escribe el prompt completo aquí..."></textarea>
 
         <label for="promptContext">Contexto / Cuándo usarlo</label>
         <textarea id="promptContext" required></textarea>
 
         <label for="promptPersonalization">Personalización</label>
-        <textarea id="promptPersonalization"></textarea>
+        <textarea id="promptPersonalization" placeholder="Ajustes y variables que aplicas siempre"></textarea>
 
         <label for="promptFrequency">Frecuencia</label>
         <select id="promptFrequency">
@@ -63,26 +81,28 @@
         </select>
 
         <div class="modal-actions">
-          <button type="submit" id="savePrompt" class="btn-primary">Guardar</button>
-          <button type="button" id="deletePrompt" class="btn-danger">🗑️ Eliminar</button>
-          <button type="button" id="cancelBtn" class="btn-secondary">Cancelar</button>
+          <button id="savePrompt" type="submit" class="btn btn-primary">Guardar</button>
+          <button id="deletePrompt" type="button" class="btn btn-danger">🗑️ Eliminar</button>
+          <button id="cancelBtn" type="button" class="btn btn-secondary">Cancelar</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- ===========================
+       FOOTER
+       =========================== -->
   <footer class="app-footer">
-    <img src="Favicon-app.png" alt="Favicon Contador 4.0" class="footer-icon" />
+    <img src="Favicon-app.png" alt="Contador 4.0" class="footer-icon" />
     <p>
-      Biblioteca de Prompts es un desarrollo de 
-      <a href="https://jairoamaya.co" target="_blank">Jairo Amaya – Full Stack Marketer</a>, 
-      creado como complemento del 
-      <em>E.book Contador 4.0 – Sistema de Transformación con IA para Contadores</em>. 
+      Biblioteca de Prompts es un desarrollo de
+      <a href="https://jairoamaya.co" target="_blank" rel="noopener">Jairo Amaya – Full Stack Marketer</a>,
+      creado como complemento del <em>E.book Contador 4.0 – Sistema de Transformación con IA para Contadores</em>.
       <br>Todos los derechos reservados © 2025.
     </p>
   </footer>
 
+  <!-- Script -->
   <script src="script.js" type="module" defer></script>
 </body>
 </html>
