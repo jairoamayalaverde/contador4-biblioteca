@@ -250,3 +250,38 @@ body{
     font-size: 1.3rem;
   }
 }
+/* ================================
+   HEADER Y LOGO – CONTADOR 4.0
+   ================================ */
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 0;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+header img {
+  height: 48px;
+  width: auto;
+  display: block;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+header img:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* Ajuste para modo oscuro (si se aplica en el futuro) */
+@media (prefers-color-scheme: dark) {
+  header {
+    background: #1b1b1b;
+    border-bottom-color: #333;
+  }
+}
