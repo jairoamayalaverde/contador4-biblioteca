@@ -4,71 +4,101 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Biblioteca de Prompts – Contador 4.0</title>
-  <link rel="icon" href="Favicon-app.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="Favicon-app.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="Favicon-app.png" />
+  <meta name="theme-color" content="#E86C2A">
+
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500&family=Poppins:wght@700;900&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <header>
-    <img src="Logo-sistema-de-transformación-Contador-4.0.png" alt="Logo Contador 4.0" class="logo" />
-    <h1>Biblioteca de Prompts <span>– Contador 4.0</span></h1>
+  <header class="site-header">
+    <img class="site-logo" src="https://raw.githubusercontent.com/jairoamayalaverde/contador4-biblioteca/main/Logo-sistema-de-transformaci%C3%B3n-Contador-4.0.png" alt="Contador 4.0" />
   </header>
 
-  <main>
-    <div class="controls">
-      <input type="text" id="searchInput" placeholder="Buscar prompt..." />
-      <button id="exportBtn" class="btn dark">📤 Exportar Excel</button>
-      <button id="viewSheets" class="btn gray" onclick="window.open('https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing','_blank')">🌐 Ver / Editar en Google Sheets</button>
-      <button id="addPromptBtn" class="btn orange">+ Nuevo Prompt</button>
+  <main class="app-container">
+    <div class="top-row">
+      <h1>Biblioteca de Prompts – <span>Contador 4.0</span></h1>
+
+      <div class="actions">
+        <button id="exportBtn" class="btn btn-dark">📤 Exportar Excel</button>
+        <button id="exportBtnSheet" class="btn btn-muted">🌐 Ver / Editar en Google Sheets</button>
+        <button id="addPromptBtn" class="btn btn-cta">+ Nuevo Prompt</button>
+      </div>
     </div>
 
-    <div id="promptList" class="prompt-grid"></div>
+    <div class="controls">
+      <input type="search" id="searchInput" placeholder="Buscar prompt..." />
+    </div>
+
+    <section id="promptList" class="prompt-grid" aria-live="polite"></section>
   </main>
 
-  <!-- Modal flotante -->
-  <div id="promptModal" class="modal">
+  <!-- Modal Ver / Editar / Nuevo -->
+  <div id="promptModal" class="modal" aria-hidden="true">
     <div class="modal-content">
-      <span class="close">&times;</span>
+      <button class="modal-close" aria-label="Cerrar">&times;</button>
       <h2 id="modalTitle">Nuevo Prompt</h2>
-      <form id="promptForm">
-        <label>Nombre del Prompt</label>
+
+      <form id="promptForm" class="prompt-form">
+        <label for="promptName">Nombre del Prompt</label>
         <input type="text" id="promptName" required />
 
-        <label>Contexto / Cuándo usarlo</label>
-        <textarea id="promptContext" rows="2" required></textarea>
+        <label for="promptContext">Contexto / Cuándo usarlo</label>
+        <textarea id="promptContext" required></textarea>
 
-        <label>Personalización</label>
-        <textarea id="promptPersonalization" rows="2"></textarea>
+        <label for="promptPersonalization">Personalización</label>
+        <textarea id="promptPersonalization"></textarea>
 
-        <label>Contenido del Prompt</label>
-        <textarea id="promptText" rows="4" required></textarea>
+        <label for="promptText">Contenido del Prompt</label>
+        <textarea id="promptText" placeholder="Escribe el prompt completo aquí..." required></textarea>
 
-        <label>Frecuencia</label>
-        <select id="promptFrequency" required>
-          <option value="diaria">Diaria</option>
-          <option value="semanal">Semanal</option>
+        <label for="promptFrequency">Frecuencia</label>
+        <select id="promptFrequency">
+          <option value="diario">Diario</option>
+          <option value="semanal" selected>Semanal</option>
           <option value="mensual">Mensual</option>
           <option value="ocasional">Ocasional</option>
         </select>
 
         <div class="modal-actions">
-          <button type="submit" id="savePrompt" class="btn orange">Guardar</button>
-          <button type="button" id="deletePrompt" class="btn danger">Eliminar</button>
-          <button type="button" id="cancelBtn" class="btn gray">Cancelar</button>
+          <button type="submit" id="savePrompt" class="btn btn-cta">Guardar</button>
+          <button type="button" id="deletePrompt" class="btn btn-danger">🗑️ Eliminar</button>
+          <button type="button" id="cancelBtn" class="btn btn-secondary">Cancelar</button>
         </div>
       </form>
     </div>
   </div>
 
-  <footer>
-    <img src="Favicon-app.png" alt="Favicon Contador 4.0" class="footer-logo" />
+  <!-- Modal Google Sheets (simple) -->
+  <div id="sheetModal" class="modal" aria-hidden="true">
+    <div class="modal-content small">
+      <button class="modal-close close-sheet" aria-label="Cerrar">&times;</button>
+      <h3>Ver / Editar hoja en Google Sheets</h3>
+      <p>Puedes abrir la hoja externa en una pestaña nueva.</p>
+      <div class="modal-actions">
+        <a id="openSheetLink" class="btn btn-dark" href="https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing" target="_blank" rel="noopener">Abrir hoja</a>
+        <button type="button" id="closeSheetBtn" class="btn btn-secondary">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <img src="Favicon-app.png" alt="Favicon" class="footer-icon" />
     <p>
-      Biblioteca de Prompts es un desarrollo de <strong>Jairo Amaya – Full Stack Marketer</strong>, creado como complemento del
-      <em>E.book Contador 4.0 – Sistema de Transformación con IA para Contadores</em>.<br />
-      Todos los derechos reservados © 2025.
+      Biblioteca de Prompts es un desarrollo de
+      <a href="https://jairoamaya.co" target="_blank" rel="noopener">Jairo Amaya – Full Stack Marketer</a>,
+      creado como complemento del <em>E.book Contador 4.0 – Sistema de Transformación con IA para Contadores</em>.
+      <br>Todos los derechos reservados © 2025.
     </p>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js" type="module" defer></script>
 </body>
 </html>
