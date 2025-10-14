@@ -274,3 +274,17 @@ body{
   .modal{ width:96%; max-width:520px; }
   #searchInput{ font-size:0.95rem; padding:10px 12px; }
 }
+/* ===========================
+   🔧 Ajuste responsivo del logo
+=========================== */
+.site-logo {
+  height: 52px;
+  transition: all 0.3s ease;
+}
+
+/* En pantallas pequeñas, reducir tamaño */
+@media (max-width: 600px) {
+  .site-logo {
+    height: 40px;
+  }
+}
