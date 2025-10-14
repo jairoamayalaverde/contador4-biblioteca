@@ -307,3 +307,25 @@ header img:hover {
     padding: 10px 0;
   }
 }
+/* === Ajustes visuales del logo y fondo general === */
+body {
+  background-color: #f9f9f9 !important; /* fondo claro uniforme */
+}
+
+/* Contenedor del logo superior */
+header img,
+.logo-header img {
+  display: block;
+  margin: 20px auto 0; /* margen superior + centrado */
+  max-width: 180px;
+  height: auto;
+}
+
+/* En móviles: tamaño optimizado para evitar recortes */
+@media (max-width: 768px) {
+  header img,
+  .logo-header img {
+    max-width: 130px;
+    margin-top: 15px;
+  }
+}
