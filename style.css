@@ -1,171 +1,296 @@
-/* === General === */
-body {
+/* =========================================
+   Biblioteca de Prompts – Contador 4.0
+   CSS restaurado y organizado
+   ========================================= */
+
+/* ---------- Variables (colores) ---------- */
+:root{
+  --naranja: #E86C2A;
+  --azul: #0A2342;
+  --gris-claro: #F8F9FA;
+  --gris-medio: #E0E0E0;
+  --texto: #222;
+  --blanco: #ffffff;
+  --shadow: rgba(10, 10, 10, 0.06);
+}
+
+/* ---------- Reset ligero ---------- */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
   font-family: "Lato", sans-serif;
-  background-color: #f8f9fa;
-  color: #333;
-  margin: 0;
-  padding: 0;
+  margin:0;
+  background: var(--gris-claro);
+  color:var(--texto);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-h1, h2, h3 {
-  font-family: "Poppins", sans-serif;
+/* ---------- Header (logo centrado, sin sticky por defecto) ---------- */
+.site-header{
+  background: var(--blanco);
+  padding: 18px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  border-bottom:1px solid var(--gris-medio);
+  position:relative; /* no fixed to keep layout stable */
 }
 
-/* === Header === */
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e3e3e3;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 24px;
+.site-logo{
+  height:56px;
+  width:auto;
+  object-fit:contain;
+  display:block;
 }
 
-.app-header h1 {
-  font-size: 1.3rem;
-  color: #222;
+.site-title{
+  flex:1;
+  text-align:center;
+  font-family:"Poppins", sans-serif;
+  font-weight:900;
+  color:var(--azul);
+  margin:0;
+  font-size:1.15rem;
 }
 
-.app-header span {
-  color: #e86c2a;
+.site-title span{ color: var(--naranja) }
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
-.header-logo {
-  height: 44px;
-  object-fit: contain;
+/* ---------- Contenedor principal ---------- */
+.app-container{
+  max-width:1100px;
+  margin: 28px auto;
+  padding: 0 18px 36px;
 }
 
-/* === Botones === */
-.btn-add, .btn-export, .btn-primary, .btn-danger, .btn-secondary {
+/* ---------- Controls: search + actions ---------- */
+.controls{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin: 18px 0;
+  flex-wrap:wrap;
+}
+
+.search-wrap{
+  flex:1 1 480px;
+}
+
+#searchInput{
+  width:100%;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid var(--gris-medio);
+  background:#fff;
+  font-size:0.95rem;
+}
+
+/* actions */
+.actions-wrap{ display:flex; gap:10px; align-items:center; }
+
+.btn{
   border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s;
+  border-radius:10px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
 }
 
-.btn-add {
-  background-color: #e86c2a;
-  color: white;
+.btn-add{
+  background: var(--naranja);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(232,108,42,0.12);
 }
-
-.btn-export {
-  background-color: #1f4e79;
-  color: white;
+.btn-export{
+  background: var(--azul);
+  color:#fff;
+  box-shadow: 0 6px 18px rgba(15,35,66,0.08);
 }
+.btn-primary{ background: var(--naranja); color: #fff; border-radius:8px; padding:10px 16px; }
+.btn-secondary{ background: #f0f0f0; color: var(--azul); padding:10px 14px; border-radius:8px; }
+.btn-danger{ background:#c62828; color:#fff; padding:10px 14px; border-radius:8px }
 
-.btn-add:hover, .btn-export:hover {
-  opacity: 0.85;
-}
-
-/* === Search Bar === */
-.search-bar {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin: 20px 0;
-}
-
-.search-bar input {
-  width: 60%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-/* === Tarjetas tipo Notion === */
-.prompt-list {
-  display: grid;
+/* ---------- Prompt list: Notion-like grid ---------- */
+.prompt-list{
+  display:grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  padding: 20px;
+  gap:20px;
 }
 
-.prompt-item {
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+/* Card visual */
+.prompt-item{
+  background:var(--blanco);
+  border-radius:12px;
+  padding:16px;
+  border:1px solid #f0f0f0;
+  box-shadow: 0 6px 18px var(--shadow);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s;
+  cursor:pointer;
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
 }
 
-.prompt-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+.prompt-item:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(10,10,10,0.12);
+  border-color: rgba(232,108,42,0.18);
 }
 
-/* === Modal === */
-.modal {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  width: 90%;
-  max-width: 600px;
-  z-index: 200;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+/* Fixed (base) prompts get a subtle accent */
+.prompt-item.fixed{
+  border-left: 4px solid var(--naranja);
 }
 
-.modal-content {
-  padding: 24px;
+/* Title inside card */
+.prompt-item h3{
+  margin:0;
+  font-size:1.02rem;
+  color:var(--azul);
+  font-weight:700;
 }
 
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 150;
+/* small meta text (optional) */
+.prompt-meta{
+  font-size:0.85rem;
+  color:#6b7280;
+  margin-top:6px;
 }
 
-.close-modal {
-  float: right;
-  font-size: 22px;
-  cursor: pointer;
+/* ---------- Modal overlay + modal ---------- */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,0.45);
+  display:none;
+  z-index:990;
+  transition: opacity .2s ease;
 }
 
-/* === Footer === */
-.app-footer {
-  text-align: center;
-  font-size: 0.9rem;
-  color: #444;
-  padding: 20px;
-  background-color: #fff;
-  border-top: 1px solid #ddd;
+/* modal container */
+.modal{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(.98);
+  width:92%;
+  max-width:760px;
+  max-height:86vh;
+  background:var(--blanco);
+  border-radius:12px;
+  box-shadow: 0 18px 40px rgba(12,20,30,0.18);
+  overflow:hidden;
+  display:none;
+  z-index:1000;
+  transition: transform .22s ease, opacity .22s ease;
 }
 
-.footer-icon {
-  width: 48px;
-  display: block;
-  margin: 0 auto 10px;
+/* when active (JS toggles classes or display) */
+.modal.active{ display:block; transform:translate(-50%,-50%) scale(1); }
+.modal-overlay.active{ display:block; }
+
+/* modal content scroll area */
+.modal-content{
+  padding:22px;
+  max-height:86vh;
+  overflow:auto;
 }
 
-.app-footer a {
-  color: #e86c2a;
-  text-decoration: none;
+/* modal close button */
+.close-btn{
+  position:absolute;
+  right:12px;
+  top:12px;
+  border:none;
+  background:transparent;
+  font-size:22px;
+  cursor:pointer;
+  color:var(--azul);
 }
 
-.app-footer a:hover {
-  text-decoration: underline;
+/* form fields */
+.modal-content h2{
+  margin:0 0 12px 0;
+  font-family:"Poppins", sans-serif;
+  font-weight:900;
+  color:var(--azul);
+  font-size:1.1rem;
 }
 
-/* === Responsive === */
-@media (max-width: 600px) {
-  .modal {
-    width: 94%;
-  }
-  .app-header h1 {
-    font-size: 1rem;
-  }
-  .header-logo {
-    height: 36px;
-  }
+.modal-content label{
+  display:block;
+  margin-top:12px;
+  color:var(--azul);
+  font-weight:600;
+  font-size:0.9rem;
 }
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select{
+  width:100%;
+  margin-top:8px;
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px solid var(--gris-medio);
+  font-size:0.95rem;
+  font-family:inherit;
+}
+
+.modal-content textarea{ min-height:110px; resize:vertical; }
+
+/* modal actions */
+.modal-actions{
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+  margin-top:18px;
+}
+
+/* small responsive tweaks for modal internals */
+@media (max-width:900px){
+  .modal{ max-width:640px; }
+}
+@media (max-width:600px){
+  .modal{ width:96%; max-width:520px; }
+  .site-logo{ height:48px; }
+  .site-title{ font-size:1rem; }
+  .app-container{ margin-top:12px; padding:0 12px 36px }
+  #searchInput{ width:100% }
+}
+
+/* ---------- Footer ---------- */
+.app-footer{
+  margin: 40px auto 20px;
+  padding:18px 12px;
+  background:var(--blanco);
+  border-top:1px solid #ececec;
+  text-align:center;
+  color:#6b6b6b;
+  font-size:0.95rem;
+}
+.footer-icon{
+  width:44px;
+  height:auto;
+  display:block;
+  margin:0 auto 10px;
+}
+
+/* ========= Utilities ========= */
+.hidden{ display:none !important; }
+.center{ text-align:center; }
+.small{ font-size:0.85rem; color:#6b7280; }
+
+/* End of stylesheet */
