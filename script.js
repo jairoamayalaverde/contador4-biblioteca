@@ -193,3 +193,108 @@ document.addEventListener("DOMContentLoaded", () => {
   renderPrompts();
 
 });
+/* ===============================
+   🔹 Header optimizado con 2 botones
+=============================== */
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 0.8rem 1.5rem;
+  background: #ffffff;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.site-logo {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+}
+
+.site-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: #333;
+  font-size: 1.2rem;
+  margin-left: 10px;
+}
+
+.site-title span {
+  color: #E86C2A;
+}
+
+/* --- Botones del header --- */
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-add,
+.btn-secondary {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Botón “Nuevo Prompt” */
+.btn-add {
+  background: #E86C2A;
+  color: #fff;
+  border: none;
+}
+
+.btn-add:hover {
+  background: #cf5d22;
+  transform: translateY(-1px);
+}
+
+/* Botón “Ver o editar en Google Sheets” */
+.btn-secondary {
+  background: transparent;
+  border: 2px solid #E86C2A;
+  color: #E86C2A;
+}
+
+.btn-secondary:hover {
+  background: #E86C2A;
+  color: #fff;
+}
+
+/* 🔹 Móvil */
+@media (max-width: 700px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .site-logo {
+    height: 34px;
+  }
+
+  .site-title {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .header-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 6px;
+  }
+
+  .btn-add,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+}
