@@ -26,34 +26,27 @@ body{
   -moz-osx-font-smoothing:grayscale;
 }
 /* ===============================
-   🌿 Header tipo Notion elegante
+   🌿 Header refinado final
 =============================== */
 .header-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 14px;
-  padding: 0.9rem 1.6rem;
-  background: #ffffffcc; /* Blanco con leve transparencia */
-  backdrop-filter: blur(10px);
+  gap: 16px;
+  padding: 0.8rem 1.8rem;
+  background: #ffffffee;
+  backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
-  z-index: 20;
-  transition: all 0.3s ease;
+  z-index: 30;
 }
 
-.header-inner:hover {
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-}
-
-/* --- Logo y título --- */
 .site-logo {
-  height: 42px;
+  height: 46px;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
   transition: transform 0.3s ease;
 }
 
@@ -62,72 +55,68 @@ body{
 }
 
 .site-title {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 700;
-  color: #333;
-  font-size: 1.25rem;
-  margin-left: 10px;
-  transition: color 0.3s ease;
+  color: #1b1b1b;
+  font-size: 1.4rem;
+  margin: 0 0 0 12px;
 }
 
 .site-title span {
-  color: #E86C2A;
+  color: #e86c2a;
 }
 
-/* --- Botones del header --- */
+/* 🔸 Botones del header */
 .header-buttons {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.btn-add,
-.btn-secondary {
-  font-family: 'Poppins', sans-serif;
+.btn-secondary,
+.btn-add {
+  font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
-  border-radius: 10px;
-  padding: 8px 16px;
+  border-radius: 8px;
+  padding: 8px 14px;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-/* Botón “Nuevo Prompt” */
+/* Ver o editar en Google Sheets */
+.btn-secondary {
+  background: #fff;
+  border: 2px solid #e86c2a;
+  color: #e86c2a;
+}
+
+.btn-secondary:hover {
+  background: #e86c2a;
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(232, 108, 42, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Nuevo Prompt */
 .btn-add {
-  background: #E86C2A;
+  background: #e86c2a;
   color: #fff;
   border: none;
-  box-shadow: 0 2px 6px rgba(232, 108, 42, 0.3);
 }
 
 .btn-add:hover {
   background: #cf5d22;
+  box-shadow: 0 3px 8px rgba(232, 108, 42, 0.3);
   transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(232, 108, 42, 0.4);
 }
 
-/* Botón “Ver o editar en Google Sheets” */
-.btn-secondary {
-  background: #fff;
-  border: 2px solid #E86C2A;
-  color: #E86C2A;
-  box-shadow: 0 2px 6px rgba(232, 108, 42, 0.1);
-}
-
-.btn-secondary:hover {
-  background: #E86C2A;
-  color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(232, 108, 42, 0.3);
-}
-
-/* --- Efecto Notion-style en hover de header --- */
-.header-inner:hover .site-title span {
-  color: #cf5d22;
-}
-
-/* 🔹 Móvil */
-@media (max-width: 700px) {
+/* 🔹 Responsive móvil */
+@media (max-width: 768px) {
   .header-inner {
     flex-direction: column;
     align-items: center;
@@ -136,31 +125,32 @@ body{
   }
 
   .site-logo {
-    height: 36px;
+    height: 38px;
   }
 
   .site-title {
-    font-size: 1rem;
+    font-size: 1.1rem;
     text-align: center;
   }
 
   .header-buttons {
     flex-direction: column;
-    width: 100%;
     gap: 8px;
+    width: 100%;
   }
 
   .btn-add,
   .btn-secondary {
     width: 100%;
-    text-align: center;
+    justify-content: center;
   }
 }
 
 
- 
-  
 
+
+
+ 
 
 
 
