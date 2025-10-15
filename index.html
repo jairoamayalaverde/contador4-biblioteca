@@ -17,27 +17,27 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-left">
-      <img
-        src="https://raw.githubusercontent.com/jairoamayalaverde/contador4-biblioteca/main/Logo-sistema-de-transformación-Contador-4.0.png"
-        alt="Logo Contador 4.0"
-        class="site-logo"
-      />
-      <h1 class="site-title">Biblioteca de Prompts – <span>Contador 4.0</span></h1>
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <img
+          src="https://raw.githubusercontent.com/jairoamayalaverde/contador4-biblioteca/main/Logo-sistema-de-transformación-Contador-4.0.png"
+          alt="Logo Contador 4.0"
+          class="site-logo"
+        />
+        <h1 class="site-title">Biblioteca de Prompts – <span>Contador 4.0</span></h1>
+      </div>
+
+      <div class="header-buttons">
+        <button id="viewSheetBtn" class="btn-secondary">Ver o editar en Google Sheets</button>
+        <button id="addPromptBtn" class="btn-add">+ Nuevo Prompt</button>
+      </div>
     </div>
+  </header>
 
-    <div class="header-buttons">
-      <button id="viewSheetBtn" class="btn-secondary">Ver o editar en Google Sheets</button>
-      <button id="addPromptBtn" class="btn-add">+ Nuevo Prompt</button>
-    </div>
-  </div>
-</header>
-
-
-
-  <!-- ======= Main container ======= -->
+  <!-- ===== MAIN ===== -->
   <main class="app-container">
     <section class="controls">
       <div class="search-wrap">
@@ -51,33 +51,27 @@
     <section id="promptList" class="prompt-list" aria-live="polite"></section>
   </main>
 
-  <!-- ======= Overlay ======= -->
+  <!-- ===== MODAL ===== -->
   <div id="modalOverlay" class="modal-overlay" aria-hidden="true"></div>
 
-  <!-- ======= Modal: Ver / Editar / Nuevo Prompt ======= -->
   <div id="promptModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal-content">
       <button class="close-btn close-modal" aria-label="Cerrar">&times;</button>
       <h2 id="modalTitle">Nuevo Prompt</h2>
 
       <form id="promptForm" autocomplete="off">
-        <!-- 1. Nombre -->
         <label for="promptName">Nombre del Prompt</label>
         <input id="promptName" type="text" required />
 
-        <!-- 2. Prompt completo (principal) -->
         <label for="promptText">Contenido del Prompt</label>
         <textarea id="promptText" required placeholder="Escribe el prompt completo aquí..."></textarea>
 
-        <!-- 3. Contexto -->
         <label for="promptContext">Contexto / Cuándo usarlo</label>
-        <textarea id="promptContext" required></textarea>
+        <textarea id="promptContext"></textarea>
 
-        <!-- 4. Personalización -->
         <label for="promptPersonalization">Personalización</label>
-        <textarea id="promptPersonalization" placeholder="Ajustes que aplicas siempre"></textarea>
+        <textarea id="promptPersonalization" placeholder="Ajustes o adaptaciones específicas..."></textarea>
 
-        <!-- 5. Frecuencia -->
         <label for="promptFrequency">Frecuencia</label>
         <select id="promptFrequency">
           <option value="diario">Diario</option>
@@ -95,7 +89,7 @@
     </div>
   </div>
 
-  <!-- ======= Footer ======= -->
+  <!-- ===== FOOTER ===== -->
   <footer class="app-footer">
     <img src="Favicon-app.png" alt="Contador 4.0" class="footer-icon" />
     <p>
@@ -106,6 +100,7 @@
     </p>
   </footer>
 
-  <script src="script.js" type="module" defer></script>
+  <!-- Script principal -->
+  <script src="script.js" defer></script>
 </body>
 </html>
