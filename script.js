@@ -74,14 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function showOverlay() { modalOverlay.classList.add("active"); modalOverlay.style.display = "block"; }
   function hideOverlay() { modalOverlay.classList.remove("active"); modalOverlay.style.display = "none"; }
 
-  // Open modal: prompt = null (new) or prompt object (view/edit)
+  // Open modal
   function openModal(prompt = null) {
-    // reset
     promptForm.reset();
     delete promptForm.dataset.editId;
     delete promptForm.dataset.isFixed;
 
-    // default buttons visibility
     deleteBtn.style.display = "none";
     saveBtn.style.display = "inline-block";
 
@@ -108,26 +106,19 @@ document.addEventListener("DOMContentLoaded", () => {
     showOverlay();
     promptModal.classList.add("active");
     promptModal.style.display = "block";
-    const mc = promptModal.querySelector(".modal-content");
-    if (mc) mc.scrollTop = 0;
-    setTimeout(() => { if (!prompt) nameInput.focus(); }, 120);
   }
 
   function closeModal() {
     promptModal.classList.remove("active");
     promptModal.style.display = "none";
     hideOverlay();
-    delete promptForm.dataset.editId;
-    delete promptForm.dataset.isFixed;
   }
 
-  // Bind overlay & close handlers
   modalOverlay.addEventListener("click", closeModal);
   closeBtns.forEach(b => b.addEventListener("click", closeModal));
-  if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { if (promptModal.classList.contains("active")) closeModal(); } });
+  cancelBtn.addEventListener("click", closeModal);
 
-  // Save / create
+  // Guardar o crear
   promptForm.addEventListener("submit", (e) => {
     e.preventDefault();
     if (promptForm.dataset.isFixed === "true") { alert("Los prompts base no se pueden editar."); return; }
@@ -136,165 +127,55 @@ document.addEventListener("DOMContentLoaded", () => {
     const newPrompt = {
       id,
       name: nameInput.value.trim() || "Sin título",
-      text: textInput.value.trim() || "",
-      context: contextInput.value.trim() || "",
-      personalization: personalizationInput.value.trim() || "",
-      frequency: freqSelect.value || "semanal",
+      text: textInput.value.trim(),
+      context: contextInput.value.trim(),
+      personalization: personalizationInput.value.trim(),
+      frequency: freqSelect.value,
       fixed: false,
       createdAt: Date.now()
     };
 
-    const existingIndex = userPrompts.findIndex(p => String(p.id) === String(id));
+    const existingIndex = userPrompts.findIndex(p => p.id === id);
     if (existingIndex > -1) userPrompts[existingIndex] = newPrompt;
     else userPrompts.push(newPrompt);
 
-    try { localStorage.setItem("userPrompts", JSON.stringify(userPrompts)); } catch (err) { console.warn("localStorage save error:", err); }
+    localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
     renderPrompts();
     closeModal();
   });
 
-  // Delete personal prompt
+  // Eliminar
   deleteBtn.addEventListener("click", () => {
     const id = promptForm.dataset.editId;
     if (!id) return;
-    if (!confirm("¿Seguro que deseas eliminar este prompt? Esta acción no se puede deshacer.")) return;
-    userPrompts = userPrompts.filter(p => String(p.id) !== String(id));
-    try { localStorage.setItem("userPrompts", JSON.stringify(userPrompts)); } catch (err) { console.warn("localStorage save error:", err); }
+    if (!confirm("¿Seguro que deseas eliminar este prompt?")) return;
+    userPrompts = userPrompts.filter(p => p.id !== id);
+    localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
     renderPrompts();
     closeModal();
   });
 
-  // Add new prompt button
-  if (addPromptBtn) addPromptBtn.addEventListener("click", () => openModal(null));
+  // Botón nuevo prompt
+  addPromptBtn.addEventListener("click", () => openModal(null));
 
-  // Search filter
-  if (searchInput) {
-    searchInput.addEventListener("input", (e) => {
-      const q = String(e.target.value || "").trim().toLowerCase();
-      if (!q) { renderPrompts(); return; }
-      const filtered = getAllPrompts().filter(p => {
-        return (p.name && p.name.toLowerCase().includes(q)) ||
-               (p.context && p.context.toLowerCase().includes(q)) ||
-               (p.text && p.text.toLowerCase().includes(q));
-      });
-      renderPrompts(filtered);
-    });
-  }
+  // Buscar
+  searchInput.addEventListener("input", (e) => {
+    const q = e.target.value.toLowerCase();
+    const filtered = getAllPrompts().filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.context.toLowerCase().includes(q) ||
+      p.text.toLowerCase().includes(q)
+    );
+    renderPrompts(filtered);
+  });
 
-  // Export -> opens XLSX stored in GitHub (raw)
-  if (exportBtn) {
-    exportBtn.addEventListener("click", () => {
-      const rawUrl = "https://github.com/jairoamayalaverde/contador4-biblioteca/raw/main/Biblioteca%20de%20Prompts%20Contador%204.0.xlsx";
-      window.open(rawUrl, "_blank");
-    });
-  }
+  // Exportar Excel
+  exportBtn.addEventListener("click", () => {
+    const url = "https://github.com/jairoamayalaverde/contador4-biblioteca/raw/main/Biblioteca%20de%20Prompts%20Contador%204.0.xlsx";
+    window.open(url, "_blank");
+  });
 
-  // Initial render
+  // Inicial
   renderPrompts();
 
 });
-/* ===============================
-   🔹 Header optimizado con 2 botones
-=============================== */
-.header-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 0.8rem 1.5rem;
-  background: #ffffff;
-  border-bottom: 1px solid #eee;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.site-logo {
-  height: 38px;
-  width: auto;
-  object-fit: contain;
-}
-
-.site-title {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  color: #333;
-  font-size: 1.2rem;
-  margin-left: 10px;
-}
-
-.site-title span {
-  color: #E86C2A;
-}
-
-/* --- Botones del header --- */
-.header-buttons {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn-add,
-.btn-secondary {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-radius: 8px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-/* Botón “Nuevo Prompt” */
-.btn-add {
-  background: #E86C2A;
-  color: #fff;
-  border: none;
-}
-
-.btn-add:hover {
-  background: #cf5d22;
-  transform: translateY(-1px);
-}
-
-/* Botón “Ver o editar en Google Sheets” */
-.btn-secondary {
-  background: transparent;
-  border: 2px solid #E86C2A;
-  color: #E86C2A;
-}
-
-.btn-secondary:hover {
-  background: #E86C2A;
-  color: #fff;
-}
-
-/* 🔹 Móvil */
-@media (max-width: 700px) {
-  .header-inner {
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .site-logo {
-    height: 34px;
-  }
-
-  .site-title {
-    font-size: 1rem;
-    text-align: center;
-  }
-
-  .header-buttons {
-    flex-direction: column;
-    width: 100%;
-    gap: 6px;
-  }
-
-  .btn-add,
-  .btn-secondary {
-    width: 100%;
-    text-align: center;
-  }
-}
