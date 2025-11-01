@@ -179,3 +179,130 @@ document.addEventListener("DOMContentLoaded", () => {
   renderPrompts();
 
 });
+// =================================================================
+// === LEER PROMPTS GUARDADOS DESDE LA CONSOLA ====================
+// =================================================================
+
+function cargarBibliotecaLocal() {
+  try {
+    const biblioteca = JSON.parse(localStorage.getItem('contador4_biblioteca') || '[]');
+    const total = localStorage.getItem('contador4_total_prompts') || '0';
+    
+    console.log(`📚 ${total} prompts cargados desde biblioteca local`);
+    
+    return biblioteca;
+  } catch (error) {
+    console.error('Error al cargar biblioteca:', error);
+    return [];
+  }
+}
+
+function renderizarPrompts(prompts) {
+  const container = document.getElementById('prompts-container'); // Ajusta según tu HTML
+  
+  if (!container) {
+    console.warn('Container de prompts no encontrado');
+    return;
+  }
+  
+  if (prompts.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 60px 20px; color: #6b7280;">
+        <h3 style="font-size: 1.5em; margin-bottom: 10px;">📚 Tu biblioteca está vacía</h3>
+        <p style="margin-bottom: 20px;">Genera prompts desde la Consola para verlos aquí</p>
+        <a href="URL_DE_TU_CONSOLA" style="display: inline-block; padding: 12px 24px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+          Ir a la Consola
+        </a>
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = prompts.map(prompt => `
+    <div class="prompt-card" data-id="${prompt.id}">
+      <div class="prompt-header">
+        <span class="prompt-categoria">${prompt.categoria}</span>
+        <span class="prompt-fecha">${prompt.fecha}</span>
+      </div>
+      <h3 class="prompt-titulo">${prompt.titulo}</h3>
+      <p class="prompt-subcategoria">${prompt.subcategoria}</p>
+      <div class="prompt-contenido">
+        ${prompt.contenido.substring(0, 200)}...
+      </div>
+      <div class="prompt-actions">
+        <button onclick="copiarPrompt('${prompt.id}')" class="btn-action primary">
+          📋 Copiar
+        </button>
+        <button onclick="verPromptCompleto('${prompt.id}')" class="btn-action">
+          👁️ Ver completo
+        </button>
+        <button onclick="eliminarPrompt('${prompt.id}')" class="btn-action danger">
+          🗑️ Eliminar
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Funciones auxiliares
+function copiarPrompt(id) {
+  const biblioteca = cargarBibliotecaLocal();
+  const prompt = biblioteca.find(p => p.id === id);
+  
+  if (!prompt) return;
+  
+  navigator.clipboard.writeText(prompt.contenido).then(() => {
+    mostrarNotificacion('✅ Prompt copiado al portapapeles');
+  });
+}
+
+function verPromptCompleto(id) {
+  const biblioteca = cargarBibliotecaLocal();
+  const prompt = biblioteca.find(p => p.id === id);
+  
+  if (!prompt) return;
+  
+  // Mostrar en modal (ajusta según tu implementación)
+  alert(prompt.contenido); // Temporal - reemplaza con tu modal
+}
+
+function eliminarPrompt(id) {
+  if (!confirm('¿Estás seguro de eliminar este prompt?')) return;
+  
+  let biblioteca = cargarBibliotecaLocal();
+  biblioteca = biblioteca.filter(p => p.id !== id);
+  
+  localStorage.setItem('contador4_biblioteca', JSON.stringify(biblioteca));
+  localStorage.setItem('contador4_total_prompts', biblioteca.length);
+  
+  // Re-renderizar
+  renderizarPrompts(biblioteca);
+  mostrarNotificacion('🗑️ Prompt eliminado');
+}
+
+function mostrarNotificacion(mensaje) {
+  // Implementa tu sistema de notificaciones
+  alert(mensaje); // Temporal
+}
+
+// Inicializar cuando cargue la página
+document.addEventListener('DOMContentLoaded', () => {
+  const prompts = cargarBibliotecaLocal();
+  renderizarPrompts(prompts);
+  
+  // Actualizar contador en header (si existe)
+  const totalElement = document.getElementById('total-prompts');
+  if (totalElement) {
+    totalElement.textContent = prompts.length;
+  }
+});
+
+// Exportar funciones si usas módulos
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    cargarBibliotecaLocal,
+    renderizarPrompts,
+    copiarPrompt,
+    eliminarPrompt
+  };
+}
