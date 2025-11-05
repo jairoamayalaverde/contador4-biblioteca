@@ -1,5 +1,5 @@
 // script.js — Biblioteca de Prompts – Contador 4.0
-// Lógica V2.2: (CORREGIDO) Tarjetas avanzadas, acciones rápidas, Google Sheets link, CRUD (localStorage), búsqueda.
+// Lógica V2.3: (CORREGIDO ERROR DE SINTAXIS) Tarjetas avanzadas, acciones rápidas, Google Sheets link, CRUD (localStorage), búsqueda.
 
 document.addEventListener("DOMContentLoaded", () => {
   // --- REFERENCIAS DOM ---
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       card.innerHTML = `
         <div class="prompt-header">
-          <span class="prompt-categoria">${categoria</span>
+          <span class="prompt-categoria">${categoria}</span>
         </div>
         <h3 class="prompt-titulo">${p.name}</h3>
         <p class="prompt-subcategoria">${contexto}</p>
@@ -309,7 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderPrompts(filtered);
   });
 
-  // Botón Ver en Google Sheets (CORREGIDO)
+  // Botón Ver en Google Sheets
   viewSheetBtn.addEventListener("click", () => {
     const sheetUrl = "https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing";
     window.open(sheetUrl, "_blank");
