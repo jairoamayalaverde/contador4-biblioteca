@@ -1,5 +1,5 @@
 // script.js — Biblioteca de Prompts – Contador 4.0
-// Lógica V2.4: Filtros de categoría + Búsqueda + Acciones rápidas
+// Lógica V2.5: (CORREGIDO ERROR DE SINTAXIS) Filtros + Búsqueda + Acciones rápidas
 
 document.addEventListener("DOMContentLoaded", () => {
   // --- REFERENCIAS DOM ---
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const deleteBtn = document.getElementById("deletePrompt");
   const saveBtn = document.getElementById("savePrompt");
 
-  // (NUEVO) Referencias para filtros
+  // Referencias para filtros
   const filterBtns = document.querySelectorAll(".filter-btn");
 
   // --- Formulario Modal ---
@@ -71,11 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
 
-  // --- (MODIFICADO) LÓGICA CENTRAL DE RENDERIZADO ---
+  // --- LÓGICA CENTRAL DE RENDERIZADO ---
 
   /**
-   * (NUEVA) Función central para aplicar filtros y búsqueda.
-   * Esta función decide QUÉ mostrar.
+   * Función central para aplicar filtros y búsqueda.
    */
   function applyFiltersAndSearch() {
     const allPrompts = getAllPrompts();
@@ -96,17 +95,16 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       // Buscar en nombre, contexto o texto
       return p.name.toLowerCase().includes(searchTerm) ||
-             p.context.toLowerCase().includes(searchTerm) ||
-             p.text.toLowerCase().includes(searchTerm);
+             (p.context && p.context.toLowerCase().includes(searchTerm)) ||
+             (p.text && p.text.toLowerCase().includes(searchTerm));
     });
 
-    // 3. Llamar a renderPrompts para que DIBUJE la lista final
+    // 3. Llamar a renderPromptsUI para que DIBUJE la lista final
     renderPromptsUI(filteredBySearch);
   }
 
   /**
-   * (MODIFICADA) Esta función ahora solo se encarga de DIBUJAR.
-   * Ya no decide qué mostrar, solo recibe una lista y la renderiza.
+   * Esta función ahora solo se encarga de DIBUJAR.
    */
   function renderPromptsUI(listToRender) {
     promptList.innerHTML = "";
@@ -202,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     userPrompts = userPrompts.filter(p => p.id !== id);
     localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
-    applyFiltersAndSearch(); // (MODIFICADO) Llama a la función central
+    applyFiltersAndSearch(); // Llama a la función central
     closeModal();
   }
 
@@ -298,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
-    applyFiltersAndSearch(); // (MODIFICADO) Llama a la función central
+    applyFiltersAndSearch(); // Llama a la función central
     closeModal();
   });
 
@@ -311,14 +309,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- BÚSQUEDA Y FILTROS ---
 
-  // (MODIFICADO) Evento de Búsqueda
+  // Evento de Búsqueda
   searchInput.addEventListener("input", () => {
     applyFiltersAndSearch(); // Llama a la función central
   });
 
-  // (NUEVO) Eventos de Filtros
+  // (CORREGIDO) Eventos de Filtros
   filterBtns.forEach(btn => {
-    btn.addEventListener("click", ()F => {
+    btn.addEventListener("click", () => { // <-- AQUÍ ESTABA EL ERROR
       // 1. Actualiza el estado
       currentFilter = btn.dataset.filter;
 
@@ -347,6 +345,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // --- INICIALIZACIÓN ---
-  applyFiltersAndSearch(); // (MODIFICADO) Llama a la función central al cargar
+  applyFiltersAndSearch(); // Llama a la función central al cargar
 
 });
