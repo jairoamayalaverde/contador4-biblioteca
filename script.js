@@ -1,10 +1,10 @@
 // script.js — Biblioteca de Prompts – Contador 4.0
-// Lógica V2.1: Tarjetas avanzadas, acciones rápidas (con lógica de prompts base), Google Sheets link, CRUD (localStorage), búsqueda.
+// Lógica V2.2: (CORREGIDO) Tarjetas avanzadas, acciones rápidas, Google Sheets link, CRUD (localStorage), búsqueda.
 
 document.addEventListener("DOMContentLoaded", () => {
   // --- REFERENCIAS DOM ---
   const addPromptBtn = document.getElementById("addPromptBtn");
-  const viewSheetBtn = document.getElementById("viewSheetBtn"); // <-- NUEVO
+  const viewSheetBtn = document.getElementById("viewSheetBtn");
   const promptModal = document.getElementById("promptModal");
   const modalOverlay = document.getElementById("modalOverlay");
   const closeBtns = document.querySelectorAll(".close-modal, .close-btn");
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       card.innerHTML = `
         <div class="prompt-header">
-          <span class="prompt-categoria">${categoria}</span>
+          <span class="prompt-categoria">${categoria</span>
         </div>
         <h3 class="prompt-titulo">${p.name}</h3>
         <p class="prompt-subcategoria">${contexto}</p>
@@ -309,17 +309,12 @@ document.addEventListener("DOMContentLoaded", () => {
     renderPrompts(filtered);
   });
 
-  // (NUEVO) Botón Ver en Google Sheets
+  // Botón Ver en Google Sheets (CORREGIDO)
   viewSheetBtn.addEventListener("click", () => {
     const sheetUrl = "https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing";
     window.open(sheetUrl, "_blank");
   });
 
-aws-bedrock-claude-v2-1: (NUEVO) Botón Ver en Google Sheets
-viewSheetBtn.addEventListener("click", () => {
-  const sheetUrl = "https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing";
-  window.open(sheetUrl, "_blank");
-});
   // Exportar Excel
   exportBtn.addEventListener("click", () => {
     const url = "https://github.com/jairoamayalaverde/contador4-biblioteca/raw/main/Biblioteca%20de%20Prompts%20Contador%204.0.xlsx";
