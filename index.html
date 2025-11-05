@@ -5,25 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Biblioteca de Prompts – Contador 4.0</title>
 
-  <!-- Favicon -->
   <link rel="icon" href="Favicon-app.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="Favicon-app.png" />
   <meta name="theme-color" content="#E86C2A">
 
-  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500&family=Poppins:wght@700;900&display=swap" rel="stylesheet">
 
-  <!-- Estilos -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- ===== HEADER ===== -->
   <header class="site-header">
     <div class="header-inner">
       <div class="header-left">
         <img
-          src="https://raw.githubusercontent.com/jairoamayalaverde/contador4-biblioteca/main/Logo-sistema-de-transformación-Contador-4.0.png"
+          src="https://raw.githubusercontent.com/jairoamayalaverde/contador4-biblioteca/main/Logo-sistema-de-transformación-Contador-4.0.png"
           alt="Logo Contador 4.0"
           class="site-logo"
         />
@@ -37,7 +33,6 @@
     </div>
   </header>
 
-  <!-- ===== MAIN ===== -->
   <main class="app-container">
     <section class="controls">
       <div class="search-wrap">
@@ -48,10 +43,17 @@
       </div>
     </section>
 
+    <nav id="filterControls" class="filter-controls">
+        <button class="filter-btn active" data-filter="todos">Todos</button>
+        <button class="filter-btn" data-filter="diario">Diario</button>
+        <button class="filter-btn" data-filter="semanal">Semanal</button>
+        <button class="filter-btn" data-filter="mensual">Mensual</button>
+        <button class="filter-btn" data-filter="ocasional">Ocasional</button>
+    </nav>
+
     <section id="promptList" class="prompt-list" aria-live="polite"></section>
   </main>
 
-  <!-- ===== MODAL ===== -->
   <div id="modalOverlay" class="modal-overlay" aria-hidden="true"></div>
 
   <div id="promptModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
@@ -89,7 +91,6 @@
     </div>
   </div>
 
-  <!-- ===== FOOTER ===== -->
   <footer class="app-footer">
     <p>
       Biblioteca de Prompts es un desarrollo de
@@ -99,7 +100,6 @@
     </p>
   </footer>
 
-  <!-- Script principal -->
   <script src="script.js" defer></script>
 </body>
 </html>
