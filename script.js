@@ -1,9 +1,10 @@
 // script.js — Biblioteca de Prompts – Contador 4.0
-// Lógica V2: Tarjetas avanzadas, acciones rápidas, CRUD (localStorage), búsqueda.
+// Lógica V2.1: Tarjetas avanzadas, acciones rápidas (con lógica de prompts base), Google Sheets link, CRUD (localStorage), búsqueda.
 
 document.addEventListener("DOMContentLoaded", () => {
   // --- REFERENCIAS DOM ---
   const addPromptBtn = document.getElementById("addPromptBtn");
+  const viewSheetBtn = document.getElementById("viewSheetBtn"); // <-- NUEVO
   const promptModal = document.getElementById("promptModal");
   const modalOverlay = document.getElementById("modalOverlay");
   const closeBtns = document.querySelectorAll(".close-modal, .close-btn");
@@ -62,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
 
-  // --- RENDERIZADO (NUEVA VERSIÓN V2) ---
+  // --- RENDERIZADO (V2 con lógica de botones) ---
 
   /**
    * Renderiza la lista de prompts usando las tarjetas avanzadas (.prompt-card)
@@ -93,13 +94,22 @@ document.addEventListener("DOMContentLoaded", () => {
       const contexto = truncate(p.context || 'Sin contexto', 100);
       const contenido = truncate(p.text || 'Prompt vacío', 150);
 
-      // Botones de acción
-      // Los prompts fijos (base) no pueden ser eliminados.
-      const actionsHTML = `
-        <button class="btn-action primary btn-copy" data-id="${p.id}">📋 Copiar</button>
-        <button class="btn-action btn-view" data-id="${p.id}">👁️ Ver / Editar</button>
-        ${!p.fixed ? `<button class="btn-action danger btn-delete" data-id="${p.id}">🗑️ Eliminar</button>` : ''}
-      `;
+      // --- LÓGICA DE BOTONES (ACTUALIZADA) ---
+      // Decide qué botones mostrar basado en si el prompt es 'fijo' (base) o no.
+      let actionsHTML = '';
+      if (p.fixed) {
+        // Prompts base: SOLO mostrar "Copiar"
+        actionsHTML = `
+          <button class="btn-action primary btn-copy" data-id="${p.id}">📋 Copiar</button>
+        `;
+      } else {
+        // Prompts de usuario: Mostrar "Copiar", "Ver/Editar" y "Eliminar"
+        actionsHTML = `
+          <button class="btn-action primary btn-copy" data-id="${p.id}">📋 Copiar</button>
+          <button class="btn-action btn-view" data-id="${p.id}">👁️ Ver / Editar</button>
+          <button class="btn-action danger btn-delete" data-id="${p.id}">🗑️ Eliminar</button>
+        `;
+      }
 
       card.innerHTML = `
         <div class="prompt-header">
@@ -115,22 +125,23 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
 
-      // --- ASIGNAR EVENTOS A LOS BOTONES DE LA TARJETA ---
+      // --- ASIGNAR EVENTOS A LOS BOTONES DE LA TARJETA (ACTUALIZADO) ---
       
-      // Botón Copiar
+      // Botón Copiar (SIEMPRE existe)
       card.querySelector('.btn-copy').addEventListener('click', (e) => {
         e.stopPropagation(); // Evita que otros eventos se disparen
         copiarPrompt(p.id);
       });
 
-      // Botón Ver / Editar
-      card.querySelector('.btn-view').addEventListener('click', (e) => {
-        e.stopPropagation();
-        openModal(p); // 'p' es el objeto completo del prompt
-      });
-
-      // Botón Eliminar (solo si existe)
+      // Botones Ver/Editar y Eliminar (SOLO si NO es fijo)
       if (!p.fixed) {
+        // Botón Ver / Editar
+        card.querySelector('.btn-view').addEventListener('click', (e) => {
+          e.stopPropagation();
+          openModal(p); // 'p' es el objeto completo del prompt
+        });
+
+        // Botón Eliminar
         card.querySelector('.btn-delete').addEventListener('click', (e) => {
           e.stopPropagation();
           eliminarPrompt(p.id);
@@ -285,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  // --- BÚSQUEDA Y EXPORTACIÓN ---
+  // --- BÚSQUEDA Y ACCIONES EXTERNAS ---
 
   // Buscar
   searchInput.addEventListener("input", (e) => {
@@ -298,6 +309,17 @@ document.addEventListener("DOMContentLoaded", () => {
     renderPrompts(filtered);
   });
 
+  // (NUEVO) Botón Ver en Google Sheets
+  viewSheetBtn.addEventListener("click", () => {
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing";
+    window.open(sheetUrl, "_blank");
+  });
+
+aws-bedrock-claude-v2-1: (NUEVO) Botón Ver en Google Sheets
+viewSheetBtn.addEventListener("click", () => {
+  const sheetUrl = "https://docs.google.com/spreadsheets/d/1LdUoniteMSwjeLTm0RfCtk5rPMVBY4jQte3Sh0SKKNc/edit?usp=sharing";
+  window.open(sheetUrl, "_blank");
+});
   // Exportar Excel
   exportBtn.addEventListener("click", () => {
     const url = "https://github.com/jairoamayalaverde/contador4-biblioteca/raw/main/Biblioteca%20de%20Prompts%20Contador%204.0.xlsx";
