@@ -662,3 +662,38 @@ body{
 .btn-action.danger:hover {
   background: #fee2e2;
 }
+/* ========== (NUEVO) Filtros de Categoría ========== */
+.filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px; /* Espacio antes de las tarjetas */
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--gris-medio);
+}
+
+.filter-btn {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 20px; /* Estilo "píldora" */
+    border: 2px solid var(--gris-medio);
+    background: var(--blanco);
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    background: #f0f0f0;
+    border-color: #ccc;
+}
+
+/* Estilo para el botón activo */
+.filter-btn.active {
+    background: var(--naranja);
+    color: var(--blanco);
+    border-color: var(--naranja);
+    box-shadow: 0 2px 6px rgba(232, 108, 42, 0.3);
+}
