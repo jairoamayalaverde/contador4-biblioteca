@@ -1,8 +1,8 @@
 // script.js — Biblioteca de Prompts – Contador 4.0
-// Lógica: render base + user prompts, CRUD (localStorage), búsqueda, export -> GitHub XLSX
-document.addEventListener("DOMContentLoaded", () => {
+// Lógica V2: Tarjetas avanzadas, acciones rápidas, CRUD (localStorage), búsqueda.
 
-  // DOM references
+document.addEventListener("DOMContentLoaded", () => {
+  // --- REFERENCIAS DOM ---
   const addPromptBtn = document.getElementById("addPromptBtn");
   const promptModal = document.getElementById("promptModal");
   const modalOverlay = document.getElementById("modalOverlay");
@@ -22,7 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const personalizationInput = document.getElementById("promptPersonalization");
   const freqSelect = document.getElementById("promptFrequency");
 
-  // Base prompts (fixed)
+  // --- DATOS ---
+
+  // Prompts base (fijos)
   const defaultPrompts = [
     { id: "base-1", name: "Análisis Express Rentabilidad PYME", context: "Cliente pregunta por qué bajó la utilidad neta.", personalization: "Incluye 'sector retail Colombia' y lenguaje simple.", text: "Actúa como analista financiero experto. Evalúa los márgenes de utilidad neta de una PYME del sector retail colombiano.", frequency: "semanal", fixed: true, createdAt: Date.now() },
     { id: "base-2", name: "Propuesta Premium de Servicios", context: "Prospecto solicita cotización o upgrade de cliente actual.", personalization: "Cambio 'CEO' por 'Gerente', énfasis en ROI cuantificado.", text: "Redacta una propuesta contable con enfoque premium para retener clientes y destacar ROI con claridad.", frequency: "mensual", fixed: true, createdAt: Date.now() },
@@ -31,50 +33,153 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: "base-5", name: "Detección de Irregularidades en Nómina", context: "Antes de procesar nómina mensual.", personalization: "Detectar duplicados, horas extras inusuales y empleados inactivos.", text: "Analiza nómina y devuelve hallazgos: duplicados, horas extras anómalas, posibles empleados fantasma.", frequency: "mensual", fixed: true, createdAt: Date.now() }
   ];
 
-  // Load user prompts safely
+  // Cargar prompts del usuario (localStorage)
   let userPrompts = [];
   try {
     userPrompts = JSON.parse(localStorage.getItem("userPrompts")) || [];
   } catch (e) {
-    console.warn("localStorage userPrompts parse error:", e);
+    console.warn("Error al cargar userPrompts de localStorage:", e);
     userPrompts = [];
   }
 
-  // Helper: get all prompts
+  // Helper: Obtener todos los prompts
   function getAllPrompts() {
-    return [...defaultPrompts, ...userPrompts];
+    // Ordena: los creados por el usuario primero, luego los base
+    const sortedUserPrompts = userPrompts.sort((a, b) => b.createdAt - a.createdAt);
+    return [...sortedUserPrompts, ...defaultPrompts];
   }
 
-  // Render only name in cards
+  // Helper: Truncar texto
+  const truncate = (str, len) => {
+    if (!str) return "";
+    return str.length > len ? str.substring(0, len) + '...' : str;
+  };
+
+  // Helper: Capitalizar
+  const capitalize = (str) => {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+
+  // --- RENDERIZADO (NUEVA VERSIÓN V2) ---
+
+  /**
+   * Renderiza la lista de prompts usando las tarjetas avanzadas (.prompt-card)
+   */
   function renderPrompts(list = getAllPrompts()) {
     promptList.innerHTML = "";
+    
     if (!Array.isArray(list) || list.length === 0) {
+      const emptyMsg = (searchInput.value) 
+        ? "No se encontraron prompts con ese término de búsqueda."
+        : "No hay prompts aún. Presiona '+ Nuevo Prompt' para crear uno.";
+      
       const empty = document.createElement("div");
-      empty.className = "center small";
-      empty.textContent = "No hay prompts aún. Presiona + Nuevo Prompt para crear uno.";
+      empty.className = "prompt-empty-message"; // Puedes estilizar esta clase
+      empty.textContent = emptyMsg;
       promptList.appendChild(empty);
       return;
     }
 
     list.forEach(p => {
       const card = document.createElement("div");
-      card.className = "prompt-item";
-      if (p.fixed) card.classList.add("fixed");
+      card.className = "prompt-card";
+      if (p.fixed) {
+        card.classList.add("fixed-prompt"); // Clase para estilizar prompts base
+      }
+      
+      const categoria = capitalize(p.frequency) || 'General';
+      const contexto = truncate(p.context || 'Sin contexto', 100);
+      const contenido = truncate(p.text || 'Prompt vacío', 150);
 
-      const title = document.createElement("h3");
-      title.textContent = p.name;
-      card.appendChild(title);
+      // Botones de acción
+      // Los prompts fijos (base) no pueden ser eliminados.
+      const actionsHTML = `
+        <button class="btn-action primary btn-copy" data-id="${p.id}">📋 Copiar</button>
+        <button class="btn-action btn-view" data-id="${p.id}">👁️ Ver / Editar</button>
+        ${!p.fixed ? `<button class="btn-action danger btn-delete" data-id="${p.id}">🗑️ Eliminar</button>` : ''}
+      `;
 
-      card.addEventListener("click", () => openModal(p));
+      card.innerHTML = `
+        <div class="prompt-header">
+          <span class="prompt-categoria">${categoria}</span>
+        </div>
+        <h3 class="prompt-titulo">${p.name}</h3>
+        <p class="prompt-subcategoria">${contexto}</p>
+        <div class="prompt-contenido">
+          ${contenido}
+        </div>
+        <div class="prompt-actions">
+          ${actionsHTML}
+        </div>
+      `;
+
+      // --- ASIGNAR EVENTOS A LOS BOTONES DE LA TARJETA ---
+      
+      // Botón Copiar
+      card.querySelector('.btn-copy').addEventListener('click', (e) => {
+        e.stopPropagation(); // Evita que otros eventos se disparen
+        copiarPrompt(p.id);
+      });
+
+      // Botón Ver / Editar
+      card.querySelector('.btn-view').addEventListener('click', (e) => {
+        e.stopPropagation();
+        openModal(p); // 'p' es el objeto completo del prompt
+      });
+
+      // Botón Eliminar (solo si existe)
+      if (!p.fixed) {
+        card.querySelector('.btn-delete').addEventListener('click', (e) => {
+          e.stopPropagation();
+          eliminarPrompt(p.id);
+        });
+      }
+
       promptList.appendChild(card);
     });
   }
 
-  // Overlay show/hide
-  function showOverlay() { modalOverlay.classList.add("active"); modalOverlay.style.display = "block"; }
-  function hideOverlay() { modalOverlay.classList.remove("active"); modalOverlay.style.display = "none"; }
 
-  // Open modal
+  // --- ACCIONES DE TARJETAS Y MODAL ---
+
+  /**
+   * (NUEVA) Copia el texto de un prompt al portapapeles
+   */
+  function copiarPrompt(id) {
+    const prompt = getAllPrompts().find(p => p.id === id);
+    if (!prompt) return;
+
+    navigator.clipboard.writeText(prompt.text).then(() => {
+      // Idealmente, aquí usas un "toast" o notificación no intrusiva
+      alert("✅ Prompt copiado al portapapeles");
+    }).catch(err => {
+      console.error('Error al copiar:', err);
+      alert("Error al copiar el prompt.");
+    });
+  }
+
+  /**
+   * (MODIFICADA) Elimina un prompt (usada por tarjeta y modal)
+   */
+  function eliminarPrompt(id) {
+    if (!id) return;
+
+    // Confirma con el usuario
+    if (!confirm("¿Seguro que deseas eliminar este prompt? Esta acción no se puede deshacer.")) return;
+
+    // Solo se pueden borrar prompts de 'userPrompts'
+    userPrompts = userPrompts.filter(p => p.id !== id);
+    localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
+    
+    renderPrompts(); // Re-renderiza la lista
+    closeModal();    // Cierra el modal (si estaba abierto)
+  }
+
+  // --- MANEJO DEL MODAL ---
+
+  // Abrir modal
   function openModal(prompt = null) {
     promptForm.reset();
     delete promptForm.dataset.editId;
@@ -84,6 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
     saveBtn.style.display = "inline-block";
 
     if (prompt) {
+      // --- Modo Vista / Edición ---
       modalTitle.textContent = prompt.fixed ? "Vista de Prompt Base" : "Editar Prompt";
       nameInput.value = prompt.name || "";
       textInput.value = prompt.text || "";
@@ -96,9 +202,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const readonly = !!prompt.fixed;
       [nameInput, textInput, contextInput, personalizationInput, freqSelect].forEach(el => { el.disabled = readonly; });
 
-      if (prompt.fixed) saveBtn.style.display = "none";
-      else deleteBtn.style.display = "inline-block";
+      if (prompt.fixed) {
+        saveBtn.style.display = "none"; // No se puede guardar un prompt base
+      } else {
+        deleteBtn.style.display = "inline-block"; // Se puede eliminar uno de usuario
+      }
     } else {
+      // --- Modo Creación ---
       modalTitle.textContent = "Nuevo Prompt";
       [nameInput, textInput, contextInput, personalizationInput, freqSelect].forEach(el => { el.disabled = false; });
     }
@@ -108,22 +218,44 @@ document.addEventListener("DOMContentLoaded", () => {
     promptModal.style.display = "block";
   }
 
+  // Cerrar modal
   function closeModal() {
     promptModal.classList.remove("active");
     promptModal.style.display = "none";
     hideOverlay();
   }
 
+  // Overlay show/hide
+  function showOverlay() { modalOverlay.classList.add("active"); modalOverlay.style.display = "block"; }
+  function hideOverlay() { modalOverlay.classList.remove("active"); modalOverlay.style.display = "none"; }
+
+  // Eventos para cerrar modal
   modalOverlay.addEventListener("click", closeModal);
   closeBtns.forEach(b => b.addEventListener("click", closeModal));
   cancelBtn.addEventListener("click", closeModal);
 
-  // Guardar o crear
+  // Botón "Nuevo Prompt"
+  addPromptBtn.addEventListener("click", () => openModal(null));
+
+
+  // --- FORMULARIO (Guardar / Crear) ---
   promptForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    if (promptForm.dataset.isFixed === "true") { alert("Los prompts base no se pueden editar."); return; }
+    if (promptForm.dataset.isFixed === "true") {
+      alert("Los prompts base no se pueden editar.");
+      return;
+    }
 
     const id = promptForm.dataset.editId || String(Date.now());
+    
+    // Si es nuevo, usa Date.now(). Si edita, mantiene su 'createdAt' original.
+    let createdAt = Date.now();
+    const existingIndex = userPrompts.findIndex(p => p.id === id);
+    
+    if (existingIndex > -1) {
+      createdAt = userPrompts[existingIndex].createdAt; // Conserva fecha original
+    }
+
     const newPrompt = {
       id,
       name: nameInput.value.trim() || "Sin título",
@@ -132,31 +264,28 @@ document.addEventListener("DOMContentLoaded", () => {
       personalization: personalizationInput.value.trim(),
       frequency: freqSelect.value,
       fixed: false,
-      createdAt: Date.now()
+      createdAt: createdAt // Fecha de creación
     };
 
-    const existingIndex = userPrompts.findIndex(p => p.id === id);
-    if (existingIndex > -1) userPrompts[existingIndex] = newPrompt;
-    else userPrompts.push(newPrompt);
+    if (existingIndex > -1) {
+      userPrompts[existingIndex] = newPrompt; // Actualiza
+    } else {
+      userPrompts.push(newPrompt); // Agrega
+    }
 
     localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
     renderPrompts();
     closeModal();
   });
 
-  // Eliminar
+  // (MODIFICADO) Botón Eliminar del modal
   deleteBtn.addEventListener("click", () => {
     const id = promptForm.dataset.editId;
-    if (!id) return;
-    if (!confirm("¿Seguro que deseas eliminar este prompt?")) return;
-    userPrompts = userPrompts.filter(p => p.id !== id);
-    localStorage.setItem("userPrompts", JSON.stringify(userPrompts));
-    renderPrompts();
-    closeModal();
+    eliminarPrompt(id); // Llama a la nueva función reutilizable
   });
 
-  // Botón nuevo prompt
-  addPromptBtn.addEventListener("click", () => openModal(null));
+
+  // --- BÚSQUEDA Y EXPORTACIÓN ---
 
   // Buscar
   searchInput.addEventListener("input", (e) => {
@@ -175,134 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.open(url, "_blank");
   });
 
-  // Inicial
+  // --- INICIALIZACIÓN ---
   renderPrompts();
 
 });
-// =================================================================
-// === LEER PROMPTS GUARDADOS DESDE LA CONSOLA ====================
-// =================================================================
-
-function cargarBibliotecaLocal() {
-  try {
-    const biblioteca = JSON.parse(localStorage.getItem('contador4_biblioteca') || '[]');
-    const total = localStorage.getItem('contador4_total_prompts') || '0';
-    
-    console.log(`📚 ${total} prompts cargados desde biblioteca local`);
-    
-    return biblioteca;
-  } catch (error) {
-    console.error('Error al cargar biblioteca:', error);
-    return [];
-  }
-}
-
-function renderizarPrompts(prompts) {
-  const container = document.getElementById('prompts-container'); // Ajusta según tu HTML
-  
-  if (!container) {
-    console.warn('Container de prompts no encontrado');
-    return;
-  }
-  
-  if (prompts.length === 0) {
-    container.innerHTML = `
-      <div style="text-align: center; padding: 60px 20px; color: #6b7280;">
-        <h3 style="font-size: 1.5em; margin-bottom: 10px;">📚 Tu biblioteca está vacía</h3>
-        <p style="margin-bottom: 20px;">Genera prompts desde la Consola para verlos aquí</p>
-        <a href="URL_DE_TU_CONSOLA" style="display: inline-block; padding: 12px 24px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
-          Ir a la Consola
-        </a>
-      </div>
-    `;
-    return;
-  }
-  
-  container.innerHTML = prompts.map(prompt => `
-    <div class="prompt-card" data-id="${prompt.id}">
-      <div class="prompt-header">
-        <span class="prompt-categoria">${prompt.categoria}</span>
-        <span class="prompt-fecha">${prompt.fecha}</span>
-      </div>
-      <h3 class="prompt-titulo">${prompt.titulo}</h3>
-      <p class="prompt-subcategoria">${prompt.subcategoria}</p>
-      <div class="prompt-contenido">
-        ${prompt.contenido.substring(0, 200)}...
-      </div>
-      <div class="prompt-actions">
-        <button onclick="copiarPrompt('${prompt.id}')" class="btn-action primary">
-          📋 Copiar
-        </button>
-        <button onclick="verPromptCompleto('${prompt.id}')" class="btn-action">
-          👁️ Ver completo
-        </button>
-        <button onclick="eliminarPrompt('${prompt.id}')" class="btn-action danger">
-          🗑️ Eliminar
-        </button>
-      </div>
-    </div>
-  `).join('');
-}
-
-// Funciones auxiliares
-function copiarPrompt(id) {
-  const biblioteca = cargarBibliotecaLocal();
-  const prompt = biblioteca.find(p => p.id === id);
-  
-  if (!prompt) return;
-  
-  navigator.clipboard.writeText(prompt.contenido).then(() => {
-    mostrarNotificacion('✅ Prompt copiado al portapapeles');
-  });
-}
-
-function verPromptCompleto(id) {
-  const biblioteca = cargarBibliotecaLocal();
-  const prompt = biblioteca.find(p => p.id === id);
-  
-  if (!prompt) return;
-  
-  // Mostrar en modal (ajusta según tu implementación)
-  alert(prompt.contenido); // Temporal - reemplaza con tu modal
-}
-
-function eliminarPrompt(id) {
-  if (!confirm('¿Estás seguro de eliminar este prompt?')) return;
-  
-  let biblioteca = cargarBibliotecaLocal();
-  biblioteca = biblioteca.filter(p => p.id !== id);
-  
-  localStorage.setItem('contador4_biblioteca', JSON.stringify(biblioteca));
-  localStorage.setItem('contador4_total_prompts', biblioteca.length);
-  
-  // Re-renderizar
-  renderizarPrompts(biblioteca);
-  mostrarNotificacion('🗑️ Prompt eliminado');
-}
-
-function mostrarNotificacion(mensaje) {
-  // Implementa tu sistema de notificaciones
-  alert(mensaje); // Temporal
-}
-
-// Inicializar cuando cargue la página
-document.addEventListener('DOMContentLoaded', () => {
-  const prompts = cargarBibliotecaLocal();
-  renderizarPrompts(prompts);
-  
-  // Actualizar contador en header (si existe)
-  const totalElement = document.getElementById('total-prompts');
-  if (totalElement) {
-    totalElement.textContent = prompts.length;
-  }
-});
-
-// Exportar funciones si usas módulos
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    cargarBibliotecaLocal,
-    renderizarPrompts,
-    copiarPrompt,
-    eliminarPrompt
-  };
-}
