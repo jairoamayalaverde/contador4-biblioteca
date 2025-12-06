@@ -496,20 +496,99 @@ h1, h2, h3, h4 {
 
 
 /* ===============================
-   FOOTER
+   FOOTER CON PERSONAJE 3D
 =============================== */
-.app-footer {
-  background: var(--bg-card);
+
+/* Contenedor principal para dar espacio */
+.footer-container-3d {
+  position: relative;
+  margin-top: 140px; /* Espacio para que el robot no tape contenido */
+  background-color: var(--bg-card);
   border-top: 1px solid var(--border-color);
-  color: var(--text-muted);
-  padding: 30px;
+}
+
+/* Animación de Flotación */
+@keyframes float {
+  0% { transform: translate(-50%, 0px); }
+  50% { transform: translate(-50%, -12px); }
+  100% { transform: translate(-50%, 0px); }
+}
+
+/* Wrapper del Robot (Posicionamiento) */
+.robot-wrapper {
+  position: absolute;
+  top: -130px; /* Lo sube para que se siente en el borde */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 150px; /* Tamaño del robot */
+  animation: float 4s ease-in-out infinite;
+  pointer-events: none; /* Deja dar clic a lo que esté detrás */
+}
+
+/* La imagen del robot */
+.robot-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 30px rgba(59, 130, 246, 0.4)); /* Sombra azul brillante */
+}
+
+/* Burbuja de texto */
+.robot-bubble {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  color: var(--secondary-color);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  border: 2px solid #dbeafe;
+}
+
+/* Triangulito de la burbuja */
+.robot-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid white;
+}
+
+/* Línea divisoria Neón */
+.neon-divider {
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--bg-card) 0%, var(--primary-color) 50%, var(--bg-card) 100%);
+  box-shadow: 0 0 20px var(--primary-glow);
+}
+
+/* Estilos del texto del footer */
+.app-footer {
+  padding: 40px 20px;
   text-align: center;
-  margin-top: 60px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 .app-footer a {
   color: var(--primary-color);
   text-decoration: none;
   font-weight: 600;
+  border-bottom: 1px dotted var(--primary-color);
+  transition: all 0.3s;
 }
-.app-footer a:hover { text-decoration: underline; }
+
+.app-footer a:hover {
+  color: white;
+  border-bottom: 1px solid white;
+  text-shadow: 0 0 10px var(--primary-glow);
+}
