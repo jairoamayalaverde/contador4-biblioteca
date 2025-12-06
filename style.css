@@ -1,5 +1,6 @@
 /* =========================================
    BIBLIOTECA DE PROMPTS - TEMA DARK (CONTADOR 4.0)
+   Versión: Definitiva (Grid Ordenado + Estilo Cyber)
    ========================================= */
 
 /* Importar fuentes y Tailwind (si no están ya en el HTML) */
@@ -210,15 +211,17 @@ h1, h2, h3, h4 {
 
 
 /* ===============================
-   TARJETAS DE PROMPTS (Grid)
+   TARJETAS DE PROMPTS (Grid Alineado)
 =============================== */
 .prompt-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* Ajuste para que quepan mejor en pantallas medianas */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
   gap: 24px;
+  align-items: stretch; /* CLAVE: Estira todas las tarjetas a la misma altura */
 }
 
-.prompt-item { /* .prompt-card en tu otro css, unificamos */
+.prompt-item {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 16px;
@@ -228,6 +231,11 @@ h1, h2, h3, h4 {
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow-card);
+  
+  /* CLAVE PARA ORDEN: Convertimos la tarjeta en una columna flexible */
+  display: flex;
+  flex-direction: column;
+  height: 100%; 
 }
 
 /* Efecto Hover Tarjeta */
@@ -247,44 +255,71 @@ h1, h2, h3, h4 {
   opacity: 0.7;
 }
 
-.prompt-item h3, .prompt-titulo {
+/* Título de la tarjeta */
+.prompt-item h3 {
   color: white;
-  margin: 0 0 10px 0;
-  font-size: 1.2rem;
+  margin: 0 0 12px 0;
+  font-size: 1.15rem;
   font-weight: 700;
+  line-height: 1.4;
 }
 
-/* Tags dentro de la tarjeta */
+/* Tags (Categoría / Fecha) - Si existen en tu HTML */
+.prompt-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
 .prompt-categoria {
   background: rgba(59, 130, 246, 0.15);
   color: #60a5fa;
   padding: 4px 10px;
   border-radius: 6px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  white-space: nowrap;
   display: inline-block;
   margin-bottom: 10px;
-  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
-/* Contenido del prompt (preview) */
+.prompt-fecha {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Contenido del prompt (Preview Limitada) */
 .prompt-contenido {
   background: rgba(0,0,0,0.3);
   padding: 12px;
   border-radius: 8px;
   color: var(--text-muted);
   font-family: 'Courier New', monospace;
-  font-size: 0.9em;
+  font-size: 0.85rem;
   line-height: 1.5;
-  margin-bottom: 15px;
   border: 1px solid var(--border-color);
+  
+  /* CLAVE: Empuja el contenido para llenar espacio y alinear botones al final */
+  flex-grow: 1; 
+  margin-bottom: 20px;
+
+  /* CLAVE: Cortar texto largo con '...' (Solo funciona si hay mucho texto) */
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* Muestra máximo 5 líneas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Botones de acción en tarjeta */
+/* Botones de acción (Siempre abajo) */
 .prompt-actions {
   display: flex;
   gap: 10px;
-  margin-top: 15px;
+  margin-top: auto; /* CLAVE: Se pega al fondo de la tarjeta */
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
 
 .btn-action {
@@ -297,6 +332,8 @@ h1, h2, h3, h4 {
   border: 1px solid var(--border-color);
   background: var(--bg-input);
   color: var(--text-muted);
+  flex: 1; /* Botones del mismo ancho */
+  text-align: center;
 }
 .btn-action:hover {
   border-color: var(--text-main);
