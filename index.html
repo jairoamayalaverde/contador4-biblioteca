@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Biblioteca de Prompts – Contador 4.0</title>
 
-  <link rel="icon" href="Favicon-app.png" sizes="32x32" type="image/png" />
-  <link rel="apple-touch-icon" href="Favicon-app.png" />
-  <meta name="theme-color" content="#E86C2A">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22 stroke=%22%233b82f6%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><polygon points=%2213 2 3 14 12 14 11 22 21 10 12 10 13 2%22/></svg>">
+  
+  <meta name="theme-color" content="#0f172a">
 
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500&family=Poppins:wght@700;900&display=swap" rel="stylesheet">
 
@@ -34,7 +34,7 @@
         <input id="searchInput" type="search" placeholder="Buscar prompt por nombre, contexto o texto..." />
       </div>
       <div class="actions-wrap">
-        <button id="exportBtn" class="btn btn-export">📤 Exportar Excel</button>
+        <button id="exportBtn" class="btn-secondary" style="border: 1px solid var(--border-color); color: var(--text-muted);">📤 Exportar Excel</button>
       </div>
     </section>
 
@@ -97,19 +97,19 @@
         </select>
 
         <div class="modal-actions">
-          <button id="savePrompt" type="submit" class="btn btn-primary">Guardar</button>
-          <button id="deletePrompt" type="button" class="btn btn-danger">🗑️ Eliminar</button>
-          <button id="cancelBtn" type="button" class="btn btn-secondary">Cancelar</button>
+          <button id="savePrompt" type="submit" class="btn-action primary">Guardar</button>
+          <button id="deletePrompt" type="button" class="btn-action danger">🗑️ Eliminar</button>
+          <button id="cancelBtn" type="button" class="btn-action">Cancelar</button>
         </div>
       </form>
     </div>
   </div>
 
- <div class="footer-container-3d">
+  <div class="footer-container-3d">
     
     <div class="robot-wrapper">
       <div class="robot-bubble">
-        ¡Guarda tus mejores Prompts! 🧠
+        ¡Guarda tus mejores prompts! 🧠
       </div>
       <img 
         src="https://contador4-0-master.vercel.app/personaje-contador.png" 
